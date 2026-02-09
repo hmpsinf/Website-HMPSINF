@@ -3,12 +3,14 @@ import { ThemeToggleButton } from "@/components/common/ThemeToggleButton";
 import NotificationDropdown from "@/components/header/NotificationDropdown";
 import UserDropdown from "@/components/header/UserDropdown";
 import { useSidebar } from "@/context/SidebarContext";
+import { useSiteSettings } from "@/context/SiteSettingsContext";
 import Image from "next/image";
 import Link from "next/link";
-import React, { useState ,useEffect,useRef} from "react";
+import React, { useState, useEffect, useRef } from "react";
 
 const AppHeader: React.FC = () => {
   const [isApplicationMenuOpen, setApplicationMenuOpen] = useState(false);
+  const { settings, loading: settingsLoading } = useSiteSettings();
 
   const { isMobileOpen, toggleSidebar, toggleMobileSidebar } = useSidebar();
 
@@ -83,21 +85,42 @@ const AppHeader: React.FC = () => {
             {/* Cross Icon */}
           </button>
 
-          <Link href="/" className="lg:hidden">
-            <Image
-              width={154}
-              height={32}
-              className="dark:hidden"
-              src="./images/logo/logo.svg"
-              alt="Logo"
-            />
-            <Image
-              width={154}
-              height={32}
-              className="hidden dark:block"
-              src="./images/logo/logo-dark.svg"
-              alt="Logo"
-            />
+          <Link href="/" className="lg:hidden flex items-center gap-2">
+            {settingsLoading ? (
+              <div className="flex items-center gap-2">
+                <div className="animate-pulse bg-gray-200 dark:bg-gray-700 rounded w-8 h-8" />
+                <div className="animate-pulse bg-gray-200 dark:bg-gray-700 rounded w-20 h-5" />
+              </div>
+            ) : (
+              <>
+                {/* Light mode logo */}
+                <Image
+                  className="dark:hidden max-h-8 w-auto object-contain"
+                  src={settings?.logo_url || "/images/logo/logo.svg"}
+                  alt={settings?.site_name || "Logo"}
+                  width={150}
+                  height={32}
+                  style={{ maxHeight: "32px", width: "auto" }}
+                  priority
+                />
+                {/* Dark mode logo */}
+                <Image
+                  className="hidden dark:block max-h-8 w-auto object-contain"
+                  src={settings?.logo_dark_url || settings?.logo_url || "/images/logo/logo-dark.svg"}
+                  alt={settings?.site_name || "Logo"}
+                  width={150}
+                  height={32}
+                  style={{ maxHeight: "32px", width: "auto" }}
+                  priority
+                />
+                {/* Dynamic Site Name - show if custom logo is set */}
+                {settings?.site_name && settings?.logo_url && (
+                  <span className="text-base font-bold text-gray-800 dark:text-white whitespace-nowrap">
+                    {settings.site_name}
+                  </span>
+                )}
+              </>
+            )}
           </Link>
 
           <button
@@ -156,21 +179,20 @@ const AppHeader: React.FC = () => {
           </div>
         </div>
         <div
-          className={`${
-            isApplicationMenuOpen ? "flex" : "hidden"
-          } items-center justify-between w-full gap-4 px-5 py-4 lg:flex shadow-theme-md lg:justify-end lg:px-0 lg:shadow-none`}
+          className={`${isApplicationMenuOpen ? "flex" : "hidden"
+            } items-center justify-between w-full gap-4 px-5 py-4 lg:flex shadow-theme-md lg:justify-end lg:px-0 lg:shadow-none`}
         >
           <div className="flex items-center gap-2 2xsm:gap-3">
             {/* <!-- Dark Mode Toggler --> */}
             <ThemeToggleButton />
             {/* <!-- Dark Mode Toggler --> */}
 
-           <NotificationDropdown /> 
+            <NotificationDropdown />
             {/* <!-- Notification Menu Area --> */}
           </div>
           {/* <!-- User Area --> */}
-          <UserDropdown /> 
-    
+          <UserDropdown />
+
         </div>
       </div>
     </header>

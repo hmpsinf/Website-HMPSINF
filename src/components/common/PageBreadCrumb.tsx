@@ -1,11 +1,22 @@
+"use client";
+
 import Link from "next/link";
-import React from "react";
+import React, { useEffect } from "react";
+import { useSiteSettings } from "@/context/SiteSettingsContext";
 
 interface BreadcrumbProps {
   pageTitle: string;
 }
 
 const PageBreadcrumb: React.FC<BreadcrumbProps> = ({ pageTitle }) => {
+  const { settings } = useSiteSettings();
+
+  // Update document title when pageTitle or settings change
+  useEffect(() => {
+    const siteName = settings?.site_name || "HMPSINF";
+    document.title = `${pageTitle} | ${siteName}`;
+  }, [pageTitle, settings?.site_name]);
+
   return (
     <div className="flex flex-wrap items-center justify-between gap-3 mb-6">
       <h2

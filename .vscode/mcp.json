@@ -1,0 +1,61 @@
+{
+  "servers": {
+    "next-devtools": {
+      "command": "npx",
+      "args": ["-y", "next-devtools-mcp@latest"]
+    },
+    "mcp-turso-cloud": {
+      "command": "npx",
+      "args": ["-y", "mcp-turso-cloud"],
+      "env": {
+        "TURSO_API_TOKEN": "eyJhbGciOiJFZERTQSIsInR5cCI6IkpXVCJ9.eyJqdGkiOiIzMzVLMWdRbkVmR1FpSkxlMkt3ZU5BIn0.U-tusRZxKkpKaNe7O6c78O-IruYyeJtwnUUy9YYNz6GCHSC_8b_Lhx3wacqMgZl3x5ZP2qbNPoRB0hqNGcWoDQ",
+        "TURSO_ORGANIZATION": "miftakhulrahman",
+        "TURSO_DEFAULT_DATABASE": "hminf"
+      }
+    },
+    "cloudinary-asset-mgmt": {
+      "command": "npx",
+      "args": ["-y", "--package", "@cloudinary/asset-management-mcp", "--", "mcp", "start"],
+      "env": {
+        "CLOUDINARY_CLOUD_NAME": "dxujag3yy",
+        "CLOUDINARY_API_KEY": "848237343573475",
+        "CLOUDINARY_API_SECRET": "kH-MxbOc6SpMsxsbe5ZSnsq6wP0"
+      }
+    },
+    "cloudinary-env-config": {
+      "command": "npx",
+      "args": ["-y", "--package", "@cloudinary/environment-config-mcp", "--", "mcp", "start"],
+      "env": {
+        "CLOUDINARY_CLOUD_NAME": "dxujag3yy",
+        "CLOUDINARY_API_KEY": "848237343573475",
+        "CLOUDINARY_API_SECRET": "kH-MxbOc6SpMsxsbe5ZSnsq6wP0"
+      }
+    },
+    "cloudinary-structured-metadata": {
+      "command": "npx",
+      "args": ["-y", "--package", "@cloudinary/structured-metadata-mcp", "--", "mcp", "start"],
+      "env": {
+        "CLOUDINARY_CLOUD_NAME": "dxujag3yy",
+        "CLOUDINARY_API_KEY": "848237343573475",
+        "CLOUDINARY_API_SECRET": "kH-MxbOc6SpMsxsbe5ZSnsq6wP0"
+      }
+    },
+    "cloudinary-analysis": {
+      "command": "npx",
+      "args": ["-y", "--package", "@cloudinary/analysis", "--", "mcp", "start"],
+      "env": {
+        "CLOUDINARY_CLOUD_NAME": "dxujag3yy",
+        "CLOUDINARY_API_KEY": "848237343573475",
+        "CLOUDINARY_API_SECRET": "kH-MxbOc6SpMsxsbe5ZSnsq6wP0"
+      }
+    },
+    "context7": {
+      "type": "http",
+      "url": "https://mcp.context7.com/mcp",
+      "headers": {
+        "CONTEXT7_API_KEY": "ctx7sk-f3d70292-4a89-4630-89b4-179997932e77"
+      },
+      "tools": ["query-docs", "resolve-library-id"]
+    }
+  }
+}
