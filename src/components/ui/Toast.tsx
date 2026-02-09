@@ -104,10 +104,10 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
     return (
         <ToastContext.Provider value={{ showToast }}>
             {children}
-            {/* Toast Container - Fixed at top center with high z-index */}
+            {/* Toast Container - Fixed at top center with highest z-index */}
             <div
                 className="fixed top-4 left-1/2 -translate-x-1/2 flex flex-col gap-2 pointer-events-auto"
-                style={{ zIndex: 99999 }}
+                style={{ zIndex: 999999 }}
             >
                 {toasts.map((toast) => (
                     <ToastItemComponent

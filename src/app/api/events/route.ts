@@ -28,6 +28,7 @@ interface EventRow {
   is_open: number;
   created_at: string;
   updated_at: string;
+  view_count: number;
 }
 
 // GET /api/events - Ambil daftar event dengan pagination, search, dan filter

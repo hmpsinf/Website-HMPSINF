@@ -48,11 +48,13 @@ export async function PUT(request: Request) {
       );
     }
 
-    // Update each setting
+    // UPSERT each setting (Insert or Update)
     for (const [key, value] of Object.entries(settings)) {
+      // Menggunakan INSERT OR REPLACE untuk menangani key baru maupun update key lama
       await db.execute({
-        sql: 'UPDATE site_settings SET value = ?, updated_at = CURRENT_TIMESTAMP WHERE key = ?',
-        args: [value as string | null, key],
+        sql: `INSERT OR REPLACE INTO site_settings (key, value, updated_at) 
+              VALUES (?, ?, CURRENT_TIMESTAMP)`,
+        args: [key, value as string | null],
       });
     }
 

@@ -14,6 +14,11 @@ export interface SiteSettings {
     contact_email: string | null;
     contact_phone: string | null;
     address: string | null;
+    instagram_url: string | null;
+    tiktok_url: string | null;
+    facebook_url: string | null;
+    youtube_url: string | null;
+    maps_embed_url: string | null;
 }
 
 interface SiteSettingsContextType {
@@ -34,6 +39,11 @@ const defaultSettings: SiteSettings = {
     contact_email: null,
     contact_phone: null,
     address: null,
+    instagram_url: null,
+    tiktok_url: null,
+    facebook_url: null,
+    youtube_url: null,
+    maps_embed_url: null,
 };
 
 const SiteSettingsContext = createContext<SiteSettingsContextType | undefined>(undefined);

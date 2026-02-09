@@ -11,9 +11,11 @@ import {
   ChevronDownIcon,
   DocsIcon,
   GridIcon,
+  FolderIcon,
   GroupIcon,
   HorizontaLDots,
   ListIcon,
+  ChatIcon,
   PageIcon,
   PieChartIcon,
   PlugInIcon,
@@ -52,6 +54,14 @@ const navItems: NavItem[] = [
     path: "/site-settings",
   },
   {
+    icon: <PageIcon />,
+    name: "Tentang",
+    subItems: [
+      { name: "Sejarah", path: "/sejarah", pro: false },
+      { name: "Visi & Misi", path: "/visi-misi", pro: false },
+    ],
+  },
+  {
     icon: <GroupIcon />,
     name: "Manajemen Divisi",
     path: "/divisions",
@@ -72,6 +82,11 @@ const navItems: NavItem[] = [
     path: "/program-kerja",
   },
   {
+    icon: <FolderIcon />,
+    name: "Galeri Kegiatan",
+    path: "/galleries",
+  },
+  {
     icon: <DocsIcon />,
     name: "Dokumen",
     subItems: [
@@ -80,7 +95,7 @@ const navItems: NavItem[] = [
     ],
   },
   {
-    icon: <DocsIcon />,
+    icon: <ChatIcon />,
     name: "Berita",
     subItems: [
       { name: "Semua Berita", path: "/news", pro: false },

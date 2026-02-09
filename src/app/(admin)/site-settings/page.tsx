@@ -14,6 +14,11 @@ interface FormData {
     contact_email: string;
     contact_phone: string;
     address: string;
+    instagram_url: string;
+    tiktok_url: string;
+    facebook_url: string;
+    youtube_url: string;
+    maps_embed_url: string;
 }
 
 export default function SiteSettingsPage() {
@@ -32,6 +37,11 @@ export default function SiteSettingsPage() {
         contact_email: "",
         contact_phone: "",
         address: "",
+        instagram_url: "",
+        tiktok_url: "",
+        facebook_url: "",
+        youtube_url: "",
+        maps_embed_url: "",
     });
 
     // HIMA Inti pattern color state
@@ -62,6 +72,11 @@ export default function SiteSettingsPage() {
                 contact_email: settings.contact_email || "",
                 contact_phone: settings.contact_phone || "",
                 address: settings.address || "",
+                instagram_url: settings.instagram_url || "",
+                tiktok_url: settings.tiktok_url || "",
+                facebook_url: settings.facebook_url || "",
+                youtube_url: settings.youtube_url || "",
+                maps_embed_url: settings.maps_embed_url || "",
             });
         }
         fetchPatternColor();
@@ -454,18 +469,166 @@ export default function SiteSettingsPage() {
                                     />
                                 </div>
 
-                                <div className="flex justify-end pt-4">
-                                    <button
-                                        type="submit"
-                                        disabled={saving}
-                                        className="rounded-lg bg-brand-500 px-6 py-2.5 font-medium text-white hover:bg-brand-600 disabled:opacity-50"
-                                    >
-                                        {saving ? "Menyimpan..." : "Simpan Pengaturan"}
-                                    </button>
-                                </div>
+                                {/* Save button moved to bottom of page */}
+                                <div className="hidden"></div>
                             </form>
                         )}
                     </div>
+                </div>
+
+                {/* Social Media Settings */}
+                <div className="rounded-2xl border border-gray-200 bg-white dark:border-gray-800 dark:bg-white/[0.03]">
+                    <div className="border-b border-gray-200 px-6 py-4 dark:border-gray-800">
+                        <h3 className="text-lg font-semibold text-gray-800 dark:text-white/90">
+                            Social Media
+                        </h3>
+                    </div>
+                    <div className="p-6">
+                        {loading ? (
+                            <div className="grid gap-5 md:grid-cols-2">
+                                <Skeleton className="h-10" />
+                                <Skeleton className="h-10" />
+                                <Skeleton className="h-10" />
+                                <Skeleton className="h-10" />
+                            </div>
+                        ) : (
+                            <div className="grid gap-5 md:grid-cols-2">
+                                <div>
+                                    <label className="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-300">
+                                        Instagram URL
+                                    </label>
+                                    <input
+                                        type="url"
+                                        name="instagram_url"
+                                        value={formData.instagram_url || ''}
+                                        onChange={handleInputChange}
+                                        className="w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-gray-800 focus:border-brand-500 focus:outline-none dark:border-gray-600 dark:text-white"
+                                        placeholder="https://instagram.com/..."
+                                    />
+                                </div>
+                                <div>
+                                    <label className="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-300">
+                                        TikTok URL
+                                    </label>
+                                    <input
+                                        type="url"
+                                        name="tiktok_url"
+                                        value={formData.tiktok_url || ''}
+                                        onChange={handleInputChange}
+                                        className="w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-gray-800 focus:border-brand-500 focus:outline-none dark:border-gray-600 dark:text-white"
+                                        placeholder="https://tiktok.com/@..."
+                                    />
+                                </div>
+                                <div>
+                                    <label className="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-300">
+                                        Facebook URL
+                                    </label>
+                                    <input
+                                        type="url"
+                                        name="facebook_url"
+                                        value={formData.facebook_url || ''}
+                                        onChange={handleInputChange}
+                                        className="w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-gray-800 focus:border-brand-500 focus:outline-none dark:border-gray-600 dark:text-white"
+                                        placeholder="https://facebook.com/..."
+                                    />
+                                </div>
+                                <div>
+                                    <label className="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-300">
+                                        YouTube URL
+                                    </label>
+                                    <input
+                                        type="url"
+                                        name="youtube_url"
+                                        value={formData.youtube_url || ''}
+                                        onChange={handleInputChange}
+                                        className="w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-gray-800 focus:border-brand-500 focus:outline-none dark:border-gray-600 dark:text-white"
+                                        placeholder="https://youtube.com/..."
+                                    />
+                                </div>
+                            </div>
+                        )}
+                    </div>
+                </div>
+
+                {/* Location / Maps Settings */}
+                <div className="rounded-2xl border border-gray-200 bg-white dark:border-gray-800 dark:bg-white/[0.03]">
+                    <div className="border-b border-gray-200 px-6 py-4 dark:border-gray-800">
+                        <h3 className="text-lg font-semibold text-gray-800 dark:text-white/90">
+                            Lokasi / Maps
+                        </h3>
+                    </div>
+                    <div className="p-6">
+                        {loading ? (
+                            <div className="space-y-4">
+                                <Skeleton className="h-32" />
+                            </div>
+                        ) : (
+                            <div className="grid gap-6 lg:grid-cols-2 items-start">
+                                <div className="space-y-2">
+                                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                                        Google Maps Embed Code
+                                    </label>
+                                    <p className="text-xs text-gray-500 dark:text-gray-400">
+                                        Paste kode embed (iframe) dari Google Maps di sini.
+                                    </p>
+                                    <textarea
+                                        name="maps_embed_url"
+                                        value={formData.maps_embed_url || ''}
+                                        onChange={(e) => {
+                                            const val = e.target.value;
+                                            // Extract src from iframe if pasted
+                                            const srcMatch = val.match(/src="([^"]+)"/);
+                                            if (srcMatch && srcMatch[1]) {
+                                                handleInputChange({
+                                                    target: { name: 'maps_embed_url', value: srcMatch[1] }
+                                                } as any);
+                                            } else {
+                                                handleInputChange(e);
+                                            }
+                                        }}
+                                        rows={8}
+                                        className="w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-gray-800 focus:border-brand-500 focus:outline-none dark:border-gray-600 dark:text-white font-mono text-xs"
+                                        placeholder='<iframe src="https://www.google.com/maps/embed?..." ...></iframe>'
+                                    />
+                                </div>
+
+                                {/* Map Preview */}
+                                <div>
+                                    <label className="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">
+                                        Preview
+                                    </label>
+                                    {formData.maps_embed_url ? (
+                                        <div className="rounded-lg overflow-hidden border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 aspect-video w-full">
+                                            <iframe
+                                                src={formData.maps_embed_url}
+                                                width="100%"
+                                                height="100%"
+                                                style={{ border: 0 }}
+                                                allowFullScreen
+                                                loading="lazy"
+                                                referrerPolicy="no-referrer-when-downgrade"
+                                            />
+                                        </div>
+                                    ) : (
+                                        <div className="flex aspect-video w-full items-center justify-center rounded-lg border border-dashed border-gray-300 bg-gray-50 dark:border-gray-700 dark:bg-gray-800/50">
+                                            <p className="text-sm text-gray-400">Preview akan muncul di sini</p>
+                                        </div>
+                                    )}
+                                </div>
+                            </div>
+                        )}
+                    </div>
+                </div>
+
+                {/* Save Button (Global) */}
+                <div className="sticky bottom-4 flex justify-end">
+                    <button
+                        onClick={handleSaveSettings}
+                        disabled={saving}
+                        className="rounded-lg bg-brand-500 px-6 py-3 font-medium text-white shadow-lg hover:bg-brand-600 disabled:opacity-50 transition-all hover:scale-105 active:scale-95"
+                    >
+                        {saving ? "Menyimpan Pengaturan..." : "Simpan Semua Pengaturan"}
+                    </button>
                 </div>
             </div>
         </div>
