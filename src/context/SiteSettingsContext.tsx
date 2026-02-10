@@ -19,6 +19,16 @@ export interface SiteSettings {
     facebook_url: string | null;
     youtube_url: string | null;
     maps_embed_url: string | null;
+    hero_title: string | null;
+    hero_subtitle: string | null;
+    hero_btn1_text: string | null;
+    hero_btn1_link: string | null;
+    hero_btn2_text: string | null;
+    hero_btn2_link: string | null;
+    hero_bg_image: string | null;
+    hero_bg_size: string | null;
+    hero_side_image: string | null;
+    hero_side_image_public_id: string | null;
 }
 
 interface SiteSettingsContextType {
@@ -44,6 +54,16 @@ const defaultSettings: SiteSettings = {
     facebook_url: null,
     youtube_url: null,
     maps_embed_url: null,
+    hero_title: null,
+    hero_subtitle: null,
+    hero_btn1_text: null,
+    hero_btn1_link: null,
+    hero_btn2_text: null,
+    hero_btn2_link: null,
+    hero_bg_image: null,
+    hero_bg_size: null,
+    hero_side_image: null,
+    hero_side_image_public_id: null,
 };
 
 const SiteSettingsContext = createContext<SiteSettingsContextType | undefined>(undefined);

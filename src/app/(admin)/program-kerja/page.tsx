@@ -460,232 +460,91 @@ export default function ProgramKerjaPage() {
         <div className="space-y-6">
             <PageBreadcrumb pageTitle="Program Kerja" />
 
-            {/* Header */}
-            <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
-                <div>
-                    <h2 className="text-lg font-semibold text-gray-800 dark:text-white">Program Kerja</h2>
-                    <p className="text-sm text-gray-500 dark:text-gray-400">
-                        {activePeriod ? `Periode ${activePeriod.name}` : 'Kelola program kerja HIMA dan Divisi'}
-                    </p>
-                </div>
-                <div className="flex flex-wrap gap-3">
-                    <button
-                        onClick={openCreateModal}
-                        className="inline-flex items-center gap-2 rounded-lg bg-brand-500 px-4 py-2.5 text-sm font-medium text-white hover:bg-brand-600 transition-colors"
-                    >
-                        <Plus className="h-4 w-4" />
-                        Tambah Program
-                    </button>
-                </div>
-            </div>
-
-            {/* Stats Cards */}
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-                {(['direncanakan', 'berjalan', 'selesai', 'dibatalkan'] as const).map((status) => {
-                    const config = STATUS_CONFIG[status];
-                    const Icon = config.icon;
-                    return (
-                        <div
-                            key={status}
-                            className={`${config.headerBg} rounded-xl p-4 border ${config.borderColor}`}
-                        >
-                            <div className="flex items-center gap-3">
-                                <div className={`p-2 rounded-lg ${config.color}`}>
-                                    <Icon className="h-5 w-5" />
-                                </div>
-                                <div>
-                                    <p className="text-2xl font-bold text-gray-900 dark:text-white">
-                                        {stats[status]}
-                                    </p>
-                                    <p className="text-xs text-gray-500 dark:text-gray-400">{config.label}</p>
-                                </div>
-                            </div>
-                        </div>
-                    );
-                })}
-            </div>
-
-            {/* Tabs & Filters */}
-            <div className="flex flex-col sm:flex-row gap-4">
-                {/* Tabs */}
-                <div className="flex-1 flex flex-wrap gap-2">
-                    <button
-                        onClick={() => setActiveTab('hima')}
-                        className={`inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-colors ${activeTab === 'hima'
-                            ? 'bg-brand-500 text-white'
-                            : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700'
-                            }`}
-                    >
-                        <Target className="h-4 w-4" />
-                        HIMA Inti
-                    </button>
-                    {divisions.map((div) => (
+            <div className="rounded-2xl border border-gray-200 bg-white dark:border-gray-800 dark:bg-white/[0.03]">
+                <div className="flex flex-col gap-4 border-b px-6 py-4 dark:border-gray-800 sm:flex-row sm:items-center sm:justify-between">
+                    <div>
+                        <h2 className="text-lg font-semibold text-gray-800 dark:text-white">Program Kerja</h2>
+                        <p className="text-sm text-gray-500 dark:text-gray-400">{activePeriod ? `Periode ${activePeriod.name}` : 'Kelola program kerja HIMA dan Divisi'}</p>
+                    </div>
+                    <div className="flex flex-wrap gap-3">
                         <button
-                            key={div.id}
-                            onClick={() => setActiveTab(div.id)}
-                            className={`inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-colors ${activeTab === div.id
-                                ? 'text-white'
-                                : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700'
-                                }`}
-                            style={activeTab === div.id ? { backgroundColor: div.color } : {}}
+                            onClick={openCreateModal}
+                            className="inline-flex w-fit items-center justify-center gap-2 rounded-lg bg-brand-500 px-4 py-2.5 text-sm font-medium text-white hover:bg-brand-600 transition-colors focus:outline-none focus:ring-2 focus:ring-brand-500/40"
                         >
-                            <Briefcase className="h-4 w-4" />
-                            {div.name}
+                            <Plus className="h-4 w-4" />
+                            Tambah Program
                         </button>
-                    ))}
+                    </div>
                 </div>
 
-                {/* Filters */}
-                <div className="flex gap-3">
-                    {/* Period Filter */}
-                    <div className="relative">
-                        <Filter className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
-                        <select
-                            value={periodFilter}
-                            onChange={(e) => setPeriodFilter(e.target.value)}
-                            className="appearance-none rounded-lg border border-gray-300 bg-white pl-10 pr-10 py-2.5 text-sm text-gray-800 focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500 dark:border-gray-700 dark:bg-gray-800 dark:text-white min-w-[160px]"
-                        >
-                            <option value="">Semua Periode</option>
-                            {periods.map((period) => (
-                                <option key={period.id} value={period.id}>
-                                    {period.name} {period.is_active && '(Aktif)'}
-                                </option>
+                <div className="p-6 space-y-6">
+                    {/* Stats Cards */}
+                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+                        {(['direncanakan', 'berjalan', 'selesai', 'dibatalkan'] as const).map((status) => {
+                            const config = STATUS_CONFIG[status];
+                            const Icon = config.icon;
+                            return (
+                                <div
+                                    key={status}
+                                    className={`${config.headerBg} rounded-xl p-4 border ${config.borderColor}`}
+                                >
+                                    <div className="flex items-center gap-3">
+                                        <div className={`p-2 rounded-lg ${config.color}`}>
+                                            <Icon className="h-5 w-5" />
+                                        </div>
+                                        <div>
+                                            <p className="text-2xl font-bold text-gray-900 dark:text-white">
+                                                {stats[status]}
+                                            </p>
+                                            <p className="text-xs text-gray-500 dark:text-gray-400">{config.label}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            );
+                        })}
+                    </div>
+
+                    {/* Tabs & Filters */}
+                    <div className="flex flex-col sm:flex-row gap-4">
+                        {/* Tabs */}
+                        <div className="flex-1 flex flex-wrap gap-2">
+                            <button
+                                onClick={() => setActiveTab('hima')}
+                                className={`inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-colors ${activeTab === 'hima'
+                                    ? 'bg-brand-500 text-white'
+                                    : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700'
+                                    }`}
+                            >
+                                <Target className="h-4 w-4" />
+                                HIMA Inti
+                            </button>
+                            {divisions.map((div) => (
+                                <button
+                                    key={div.id}
+                                    onClick={() => setActiveTab(div.id)}
+                                    className={`inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-colors ${activeTab === div.id
+                                        ? 'text-white'
+                                        : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700'
+                                        }`}
+                                    style={activeTab === div.id ? { backgroundColor: div.color } : {}}
+                                >
+                                    <Briefcase className="h-4 w-4" />
+                                    {div.name}
+                                </button>
                             ))}
-                        </select>
-                    </div>
-
-                    {/* Search */}
-                    <div className="relative">
-                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
-                        <input
-                            type="text"
-                            value={search}
-                            onChange={(e) => setSearch(e.target.value)}
-                            placeholder="Cari program..."
-                            className="w-full rounded-lg border border-gray-300 bg-white pl-10 pr-4 py-2.5 text-sm text-gray-800 placeholder-gray-400 focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500 dark:border-gray-700 dark:bg-gray-800 dark:text-white dark:placeholder-gray-500 min-w-[200px]"
-                        />
-                        {search && (
-                            <button
-                                onClick={() => setSearch('')}
-                                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
-                            >
-                                <X className="h-4 w-4" />
-                            </button>
-                        )}
-                    </div>
-                </div>
-            </div>
-
-            {/* Kanban Board */}
-            <div className="flex gap-4 overflow-x-auto pb-4">
-                {(['direncanakan', 'berjalan', 'selesai', 'dibatalkan'] as const).map((status) => (
-                    <div key={status}>
-                        {renderStatusColumn(status)}
-                    </div>
-                ))}
-            </div>
-
-            {/* Create/Edit Modal */}
-            {showModal && (
-                <div className="fixed inset-0 z-99999 flex items-center justify-center p-4">
-                    <div className="absolute inset-0 bg-black/50" onClick={() => setShowModal(false)} />
-                    <div className="relative bg-white dark:bg-gray-800 rounded-2xl shadow-xl w-full max-w-lg max-h-[90vh] overflow-hidden">
-                        {/* Modal Header */}
-                        <div className="flex items-center justify-between p-6 border-b border-gray-200 dark:border-gray-700">
-                            <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
-                                {editingProgram ? 'Edit Program Kerja' : 'Tambah Program Kerja'}
-                            </h3>
-                            <button
-                                onClick={() => setShowModal(false)}
-                                className="p-2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
-                            >
-                                <X className="h-5 w-5" />
-                            </button>
                         </div>
 
-                        {/* Modal Body */}
-                        <form onSubmit={handleSubmit} className="p-6 space-y-4 overflow-y-auto max-h-[calc(90vh-140px)]">
-                            {/* Title */}
-                            <div>
-                                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                                    Judul Program <span className="text-red-500">*</span>
-                                </label>
-                                <input
-                                    type="text"
-                                    value={formData.title}
-                                    onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                                    className="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 px-4 py-2.5 text-gray-900 dark:text-white focus:ring-2 focus:ring-brand-500 focus:border-transparent outline-none"
-                                    placeholder="Nama program kerja"
-                                    required
-                                />
-                            </div>
-
-                            {/* Description */}
-                            <div>
-                                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                                    Deskripsi
-                                </label>
-                                <textarea
-                                    value={formData.description}
-                                    onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                                    rows={3}
-                                    className="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 px-4 py-2.5 text-gray-900 dark:text-white focus:ring-2 focus:ring-brand-500 focus:border-transparent outline-none resize-none"
-                                    placeholder="Deskripsi singkat program kerja"
-                                />
-                            </div>
-
-                            {/* Owner Type & Division */}
-                            <div className="grid grid-cols-2 gap-4">
-                                <div>
-                                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                                        Pemilik <span className="text-red-500">*</span>
-                                    </label>
-                                    <select
-                                        value={formData.owner_type}
-                                        onChange={(e) => setFormData({
-                                            ...formData,
-                                            owner_type: e.target.value as 'hima' | 'division',
-                                            division_id: e.target.value === 'hima' ? '' : formData.division_id
-                                        })}
-                                        className="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 px-4 py-2.5 text-gray-900 dark:text-white focus:ring-2 focus:ring-brand-500 focus:border-transparent outline-none"
-                                    >
-                                        <option value="hima">HIMA Inti</option>
-                                        <option value="division">Divisi</option>
-                                    </select>
-                                </div>
-
-                                {formData.owner_type === 'division' && (
-                                    <div>
-                                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                                            Divisi <span className="text-red-500">*</span>
-                                        </label>
-                                        <select
-                                            value={formData.division_id}
-                                            onChange={(e) => setFormData({ ...formData, division_id: e.target.value })}
-                                            className="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 px-4 py-2.5 text-gray-900 dark:text-white focus:ring-2 focus:ring-brand-500 focus:border-transparent outline-none"
-                                            required
-                                        >
-                                            <option value="">Pilih Divisi</option>
-                                            {divisions.map((div) => (
-                                                <option key={div.id} value={div.id}>{div.name}</option>
-                                            ))}
-                                        </select>
-                                    </div>
-                                )}
-                            </div>
-
-                            {/* Period */}
-                            <div>
-                                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                                    Periode <span className="text-red-500">*</span>
-                                </label>
+                        {/* Filters */}
+                        <div className="flex gap-3">
+                            {/* Period Filter */}
+                            <div className="relative">
+                                <Filter className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
                                 <select
-                                    value={formData.period_id}
-                                    onChange={(e) => setFormData({ ...formData, period_id: e.target.value })}
-                                    className="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 px-4 py-2.5 text-gray-900 dark:text-white focus:ring-2 focus:ring-brand-500 focus:border-transparent outline-none"
-                                    required
+                                    value={periodFilter}
+                                    onChange={(e) => setPeriodFilter(e.target.value)}
+                                    className="appearance-none rounded-lg border border-gray-300 bg-white pl-10 pr-10 py-2.5 text-sm text-gray-800 focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500 dark:border-gray-700 dark:bg-gray-800 dark:text-white min-w-[160px]"
                                 >
-                                    <option value="">Pilih Periode</option>
+                                    <option value="">Semua Periode</option>
                                     {periods.map((period) => (
                                         <option key={period.id} value={period.id}>
                                             {period.name} {period.is_active && '(Aktif)'}
@@ -694,86 +553,230 @@ export default function ProgramKerjaPage() {
                                 </select>
                             </div>
 
-                            {/* Status & Priority */}
-                            <div className="grid grid-cols-2 gap-4">
-                                <div>
-                                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                                        Status
-                                    </label>
-                                    <select
-                                        value={formData.status}
-                                        onChange={(e) => setFormData({ ...formData, status: e.target.value as ProgramKerja['status'] })}
-                                        className="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 px-4 py-2.5 text-gray-900 dark:text-white focus:ring-2 focus:ring-brand-500 focus:border-transparent outline-none"
+                            {/* Search */}
+                            <div className="relative">
+                                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+                                <input
+                                    type="text"
+                                    value={search}
+                                    onChange={(e) => setSearch(e.target.value)}
+                                    placeholder="Cari program..."
+                                    className="w-full rounded-lg border border-gray-300 bg-white pl-10 pr-4 py-2.5 text-sm text-gray-800 placeholder-gray-400 focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500 dark:border-gray-700 dark:bg-gray-800 dark:text-white dark:placeholder-gray-500 min-w-[200px]"
+                                />
+                                {search && (
+                                    <button
+                                        onClick={() => setSearch('')}
+                                        className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
                                     >
-                                        <option value="direncanakan">Direncanakan</option>
-                                        <option value="berjalan">Berjalan</option>
-                                        <option value="selesai">Selesai</option>
-                                        <option value="dibatalkan">Dibatalkan</option>
-                                    </select>
-                                </div>
-                                <div>
-                                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                                        Prioritas
-                                    </label>
-                                    <select
-                                        value={formData.priority}
-                                        onChange={(e) => setFormData({ ...formData, priority: e.target.value as ProgramKerja['priority'] })}
-                                        className="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 px-4 py-2.5 text-gray-900 dark:text-white focus:ring-2 focus:ring-brand-500 focus:border-transparent outline-none"
-                                    >
-                                        <option value="tinggi">Tinggi</option>
-                                        <option value="sedang">Sedang</option>
-                                        <option value="rendah">Rendah</option>
-                                    </select>
-                                </div>
+                                        <X className="h-4 w-4" />
+                                    </button>
+                                )}
                             </div>
-
-                            {/* Dates */}
-                            <div className="grid grid-cols-2 gap-4">
-                                <div>
-                                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                                        Tanggal Mulai
-                                    </label>
-                                    <input
-                                        type="date"
-                                        value={formData.start_date}
-                                        onChange={(e) => setFormData({ ...formData, start_date: e.target.value })}
-                                        className="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 px-4 py-2.5 text-gray-900 dark:text-white focus:ring-2 focus:ring-brand-500 focus:border-transparent outline-none"
-                                    />
-                                </div>
-                                <div>
-                                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                                        Tanggal Selesai
-                                    </label>
-                                    <input
-                                        type="date"
-                                        value={formData.end_date}
-                                        onChange={(e) => setFormData({ ...formData, end_date: e.target.value })}
-                                        className="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 px-4 py-2.5 text-gray-900 dark:text-white focus:ring-2 focus:ring-brand-500 focus:border-transparent outline-none"
-                                    />
-                                </div>
-                            </div>
-
-                            {/* Actions */}
-                            <div className="flex justify-end gap-3 pt-4 border-t border-gray-200 dark:border-gray-700">
-                                <button
-                                    type="button"
-                                    onClick={() => setShowModal(false)}
-                                    className="px-4 py-2.5 text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors"
-                                >
-                                    Batal
-                                </button>
-                                <button
-                                    type="submit"
-                                    disabled={saving}
-                                    className="px-4 py-2.5 text-sm font-medium text-white bg-brand-500 rounded-lg hover:bg-brand-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-                                >
-                                    {saving ? 'Menyimpan...' : editingProgram ? 'Simpan Perubahan' : 'Tambah Program'}
-                                </button>
-                            </div>
-                        </form>
+                        </div>
                     </div>
+
+                    {/* Kanban Board */}
+                    <div className="flex gap-4 overflow-x-auto pb-4">
+                        {(['direncanakan', 'berjalan', 'selesai', 'dibatalkan'] as const).map((status) => (
+                            <div key={status}>
+                                {renderStatusColumn(status)}
+                            </div>
+                        ))}
+                    </div>
+
                 </div>
-            )}
+            </div>
+
+            {
+                showModal && (
+                    <div className="fixed inset-0 z-99999 flex items-center justify-center p-4">
+                        <div className="absolute inset-0 bg-black/50" onClick={() => setShowModal(false)} />
+                        <div className="relative bg-white dark:bg-gray-800 rounded-2xl shadow-xl w-full max-w-lg max-h-[90vh] overflow-hidden">
+                            {/* Modal Header */}
+                            <div className="flex items-center justify-between p-6 border-b border-gray-200 dark:border-gray-700">
+                                <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
+                                    {editingProgram ? 'Edit Program Kerja' : 'Tambah Program Kerja'}
+                                </h3>
+                                <button
+                                    onClick={() => setShowModal(false)}
+                                    className="p-2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+                                >
+                                    <X className="h-5 w-5" />
+                                </button>
+                            </div>
+
+                            {/* Modal Body */}
+                            <form onSubmit={handleSubmit} className="p-6 space-y-4 overflow-y-auto max-h-[calc(90vh-140px)]">
+                                {/* Title */}
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                                        Judul Program <span className="text-red-500">*</span>
+                                    </label>
+                                    <input
+                                        type="text"
+                                        value={formData.title}
+                                        onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+                                        className="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 px-4 py-2.5 text-gray-900 dark:text-white focus:ring-2 focus:ring-brand-500 focus:border-transparent outline-none"
+                                        placeholder="Nama program kerja"
+                                        required
+                                    />
+                                </div>
+
+                                {/* Description */}
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                                        Deskripsi
+                                    </label>
+                                    <textarea
+                                        value={formData.description}
+                                        onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                                        rows={3}
+                                        className="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 px-4 py-2.5 text-gray-900 dark:text-white focus:ring-2 focus:ring-brand-500 focus:border-transparent outline-none resize-none"
+                                        placeholder="Deskripsi singkat program kerja"
+                                    />
+                                </div>
+
+                                {/* Owner Type & Division */}
+                                <div className="grid grid-cols-2 gap-4">
+                                    <div>
+                                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                                            Pemilik <span className="text-red-500">*</span>
+                                        </label>
+                                        <select
+                                            value={formData.owner_type}
+                                            onChange={(e) => setFormData({
+                                                ...formData,
+                                                owner_type: e.target.value as 'hima' | 'division',
+                                                division_id: e.target.value === 'hima' ? '' : formData.division_id
+                                            })}
+                                            className="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 px-4 py-2.5 text-gray-900 dark:text-white focus:ring-2 focus:ring-brand-500 focus:border-transparent outline-none"
+                                        >
+                                            <option value="hima">HIMA Inti</option>
+                                            <option value="division">Divisi</option>
+                                        </select>
+                                    </div>
+
+                                    {formData.owner_type === 'division' && (
+                                        <div>
+                                            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                                                Divisi <span className="text-red-500">*</span>
+                                            </label>
+                                            <select
+                                                value={formData.division_id}
+                                                onChange={(e) => setFormData({ ...formData, division_id: e.target.value })}
+                                                className="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 px-4 py-2.5 text-gray-900 dark:text-white focus:ring-2 focus:ring-brand-500 focus:border-transparent outline-none"
+                                                required
+                                            >
+                                                <option value="">Pilih Divisi</option>
+                                                {divisions.map((div) => (
+                                                    <option key={div.id} value={div.id}>{div.name}</option>
+                                                ))}
+                                            </select>
+                                        </div>
+                                    )}
+                                </div>
+
+                                {/* Period */}
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                                        Periode <span className="text-red-500">*</span>
+                                    </label>
+                                    <select
+                                        value={formData.period_id}
+                                        onChange={(e) => setFormData({ ...formData, period_id: e.target.value })}
+                                        className="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 px-4 py-2.5 text-gray-900 dark:text-white focus:ring-2 focus:ring-brand-500 focus:border-transparent outline-none"
+                                        required
+                                    >
+                                        <option value="">Pilih Periode</option>
+                                        {periods.map((period) => (
+                                            <option key={period.id} value={period.id}>
+                                                {period.name} {period.is_active && '(Aktif)'}
+                                            </option>
+                                        ))}
+                                    </select>
+                                </div>
+
+                                {/* Status & Priority */}
+                                <div className="grid grid-cols-2 gap-4">
+                                    <div>
+                                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                                            Status
+                                        </label>
+                                        <select
+                                            value={formData.status}
+                                            onChange={(e) => setFormData({ ...formData, status: e.target.value as ProgramKerja['status'] })}
+                                            className="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 px-4 py-2.5 text-gray-900 dark:text-white focus:ring-2 focus:ring-brand-500 focus:border-transparent outline-none"
+                                        >
+                                            <option value="direncanakan">Direncanakan</option>
+                                            <option value="berjalan">Berjalan</option>
+                                            <option value="selesai">Selesai</option>
+                                            <option value="dibatalkan">Dibatalkan</option>
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                                            Prioritas
+                                        </label>
+                                        <select
+                                            value={formData.priority}
+                                            onChange={(e) => setFormData({ ...formData, priority: e.target.value as ProgramKerja['priority'] })}
+                                            className="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 px-4 py-2.5 text-gray-900 dark:text-white focus:ring-2 focus:ring-brand-500 focus:border-transparent outline-none"
+                                        >
+                                            <option value="tinggi">Tinggi</option>
+                                            <option value="sedang">Sedang</option>
+                                            <option value="rendah">Rendah</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                {/* Dates */}
+                                <div className="grid grid-cols-2 gap-4">
+                                    <div>
+                                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                                            Tanggal Mulai
+                                        </label>
+                                        <input
+                                            type="date"
+                                            value={formData.start_date}
+                                            onChange={(e) => setFormData({ ...formData, start_date: e.target.value })}
+                                            className="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 px-4 py-2.5 text-gray-900 dark:text-white focus:ring-2 focus:ring-brand-500 focus:border-transparent outline-none"
+                                        />
+                                    </div>
+                                    <div>
+                                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                                            Tanggal Selesai
+                                        </label>
+                                        <input
+                                            type="date"
+                                            value={formData.end_date}
+                                            onChange={(e) => setFormData({ ...formData, end_date: e.target.value })}
+                                            className="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 px-4 py-2.5 text-gray-900 dark:text-white focus:ring-2 focus:ring-brand-500 focus:border-transparent outline-none"
+                                        />
+                                    </div>
+                                </div>
+
+                                {/* Actions */}
+                                <div className="flex justify-end gap-3 pt-4 border-t border-gray-200 dark:border-gray-700">
+                                    <button
+                                        type="button"
+                                        onClick={() => setShowModal(false)}
+                                        className="px-4 py-2.5 text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors"
+                                    >
+                                        Batal
+                                    </button>
+                                    <button
+                                        type="submit"
+                                        disabled={saving}
+                                        className="px-4 py-2.5 text-sm font-medium text-white bg-brand-500 rounded-lg hover:bg-brand-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                                    >
+                                        {saving ? 'Menyimpan...' : editingProgram ? 'Simpan Perubahan' : 'Tambah Program'}
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                )
+            }
 
             {/* Delete Confirmation Modal */}
             <DeleteConfirmationModal

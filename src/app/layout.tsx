@@ -6,6 +6,7 @@ import type { Metadata } from 'next';
 
 const outfit = Outfit({
   subsets: ["latin"],
+  variable: "--font-outfit",
 });
 
 export const metadata: Metadata = {
@@ -23,7 +24,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="id">
-      <body className={`${outfit.className} dark:bg-gray-900`}>
+      <body className={`${outfit.variable} ${outfit.className} dark:bg-gray-900`}>
         <Providers>{children}</Providers>
       </body>
     </html>

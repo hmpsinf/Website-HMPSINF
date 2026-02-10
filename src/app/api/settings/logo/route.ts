@@ -17,7 +17,7 @@ export async function POST(request: Request) {
 
     const formData = await request.formData();
     const file = formData.get('file') as File | null;
-    const type = formData.get('type') as string; // 'logo' or 'logo_dark' or 'favicon'
+    const type = formData.get('type') as string; // 'logo' | 'logo_dark' | 'favicon' | 'hero_bg' | 'hero_side_image'
 
     if (!file) {
       return NextResponse.json(
@@ -26,9 +26,9 @@ export async function POST(request: Request) {
       );
     }
 
-    if (!['logo', 'logo_dark', 'favicon'].includes(type)) {
+    if (!['logo', 'logo_dark', 'favicon', 'hero_bg', 'hero_side_image'].includes(type)) {
       return NextResponse.json(
-        { error: 'Tipe logo tidak valid' },
+        { error: 'Tipe tidak valid' },
         { status: 400 }
       );
     }
@@ -42,18 +42,30 @@ export async function POST(request: Request) {
       );
     }
 
-    // Validate file size (max 1MB for logos)
-    const maxSize = 1 * 1024 * 1024;
+    // Validate file size (1MB for logos/favicon/side_image, 5MB for hero_bg)
+    // Validate file size (1MB for logos/favicon, 2MB for side_image, 5MB for hero_bg)
+    let maxSize = 1 * 1024 * 1024; // Default 1MB
+    if (type === 'hero_bg') maxSize = 5 * 1024 * 1024;
+    else if (type === 'hero_side_image') maxSize = 2 * 1024 * 1024;
+
     if (file.size > maxSize) {
+      const maxMb = maxSize / (1024 * 1024);
       return NextResponse.json(
-        { error: 'Ukuran file maksimal 1MB' },
+        { error: `Ukuran file maksimal ${maxMb}MB` },
         { status: 400 }
       );
     }
 
-    // Get current public_id to delete old image
-    const urlKey = type === 'logo' ? 'logo_url' : type === 'logo_dark' ? 'logo_dark_url' : 'favicon_url';
-    const publicIdKey = type === 'logo' ? 'logo_public_id' : type === 'logo_dark' ? 'logo_dark_public_id' : 'favicon_public_id';
+    // Key mapping for each type
+    const keyMap: Record<string, { url: string; publicId: string }> = {
+      logo: { url: 'logo_url', publicId: 'logo_public_id' },
+      logo_dark: { url: 'logo_dark_url', publicId: 'logo_dark_public_id' },
+      favicon: { url: 'favicon_url', publicId: 'favicon_public_id' },
+      hero_bg: { url: 'hero_bg_image', publicId: 'hero_bg_public_id' },
+      hero_side_image: { url: 'hero_side_image', publicId: 'hero_side_image_public_id' },
+    };
+    const urlKey = keyMap[type].url;
+    const publicIdKey = keyMap[type].publicId;
     
     const currentResult = await db.execute({
       sql: 'SELECT value FROM site_settings WHERE key = ?',
@@ -86,14 +98,14 @@ export async function POST(request: Request) {
       }
     }
 
-    // Update database
+    // Upsert database
     await db.execute({
-      sql: 'UPDATE site_settings SET value = ?, updated_at = CURRENT_TIMESTAMP WHERE key = ?',
-      args: [uploadResult.url, urlKey],
+      sql: `INSERT OR REPLACE INTO site_settings (key, value, updated_at) VALUES (?, ?, CURRENT_TIMESTAMP)`,
+      args: [urlKey, uploadResult.url],
     });
     await db.execute({
-      sql: 'UPDATE site_settings SET value = ?, updated_at = CURRENT_TIMESTAMP WHERE key = ?',
-      args: [uploadResult.publicId, publicIdKey],
+      sql: `INSERT OR REPLACE INTO site_settings (key, value, updated_at) VALUES (?, ?, CURRENT_TIMESTAMP)`,
+      args: [publicIdKey, uploadResult.publicId],
     });
 
     return NextResponse.json({
@@ -123,17 +135,24 @@ export async function DELETE(request: Request) {
     }
 
     const { searchParams } = new URL(request.url);
-    const type = searchParams.get('type'); // 'logo' or 'logo_dark' or 'favicon'
+    const type = searchParams.get('type'); // 'logo' | 'logo_dark' | 'favicon' | 'hero_bg' | 'hero_side_image'
 
-    if (!type || !['logo', 'logo_dark', 'favicon'].includes(type)) {
+    if (!type || !['logo', 'logo_dark', 'favicon', 'hero_bg', 'hero_side_image'].includes(type)) {
       return NextResponse.json(
-        { error: 'Tipe logo tidak valid' },
+        { error: 'Tipe tidak valid' },
         { status: 400 }
       );
     }
 
-    const urlKey = type === 'logo' ? 'logo_url' : type === 'logo_dark' ? 'logo_dark_url' : 'favicon_url';
-    const publicIdKey = type === 'logo' ? 'logo_public_id' : type === 'logo_dark' ? 'logo_dark_public_id' : 'favicon_public_id';
+    const keyMap: Record<string, { url: string; publicId: string }> = {
+      logo: { url: 'logo_url', publicId: 'logo_public_id' },
+      logo_dark: { url: 'logo_dark_url', publicId: 'logo_dark_public_id' },
+      favicon: { url: 'favicon_url', publicId: 'favicon_public_id' },
+      hero_bg: { url: 'hero_bg_image', publicId: 'hero_bg_public_id' },
+      hero_side_image: { url: 'hero_side_image', publicId: 'hero_side_image_public_id' },
+    };
+    const urlKey = keyMap[type].url;
+    const publicIdKey = keyMap[type].publicId;
 
     // Get current public_id
     const result = await db.execute({
@@ -152,11 +171,11 @@ export async function DELETE(request: Request) {
 
     // Clear values in database
     await db.execute({
-      sql: 'UPDATE site_settings SET value = NULL, updated_at = CURRENT_TIMESTAMP WHERE key = ?',
+      sql: `INSERT OR REPLACE INTO site_settings (key, value, updated_at) VALUES (?, NULL, CURRENT_TIMESTAMP)`,
       args: [urlKey],
     });
     await db.execute({
-      sql: 'UPDATE site_settings SET value = NULL, updated_at = CURRENT_TIMESTAMP WHERE key = ?',
+      sql: `INSERT OR REPLACE INTO site_settings (key, value, updated_at) VALUES (?, NULL, CURRENT_TIMESTAMP)`,
       args: [publicIdKey],
     });
 

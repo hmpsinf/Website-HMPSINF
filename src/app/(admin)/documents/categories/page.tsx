@@ -189,9 +189,9 @@ export default function DocumentCategoriesPage() {
             <PageBreadcrumb pageTitle="Kategori Dokumen" />
 
 
-            <div className="space-y-6">
+            <div className="rounded-2xl border border-gray-200 bg-white dark:border-gray-800 dark:bg-white/[0.03]">
                 {/* Header */}
-                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                <div className="flex flex-col gap-4 border-b border-gray-200 px-6 py-4 dark:border-gray-800 sm:flex-row sm:items-center sm:justify-between">
                     <div>
                         <h2 className="text-lg font-semibold text-gray-800 dark:text-white">
                             Kelola Kategori
@@ -202,96 +202,98 @@ export default function DocumentCategoriesPage() {
                     </div>
                     <button
                         onClick={openCreateModal}
-                        className="inline-flex items-center gap-2 rounded-lg bg-brand-500 px-4 py-2.5 text-sm font-medium text-white hover:bg-brand-600 transition-colors"
+                        className="inline-flex w-fit items-center justify-center gap-2 rounded-lg bg-brand-500 px-4 py-2.5 text-sm font-medium text-white hover:bg-brand-600 transition-colors focus:outline-none focus:ring-2 focus:ring-brand-500/40"
                     >
                         <Plus className="h-4 w-4" />
                         Tambah Kategori
                     </button>
                 </div>
 
-                {/* Categories List */}
-                {loading ? (
-                    <div className="grid gap-4">
-                        <CategorySkeleton />
-                        <CategorySkeleton />
-                        <CategorySkeleton />
-                    </div>
-                ) : categories.length === 0 ? (
-                    <div className="flex flex-col items-center justify-center rounded-xl border border-dashed border-gray-300 bg-gray-50 py-12 text-center dark:border-gray-700 dark:bg-gray-800/50">
-                        <div className="mb-3 rounded-full bg-gray-100 p-3 dark:bg-gray-800">
-                            <FolderOpen className="h-6 w-6 text-gray-400" />
+                <div className="p-6">
+                    {/* Categories List */}
+                    {loading ? (
+                        <div className="grid gap-4">
+                            <CategorySkeleton />
+                            <CategorySkeleton />
+                            <CategorySkeleton />
                         </div>
-                        <h3 className="mb-1 text-sm font-medium text-gray-800 dark:text-white">
-                            Belum ada kategori
-                        </h3>
-                        <p className="mb-4 text-sm text-gray-500 dark:text-gray-400">
-                            Buat kategori untuk mengorganisir dokumen
-                        </p>
-                        <button
-                            onClick={openCreateModal}
-                            className="inline-flex items-center gap-2 rounded-lg bg-brand-500 px-4 py-2 text-sm font-medium text-white hover:bg-brand-600 transition-colors"
-                        >
-                            <Plus className="h-4 w-4" />
-                            Tambah Kategori
-                        </button>
-                    </div>
-                ) : (
-                    <div className="grid gap-4">
-                        {categories.map((category) => (
-                            <div
-                                key={category.id}
-                                className="group rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-white/[0.03] p-5 transition-shadow hover:shadow-theme-md"
+                    ) : categories.length === 0 ? (
+                        <div className="flex flex-col items-center justify-center rounded-xl border border-dashed border-gray-300 bg-gray-50 py-12 text-center dark:border-gray-700 dark:bg-gray-800/50">
+                            <div className="mb-3 rounded-full bg-gray-100 p-3 dark:bg-gray-800">
+                                <FolderOpen className="h-6 w-6 text-gray-400" />
+                            </div>
+                            <h3 className="mb-1 text-sm font-medium text-gray-800 dark:text-white">
+                                Belum ada kategori
+                            </h3>
+                            <p className="mb-4 text-sm text-gray-500 dark:text-gray-400">
+                                Buat kategori untuk mengorganisir dokumen
+                            </p>
+                            <button
+                                onClick={openCreateModal}
+                                className="inline-flex items-center gap-2 rounded-lg bg-brand-500 px-4 py-2 text-sm font-medium text-white hover:bg-brand-600 transition-colors"
                             >
-                                <div className="flex items-start gap-4">
-                                    {/* Color indicator */}
-                                    <div
-                                        className="w-12 h-12 rounded-xl flex items-center justify-center shrink-0"
-                                        style={{ backgroundColor: `${category.color}20` }}
-                                    >
-                                        <FolderOpen
-                                            className="h-6 w-6"
-                                            style={{ color: category.color }}
-                                        />
-                                    </div>
+                                <Plus className="h-4 w-4" />
+                                Tambah Kategori
+                            </button>
+                        </div>
+                    ) : (
+                        <div className="grid gap-4">
+                            {categories.map((category) => (
+                                <div
+                                    key={category.id}
+                                    className="group rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-white/[0.03] p-5 transition-shadow hover:shadow-theme-md"
+                                >
+                                    <div className="flex items-start gap-4">
+                                        {/* Color indicator */}
+                                        <div
+                                            className="w-12 h-12 rounded-xl flex items-center justify-center shrink-0"
+                                            style={{ backgroundColor: `${category.color}20` }}
+                                        >
+                                            <FolderOpen
+                                                className="h-6 w-6"
+                                                style={{ color: category.color }}
+                                            />
+                                        </div>
 
-                                    {/* Content */}
-                                    <div className="flex-1 min-w-0">
-                                        <h3 className="text-base font-semibold text-gray-800 dark:text-white truncate">
-                                            {category.name}
-                                        </h3>
-                                        {category.description && (
-                                            <p className="text-sm text-gray-500 dark:text-gray-400 mt-0.5 line-clamp-2">
-                                                {category.description}
+                                        {/* Content */}
+                                        <div className="flex-1 min-w-0">
+                                            <h3 className="text-base font-semibold text-gray-800 dark:text-white truncate">
+                                                {category.name}
+                                            </h3>
+                                            {category.description && (
+                                                <p className="text-sm text-gray-500 dark:text-gray-400 mt-0.5 line-clamp-2">
+                                                    {category.description}
+                                                </p>
+                                            )}
+                                            <p className="text-xs text-gray-400 dark:text-gray-500 mt-1.5">
+                                                {category.document_count} dokumen
                                             </p>
-                                        )}
-                                        <p className="text-xs text-gray-400 dark:text-gray-500 mt-1.5">
-                                            {category.document_count} dokumen
-                                        </p>
-                                    </div>
+                                        </div>
 
-                                    {/* Actions */}
-                                    <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                                        <button
-                                            onClick={() => openEditModal(category)}
-                                            className="p-2 rounded-lg text-gray-500 hover:text-brand-500 hover:bg-brand-50 dark:hover:bg-brand-500/10 transition-colors"
-                                            title="Edit"
-                                        >
-                                            <Edit2 className="h-4 w-4" />
-                                        </button>
-                                        <button
-                                            onClick={() => confirmDelete(category)}
-                                            disabled={deletingId === category.id}
-                                            className="p-2 rounded-lg text-gray-500 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10 transition-colors disabled:opacity-50"
-                                            title="Hapus"
-                                        >
-                                            <Trash2 className="h-4 w-4" />
-                                        </button>
+                                        {/* Actions */}
+                                        <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                                            <button
+                                                onClick={() => openEditModal(category)}
+                                                className="p-2 rounded-lg text-gray-500 hover:text-brand-500 hover:bg-brand-50 dark:hover:bg-brand-500/10 transition-colors"
+                                                title="Edit"
+                                            >
+                                                <Edit2 className="h-4 w-4" />
+                                            </button>
+                                            <button
+                                                onClick={() => confirmDelete(category)}
+                                                disabled={deletingId === category.id}
+                                                className="p-2 rounded-lg text-gray-500 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10 transition-colors disabled:opacity-50"
+                                                title="Hapus"
+                                            >
+                                                <Trash2 className="h-4 w-4" />
+                                            </button>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        ))}
-                    </div>
-                )}
+                            ))}
+                        </div>
+                    )}
+                </div>
             </div>
 
             {/* Modal */}

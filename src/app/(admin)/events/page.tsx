@@ -414,218 +414,223 @@ export default function EventsPage() {
                 </div>
 
                 {/* Header & Actions */}
-                <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
-                    <div>
-                        <h2 className="text-lg font-semibold text-gray-800 dark:text-white">
-                            Manajemen Event
-                        </h2>
-                        <p className="text-sm text-gray-500 dark:text-gray-400">
-                            Kelola event dan kegiatan HIMA
-                        </p>
-                    </div>
-                    <button
-                        onClick={() => { resetForm(); setShowCreateModal(true); }}
-                        className="inline-flex items-center gap-2 rounded-lg bg-brand-500 px-4 py-2.5 text-sm font-medium text-white hover:bg-brand-600 transition-colors"
-                    >
-                        <Plus className="h-4 w-4" />
-                        Tambah Event
-                    </button>
-                </div>
-
-                {/* Filters */}
-                <div className="flex flex-col sm:flex-row gap-3">
-                    <div className="relative flex-1">
-                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
-                        <input
-                            type="text"
-                            placeholder="Cari event..."
-                            value={search}
-                            onChange={(e) => setSearch(e.target.value)}
-                            className="w-full pl-10 pr-4 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-brand-500 focus:border-transparent"
-                        />
-                        {search && (
-                            <button
-                                onClick={() => setSearch('')}
-                                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
-                            >
-                                <X className="h-4 w-4" />
-                            </button>
-                        )}
-                    </div>
-                    <div className="relative">
-                        <Filter className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
-                        <select
-                            value={statusFilter}
-                            onChange={(e) => setStatusFilter(e.target.value)}
-                            className="pl-10 pr-8 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-brand-500 focus:border-transparent appearance-none"
+                <div className="rounded-2xl border border-gray-200 bg-white dark:border-gray-800 dark:bg-white/[0.03]">
+                    <div className="flex flex-col gap-4 border-b px-6 py-4 dark:border-gray-800 sm:flex-row sm:items-center sm:justify-between">
+                        <div>
+                            <h2 className="text-lg font-semibold text-gray-800 dark:text-white">
+                                Manajemen Event
+                            </h2>
+                            <p className="text-sm text-gray-500 dark:text-gray-400">
+                                Kelola event dan kegiatan HIMA
+                            </p>
+                        </div>
+                        <button
+                            onClick={() => { resetForm(); setShowCreateModal(true); }}
+                            className="inline-flex w-fit items-center justify-center gap-2 rounded-lg bg-brand-500 px-4 py-2.5 text-sm font-medium text-white hover:bg-brand-600 transition-colors focus:outline-none focus:ring-2 focus:ring-brand-500/40"
                         >
-                            <option value="">Semua Status</option>
-                            <option value="open">Buka</option>
-                            <option value="closed">Tutup</option>
-                        </select>
+                            <Plus className="h-4 w-4" />
+                            Tambah Event
+                        </button>
                     </div>
-                </div>
 
-                {/* Events Grid */}
-                {loading ? (
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-                        {[1, 2, 3, 4, 5, 6].map((i) => (
-                            <CardSkeleton key={i} />
-                        ))}
-                    </div>
-                ) : events.length === 0 ? (
-                    <div className="text-center py-16 bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700">
-                        <Calendar className="mx-auto h-12 w-12 text-gray-400" />
-                        <h3 className="mt-4 text-lg font-medium text-gray-900 dark:text-white">
-                            Belum ada event
-                        </h3>
-                        <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
-                            {search || statusFilter ? 'Tidak ada event yang cocok dengan filter' : 'Mulai dengan menambahkan event baru'}
-                        </p>
-                        {!search && !statusFilter && (
-                            <button
-                                onClick={() => { resetForm(); setShowCreateModal(true); }}
-                                className="mt-4 inline-flex items-center gap-2 px-4 py-2 bg-brand-500 text-white rounded-lg hover:bg-brand-600 transition-colors text-sm font-medium"
-                            >
-                                <Plus className="h-4 w-4" />
-                                Tambah Event Pertama
-                            </button>
-                        )}
-                    </div>
-                ) : (
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-                        {events.map((event) => (
-                            <div
-                                key={event.id}
-                                className="group bg-white dark:bg-gray-800 rounded-2xl overflow-hidden border border-gray-200 dark:border-gray-700 hover:shadow-lg transition-all duration-200"
-                            >
-                                {/* Thumbnail */}
-                                <div className="relative aspect-[4/5] bg-gray-100 dark:bg-gray-700">
-                                    {event.thumbnail_url ? (
-                                        <Image
-                                            src={event.thumbnail_url}
-                                            alt={event.title}
-                                            fill
-                                            className="object-cover"
-                                        />
-                                    ) : (
-                                        <div className="absolute inset-0 flex items-center justify-center">
-                                            <Calendar className="h-16 w-16 text-gray-300 dark:text-gray-600" />
+                    <div className="p-6 space-y-6">
+
+                        {/* Filters */}
+                        <div className="flex flex-col sm:flex-row gap-3">
+                            <div className="relative flex-1">
+                                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+                                <input
+                                    type="text"
+                                    placeholder="Cari event..."
+                                    value={search}
+                                    onChange={(e) => setSearch(e.target.value)}
+                                    className="w-full pl-10 pr-4 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-brand-500 focus:border-transparent"
+                                />
+                                {search && (
+                                    <button
+                                        onClick={() => setSearch('')}
+                                        className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
+                                    >
+                                        <X className="h-4 w-4" />
+                                    </button>
+                                )}
+                            </div>
+                            <div className="relative">
+                                <Filter className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+                                <select
+                                    value={statusFilter}
+                                    onChange={(e) => setStatusFilter(e.target.value)}
+                                    className="pl-10 pr-8 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-brand-500 focus:border-transparent appearance-none"
+                                >
+                                    <option value="">Semua Status</option>
+                                    <option value="open">Buka</option>
+                                    <option value="closed">Tutup</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        {/* Events Grid */}
+                        {loading ? (
+                            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+                                {[1, 2, 3, 4, 5, 6].map((i) => (
+                                    <CardSkeleton key={i} />
+                                ))}
+                            </div>
+                        ) : events.length === 0 ? (
+                            <div className="text-center py-16 bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700">
+                                <Calendar className="mx-auto h-12 w-12 text-gray-400" />
+                                <h3 className="mt-4 text-lg font-medium text-gray-900 dark:text-white">
+                                    Belum ada event
+                                </h3>
+                                <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
+                                    {search || statusFilter ? 'Tidak ada event yang cocok dengan filter' : 'Mulai dengan menambahkan event baru'}
+                                </p>
+                                {!search && !statusFilter && (
+                                    <button
+                                        onClick={() => { resetForm(); setShowCreateModal(true); }}
+                                        className="mt-4 inline-flex items-center gap-2 px-4 py-2 bg-brand-500 text-white rounded-lg hover:bg-brand-600 transition-colors text-sm font-medium"
+                                    >
+                                        <Plus className="h-4 w-4" />
+                                        Tambah Event Pertama
+                                    </button>
+                                )}
+                            </div>
+                        ) : (
+                            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+                                {events.map((event) => (
+                                    <div
+                                        key={event.id}
+                                        className="group bg-white dark:bg-gray-800 rounded-2xl overflow-hidden border border-gray-200 dark:border-gray-700 hover:shadow-lg transition-all duration-200"
+                                    >
+                                        {/* Thumbnail */}
+                                        <div className="relative aspect-[4/5] bg-gray-100 dark:bg-gray-700">
+                                            {event.thumbnail_url ? (
+                                                <Image
+                                                    src={event.thumbnail_url}
+                                                    alt={event.title}
+                                                    fill
+                                                    className="object-cover"
+                                                />
+                                            ) : (
+                                                <div className="absolute inset-0 flex items-center justify-center">
+                                                    <Calendar className="h-16 w-16 text-gray-300 dark:text-gray-600" />
+                                                </div>
+                                            )}
+                                            {/* Status Badge */}
+                                            <div className="absolute top-3 left-3 flex flex-col gap-1.5">
+                                                <span className={`inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium ${event.is_open
+                                                    ? 'bg-green-100 text-green-700 dark:bg-green-900/50 dark:text-green-300'
+                                                    : 'bg-red-100 text-red-700 dark:bg-red-900/50 dark:text-red-300'
+                                                    }`}>
+                                                    {event.is_open ? <CheckCircle className="h-3 w-3" /> : <XCircle className="h-3 w-3" />}
+                                                    {event.is_open ? 'Buka' : 'Tutup'}
+                                                </span>
+                                                <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium bg-gray-900/60 text-white">
+                                                    <Eye className="h-3 w-3" />
+                                                    {event.view_count}
+                                                </span>
+                                            </div>
+                                            {/* Actions Overlay */}
+                                            <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
+                                                <button
+                                                    onClick={() => setPreviewEvent(event)}
+                                                    className="p-2 bg-brand-500 text-white rounded-lg hover:bg-brand-600 transition-colors"
+                                                    title="Preview"
+                                                >
+                                                    <Eye className="h-4 w-4" />
+                                                </button>
+                                                <button
+                                                    onClick={() => openEditModal(event)}
+                                                    className="p-2 bg-white text-gray-700 rounded-lg hover:bg-gray-100 transition-colors"
+                                                    title="Edit"
+                                                >
+                                                    <Edit2 className="h-4 w-4" />
+                                                </button>
+                                                <button
+                                                    onClick={() => toggleStatus(event)}
+                                                    className={`p-2 rounded-lg transition-colors ${event.is_open
+                                                        ? 'bg-red-500 text-white hover:bg-red-600'
+                                                        : 'bg-green-500 text-white hover:bg-green-600'
+                                                        }`}
+                                                    title={event.is_open ? 'Tutup' : 'Buka'}
+                                                >
+                                                    {event.is_open ? <XCircle className="h-4 w-4" /> : <CheckCircle className="h-4 w-4" />}
+                                                </button>
+                                                <button
+                                                    onClick={() => confirmDelete(event)}
+                                                    className="p-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors"
+                                                    title="Hapus"
+                                                >
+                                                    <Trash2 className="h-4 w-4" />
+                                                </button>
+                                            </div>
                                         </div>
-                                    )}
-                                    {/* Status Badge */}
-                                    <div className="absolute top-3 left-3 flex flex-col gap-1.5">
-                                        <span className={`inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium ${event.is_open
-                                            ? 'bg-green-100 text-green-700 dark:bg-green-900/50 dark:text-green-300'
-                                            : 'bg-red-100 text-red-700 dark:bg-red-900/50 dark:text-red-300'
-                                            }`}>
-                                            {event.is_open ? <CheckCircle className="h-3 w-3" /> : <XCircle className="h-3 w-3" />}
-                                            {event.is_open ? 'Buka' : 'Tutup'}
-                                        </span>
-                                        <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium bg-gray-900/60 text-white">
-                                            <Eye className="h-3 w-3" />
-                                            {event.view_count}
-                                        </span>
-                                    </div>
-                                    {/* Actions Overlay */}
-                                    <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
-                                        <button
-                                            onClick={() => setPreviewEvent(event)}
-                                            className="p-2 bg-brand-500 text-white rounded-lg hover:bg-brand-600 transition-colors"
-                                            title="Preview"
-                                        >
-                                            <Eye className="h-4 w-4" />
-                                        </button>
-                                        <button
-                                            onClick={() => openEditModal(event)}
-                                            className="p-2 bg-white text-gray-700 rounded-lg hover:bg-gray-100 transition-colors"
-                                            title="Edit"
-                                        >
-                                            <Edit2 className="h-4 w-4" />
-                                        </button>
-                                        <button
-                                            onClick={() => toggleStatus(event)}
-                                            className={`p-2 rounded-lg transition-colors ${event.is_open
-                                                ? 'bg-red-500 text-white hover:bg-red-600'
-                                                : 'bg-green-500 text-white hover:bg-green-600'
-                                                }`}
-                                            title={event.is_open ? 'Tutup' : 'Buka'}
-                                        >
-                                            {event.is_open ? <XCircle className="h-4 w-4" /> : <CheckCircle className="h-4 w-4" />}
-                                        </button>
-                                        <button
-                                            onClick={() => confirmDelete(event)}
-                                            className="p-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors"
-                                            title="Hapus"
-                                        >
-                                            <Trash2 className="h-4 w-4" />
-                                        </button>
-                                    </div>
-                                </div>
 
-                                {/* Content */}
-                                <div className="p-4 space-y-2">
-                                    <h3 className="font-semibold text-gray-900 dark:text-white line-clamp-2">
-                                        {event.title}
-                                    </h3>
-                                    <div className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400">
-                                        <Calendar className="h-4 w-4 flex-shrink-0" />
-                                        <span>{formatDate(event.event_date)}</span>
-                                        {event.event_time && (
-                                            <>
-                                                <Clock className="h-4 w-4 flex-shrink-0 ml-1" />
-                                                <span>{event.event_time}</span>
-                                            </>
-                                        )}
+                                        {/* Content */}
+                                        <div className="p-4 space-y-2">
+                                            <h3 className="font-semibold text-gray-900 dark:text-white line-clamp-2">
+                                                {event.title}
+                                            </h3>
+                                            <div className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400">
+                                                <Calendar className="h-4 w-4 flex-shrink-0" />
+                                                <span>{formatDate(event.event_date)}</span>
+                                                {event.event_time && (
+                                                    <>
+                                                        <Clock className="h-4 w-4 flex-shrink-0 ml-1" />
+                                                        <span>{event.event_time}</span>
+                                                    </>
+                                                )}
+                                            </div>
+                                            <div className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400">
+                                                <MapPin className="h-4 w-4 flex-shrink-0" />
+                                                <span className="line-clamp-1">{event.location}</span>
+                                            </div>
+                                            {event.link_url && (
+                                                <a
+                                                    href={event.link_url}
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
+                                                    className="inline-flex items-center gap-1 text-sm text-brand-500 hover:text-brand-600 dark:text-brand-400"
+                                                >
+                                                    <ExternalLink className="h-3 w-3" />
+                                                    {event.link_text || 'Link Pendaftaran'}
+                                                </a>
+                                            )}
+                                        </div>
                                     </div>
-                                    <div className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400">
-                                        <MapPin className="h-4 w-4 flex-shrink-0" />
-                                        <span className="line-clamp-1">{event.location}</span>
-                                    </div>
-                                    {event.link_url && (
-                                        <a
-                                            href={event.link_url}
-                                            target="_blank"
-                                            rel="noopener noreferrer"
-                                            className="inline-flex items-center gap-1 text-sm text-brand-500 hover:text-brand-600 dark:text-brand-400"
-                                        >
-                                            <ExternalLink className="h-3 w-3" />
-                                            {event.link_text || 'Link Pendaftaran'}
-                                        </a>
-                                    )}
+                                ))}
+                            </div>
+                        )}
+
+                        {/* Pagination */}
+                        {pagination.totalPages > 1 && (
+                            <div className="flex items-center justify-between border-t border-gray-200 dark:border-gray-700 pt-4">
+                                <p className="text-sm text-gray-500 dark:text-gray-400">
+                                    Menampilkan {((pagination.page - 1) * pagination.limit) + 1} - {Math.min(pagination.page * pagination.limit, pagination.total)} dari {pagination.total} event
+                                </p>
+                                <div className="flex items-center gap-2">
+                                    <button
+                                        onClick={() => goToPage(pagination.page - 1)}
+                                        disabled={pagination.page === 1}
+                                        className="p-2 rounded-lg border border-gray-300 dark:border-gray-600 text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                                    >
+                                        <ChevronLeft className="h-4 w-4" />
+                                    </button>
+                                    <span className="text-sm text-gray-700 dark:text-gray-300">
+                                        {pagination.page} / {pagination.totalPages}
+                                    </span>
+                                    <button
+                                        onClick={() => goToPage(pagination.page + 1)}
+                                        disabled={pagination.page === pagination.totalPages}
+                                        className="p-2 rounded-lg border border-gray-300 dark:border-gray-600 text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                                    >
+                                        <ChevronRight className="h-4 w-4" />
+                                    </button>
                                 </div>
                             </div>
-                        ))}
+                        )}
                     </div>
-                )}
-
-                {/* Pagination */}
-                {pagination.totalPages > 1 && (
-                    <div className="flex items-center justify-between border-t border-gray-200 dark:border-gray-700 pt-4">
-                        <p className="text-sm text-gray-500 dark:text-gray-400">
-                            Menampilkan {((pagination.page - 1) * pagination.limit) + 1} - {Math.min(pagination.page * pagination.limit, pagination.total)} dari {pagination.total} event
-                        </p>
-                        <div className="flex items-center gap-2">
-                            <button
-                                onClick={() => goToPage(pagination.page - 1)}
-                                disabled={pagination.page === 1}
-                                className="p-2 rounded-lg border border-gray-300 dark:border-gray-600 text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-                            >
-                                <ChevronLeft className="h-4 w-4" />
-                            </button>
-                            <span className="text-sm text-gray-700 dark:text-gray-300">
-                                {pagination.page} / {pagination.totalPages}
-                            </span>
-                            <button
-                                onClick={() => goToPage(pagination.page + 1)}
-                                disabled={pagination.page === pagination.totalPages}
-                                className="p-2 rounded-lg border border-gray-300 dark:border-gray-600 text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-                            >
-                                <ChevronRight className="h-4 w-4" />
-                            </button>
-                        </div>
-                    </div>
-                )}
+                </div>
             </div>
 
             {/* Create Modal */}

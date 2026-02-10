@@ -750,3 +750,59 @@ span.flatpickr-weekday,
   opacity: 0.8;
   cursor: grabbing; /* Changes the cursor to indicate dragging */
 }
+
+/* ── Hero Button Fill Animation ── */
+.hero-btn {
+  position: relative;
+  overflow: hidden;
+  z-index: 0;
+  transition: color 0.35s ease;
+}
+
+.hero-btn::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  transform: scaleY(0);
+  transform-origin: bottom;
+  transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  border-radius: inherit;
+}
+
+.hero-btn:hover::before {
+  transform: scaleY(1);
+}
+
+/* Primary: black → white fill */
+.hero-btn-primary {
+  background-color: var(--color-brand-600);
+  color: #ffffff;
+}
+
+.hero-btn-primary::before {
+  background-color: #ffffff;
+}
+
+.hero-btn-primary:hover {
+  color: #000000;
+  border-color: #ffffff; 
+}
+
+/* Secondary: outline → white fill, text → brand-600 */
+.hero-btn-secondary {
+  background-color: transparent;
+  border: 1.5px solid #ffffff;
+  color: #ffffff;
+}
+
+.hero-btn-secondary::before {
+  background-color: #ffffff;
+}
+
+.hero-btn-secondary:hover {
+  color: #000000;
+  border-color: #ffffff;
+}
+
+

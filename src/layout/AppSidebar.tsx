@@ -36,7 +36,7 @@ const navItems: NavItem[] = [
   {
     icon: <GridIcon />,
     name: "Dashboard",
-    subItems: [{ name: "Ecommerce", path: "/", pro: false }],
+    subItems: [{ name: "Dashboard", path: "/dashboard", pro: false }],
   },
   {
     icon: <CalenderIcon />,
@@ -52,6 +52,13 @@ const navItems: NavItem[] = [
     icon: <DocsIcon />,
     name: "Site Settings",
     path: "/site-settings",
+  },
+  {
+    icon: <PageIcon />,
+    name: "Landing Page",
+    subItems: [
+      { name: "Hero Section", path: "/landing-page/hero", pro: false },
+    ],
   },
   {
     icon: <PageIcon />,
@@ -358,7 +365,7 @@ const AppSidebar: React.FC = () => {
         className={`py-8 flex items-center gap-3 ${!isExpanded && !isHovered ? "lg:justify-center" : "justify-start"
           }`}
       >
-        <Link href="/" className="flex items-center gap-3">
+        <Link href="/dashboard" className="flex items-center gap-3">
           {/* Skeleton Loading State */}
           {settingsLoading ? (
             isExpanded || isHovered || isMobileOpen ? (

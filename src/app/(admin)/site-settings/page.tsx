@@ -29,6 +29,7 @@ export default function SiteSettingsPage() {
     const logoInputRef = useRef<HTMLInputElement>(null);
     const logoDarkInputRef = useRef<HTMLInputElement>(null);
     const faviconInputRef = useRef<HTMLInputElement>(null);
+    // Removed hero inputs
 
     const [formData, setFormData] = useState<FormData>({
         site_name: "",
@@ -170,6 +171,8 @@ export default function SiteSettingsPage() {
             setUploadingLogo(null);
         }
     };
+
+    // Removed handleHeroBgUpload and handleDeleteHeroBg
 
     const Skeleton = ({ className }: { className?: string }) => (
         <div
@@ -620,6 +623,7 @@ export default function SiteSettingsPage() {
                     </div>
                 </div>
 
+                {/* Hero section moved to specific page */}
                 {/* Save Button (Global) */}
                 <div className="sticky bottom-4 flex justify-end">
                     <button
