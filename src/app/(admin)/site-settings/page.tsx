@@ -468,7 +468,7 @@ export default function SiteSettingsPage() {
                                         value={formData.footer_text}
                                         onChange={handleInputChange}
                                         className="w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-gray-800 focus:border-brand-500 focus:outline-none dark:border-gray-600 dark:text-white"
-                                        placeholder="© 2025 HMPSINF. All rights reserved."
+                                        placeholder="© 2026 HMPSINF. All rights reserved."
                                     />
                                 </div>
 

@@ -111,7 +111,7 @@ export async function getUpcomingEvents(limit = 3) {
     sql: `
       SELECT 
         id, title, thumbnail_url, event_date, event_end_date,
-        event_time, location, description, link_url, link_text, is_open
+        event_time, event_end_time, location, description, link_url, link_text, is_open
       FROM events
       WHERE is_open = 1
       ORDER BY event_date ASC
@@ -127,6 +127,7 @@ export async function getUpcomingEvents(limit = 3) {
     event_date: row.event_date as string,
     event_end_date: row.event_end_date as string | null,
     event_time: row.event_time as string | null,
+    event_end_time: row.event_end_time as string | null,
     location: row.location as string,
     description: row.description as string | null,
     link_url: row.link_url as string | null,
@@ -192,6 +193,21 @@ export async function getSiteSettings() {
     sambutan_section_subtitle: settings.sambutan_section_subtitle || "Pesan dari Ketua Himpunan Periode Ini",
     sambutan_content: settings.sambutan_content || "Selamat datang di website resmi HMPSINF...",
     hima_inti_pattern_color: settings.hima_inti_pattern_color || null,
+    // Video Section fields
+    landing_video_title: settings.landing_video_title || "Video Profil Himpunan",
+    landing_video_subtitle: settings.landing_video_subtitle || "Dokumentasi Kegiatan dan Profil HMPSINF",
+    landing_video_url: settings.landing_video_url || "https://www.youtube.com/embed/dQw4w9WgXcQ", // Placeholder default
+    landing_video_description: settings.landing_video_description || "Saksikan keseruan dan semangat kebersamaan dalam setiap kegiatan yang kami selenggarakan.",
+    landing_video_bg_image: settings.landing_video_bg_image || null,
+    landing_video_bg_attachment: settings.landing_video_bg_attachment || "fixed",
+    landing_video_overlay_opacity: settings.landing_video_overlay_opacity || "80", // number as string
+    landing_video_pattern_opacity: settings.landing_video_pattern_opacity || "10",
+    landing_video_footer_text: settings.landing_video_footer_text || "HMPSINF 2024",
+    // CTA Section
+    landing_cta_title: settings.landing_cta_title || "Siap Berinovasi Bersama Kami?",
+    landing_cta_subtitle: settings.landing_cta_subtitle || "Mari bergabung dan wujudkan masa depan teknologi bersama HMPSINF.",
+    landing_cta_btn_text: settings.landing_cta_btn_text || "Hubungi Kami",
+    landing_cta_btn_link: settings.landing_cta_btn_link || "/contact",
   };
 }
 

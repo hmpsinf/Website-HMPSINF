@@ -71,58 +71,53 @@ export default function PublicFooter({
                                 />
                             ) : null}
                             <span className="text-xl font-bold tracking-tight text-gray-900">
-                                {siteName.includes("INF") ? (
-                                    <>
-                                        {siteName.replace("INF", "")}
-                                        <span className="text-brand-500">INF</span>
-                                    </>
-                                ) : (
-                                    siteName
-                                )}
+                                {siteName}
                             </span>
                         </Link>
                         <p className="text-sm leading-relaxed text-gray-500">
-                            {footerText ||
-                                `${siteName}. Wadah aspirasi dan pengembangan potensi mahasiswa informatika.`}
+                            Wadah aspirasi dan pengembangan potensi mahasiswa informatika.
                         </p>
                     </div>
 
-                    {/* Kolom 2: Link Cepat */}
-                    <div>
-                        <h3 className="mb-4 text-xs font-semibold uppercase tracking-wider text-gray-900">
-                            Link Cepat
-                        </h3>
-                        <ul className="space-y-3">
-                            {quickLinks.map((link) => (
-                                <li key={link.href}>
-                                    <Link
-                                        href={link.href}
-                                        className="text-sm text-gray-500 transition-colors hover:text-brand-600"
-                                    >
-                                        {link.label}
-                                    </Link>
-                                </li>
-                            ))}
-                        </ul>
-                    </div>
+                    {/* Wrapper for Halaman & Profil - 2 columns on mobile */}
+                    <div className="col-span-1 grid grid-cols-2 gap-8 sm:col-span-2 sm:gap-12 lg:col-span-2">
+                        {/* Kolom 2: Link Cepat */}
+                        <div>
+                            <h3 className="mb-4 text-xs font-semibold uppercase tracking-wider text-gray-900">
+                                Halaman
+                            </h3>
+                            <ul className="space-y-3">
+                                {quickLinks.map((link) => (
+                                    <li key={link.href}>
+                                        <Link
+                                            href={link.href}
+                                            className="text-sm text-gray-500 transition-colors hover:text-brand-600"
+                                        >
+                                            {link.label}
+                                        </Link>
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
 
-                    {/* Kolom 3: Profil */}
-                    <div>
-                        <h3 className="mb-4 text-xs font-semibold uppercase tracking-wider text-gray-900">
-                            Profil
-                        </h3>
-                        <ul className="space-y-3">
-                            {profilLinks.map((link) => (
-                                <li key={link.href}>
-                                    <Link
-                                        href={link.href}
-                                        className="text-sm text-gray-500 transition-colors hover:text-brand-600"
-                                    >
-                                        {link.label}
-                                    </Link>
-                                </li>
-                            ))}
-                        </ul>
+                        {/* Kolom 3: Profil */}
+                        <div>
+                            <h3 className="mb-4 text-xs font-semibold uppercase tracking-wider text-gray-900">
+                                Profil
+                            </h3>
+                            <ul className="space-y-3">
+                                {profilLinks.map((link) => (
+                                    <li key={link.href}>
+                                        <Link
+                                            href={link.href}
+                                            className="text-sm text-gray-500 transition-colors hover:text-brand-600"
+                                        >
+                                            {link.label}
+                                        </Link>
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
                     </div>
 
                     {/* Kolom 4: Kontak & Sosial */}
@@ -169,8 +164,7 @@ export default function PublicFooter({
             <div className="border-t border-gray-200">
                 <div className="mx-auto max-w-7xl px-6 py-6">
                     <p className="text-center text-xs text-gray-400">
-                        &copy; {new Date().getFullYear()} {siteName}. Himpunan Mahasiswa Program Studi
-                        Informatika.
+                        {footerText || `© ${new Date().getFullYear()} ${siteName}. Hak Cipta Dilindungi.`}
                     </p>
                 </div>
             </div>

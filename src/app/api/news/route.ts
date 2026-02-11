@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from "next/server";
-import fs from 'fs';
 import db from "@/lib/db";
 import { v4 as uuidv4 } from "uuid";
 import { v2 as cloudinary } from "cloudinary";
@@ -127,12 +126,6 @@ export async function POST(request: NextRequest) {
     const meta_description = formData.get("meta_description") as string | null;
     const meta_keywords = formData.get("meta_keywords") as string | null;
     const author_name = formData.get("author_name") as string | null;
-
-    try {
-      fs.appendFileSync('debug-news.log', `[${new Date().toISOString()}] Create News - Title: ${title}, Author: ${author_name}\n`);
-    } catch (e) {
-      console.error('Failed to write to debug log', e);
-    }
     const thumbnail = formData.get("thumbnail") as File | null;
 
     if (!title || !title.trim()) {

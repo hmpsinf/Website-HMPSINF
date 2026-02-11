@@ -158,7 +158,10 @@ export default async function NewsSection() {
                 </div>
 
                 <div className="mt-8 text-center md:hidden">
-                    <Link href="/berita" className="inline-flex items-center gap-2 text-sm font-semibold text-brand-600 hover:text-brand-700">
+                    <Link
+                        href="/berita"
+                        className="inline-flex items-center gap-2 px-6 py-3 rounded-full border border-gray-200 text-sm font-medium text-gray-900 hover:bg-gray-50 transition-colors"
+                    >
                         Lihat Semua Berita
                         <ArrowRight className="h-4 w-4" />
                     </Link>

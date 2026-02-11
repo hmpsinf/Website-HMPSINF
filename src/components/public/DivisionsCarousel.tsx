@@ -53,7 +53,7 @@ export default function DivisionsCarousel({ divisions }: DivisionsCarouselProps)
             {/* Horizontal Scroll Container */}
             <div
                 ref={scrollContainerRef}
-                className="flex overflow-x-auto py-8 -mx-4 px-4 sm:px-0 sm:mx-0 snap-x snap-mandatory gap-6 no-scrollbar"
+                className="flex overflow-x-auto py-8 -mx-4 px-4 sm:mx-0 sm:px-2 snap-x snap-mandatory gap-6 no-scrollbar"
                 style={{ scrollPaddingLeft: '1rem', scrollPaddingRight: '1rem' }}
             >
                 {divisions.map((division) => (

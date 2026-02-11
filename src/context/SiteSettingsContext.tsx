@@ -33,6 +33,23 @@ export interface SiteSettings {
     sambutan_section_subtitle: string | null;
     sambutan_content: string | null;
     hima_inti_pattern_color: string | null;
+
+    // Video Section
+    landing_video_title: string | null;
+    landing_video_subtitle: string | null;
+    landing_video_url: string | null;
+    landing_video_description: string | null;
+    landing_video_bg_image: string | null;
+    landing_video_bg_attachment: string | null;
+    landing_video_overlay_opacity: string | null;
+    landing_video_pattern_opacity: string | null;
+    landing_video_footer_text: string | null;
+
+    // CTA Section
+    landing_cta_title: string | null;
+    landing_cta_subtitle: string | null;
+    landing_cta_btn_text: string | null;
+    landing_cta_btn_link: string | null;
 }
 
 interface SiteSettingsContextType {
@@ -72,6 +89,19 @@ const defaultSettings: SiteSettings = {
     sambutan_section_subtitle: null,
     sambutan_content: null,
     hima_inti_pattern_color: null,
+    landing_video_title: null,
+    landing_video_subtitle: null,
+    landing_video_url: null,
+    landing_video_description: null,
+    landing_video_bg_image: null,
+    landing_video_bg_attachment: null,
+    landing_video_overlay_opacity: null,
+    landing_video_pattern_opacity: null,
+    landing_video_footer_text: null,
+    landing_cta_title: null,
+    landing_cta_subtitle: null,
+    landing_cta_btn_text: null,
+    landing_cta_btn_link: null,
 };
 
 const SiteSettingsContext = createContext<SiteSettingsContextType | undefined>(undefined);

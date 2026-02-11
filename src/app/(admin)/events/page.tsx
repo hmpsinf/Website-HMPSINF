@@ -21,6 +21,7 @@ interface Event {
     event_date: string;
     event_end_date: string | null;
     event_time: string | null;
+    event_end_time: string | null;
     timeline: string | null;
     location: string;
     description: string | null;
@@ -47,19 +48,55 @@ interface Pagination {
 }
 
 // Format date
-function formatDate(dateString: string): string {
-    return new Date(dateString).toLocaleDateString('id-ID', {
+function formatDate(dateString: string, endDateString?: string | null): string {
+    const d = new Date(dateString);
+    const options: Intl.DateTimeFormatOptions = { day: 'numeric', month: 'long', year: 'numeric' };
+
+    if (endDateString && endDateString !== dateString) {
+        const endD = new Date(endDateString);
+        // Same year and month
+        if (d.getFullYear() === endD.getFullYear() && d.getMonth() === endD.getMonth()) {
+            return `${d.getDate()} - ${endD.getDate()} ${d.toLocaleDateString('id-ID', { month: 'long', year: 'numeric' })}`;
+        }
+        // Same year different month
+        if (d.getFullYear() === endD.getFullYear()) {
+            return `${d.getDate()} ${d.toLocaleDateString('id-ID', { month: 'short' })} - ${endD.getDate()} ${endD.toLocaleDateString('id-ID', { month: 'long', year: 'numeric' })}`;
+        }
+        // Different year
+        return `${d.toLocaleDateString('id-ID', options)} - ${endD.toLocaleDateString('id-ID', options)}`;
+    }
+    return d.toLocaleDateString('id-ID', {
+        day: 'numeric',
+        month: 'long',
+        year: 'numeric'
+    });
+    return d.toLocaleDateString('id-ID', {
         day: 'numeric',
         month: 'long',
         year: 'numeric'
     });
 }
 
+// Format time
+function formatTime(timeStr: string | null, endTimeStr?: string | null) {
+    if (!timeStr) return "";
+
+    const cleanTime = (t: string) => t.replace(/\s*WIB/i, "").trim();
+    const start = cleanTime(timeStr);
+
+    if (endTimeStr) {
+        const end = cleanTime(endTimeStr);
+        return `${start} - ${end} WIB`;
+    }
+
+    return `${start} WIB`;
+}
+
 // Card Skeleton
 function CardSkeleton() {
     return (
         <div className="animate-pulse bg-white dark:bg-gray-800 rounded-2xl overflow-hidden border border-gray-200 dark:border-gray-700">
-            <div className="aspect-[4/5] bg-gray-200 dark:bg-gray-700" />
+            <div className="aspect-4/5 bg-gray-200 dark:bg-gray-700" />
             <div className="p-4 space-y-3">
                 <div className="h-5 w-3/4 bg-gray-200 dark:bg-gray-700 rounded" />
                 <div className="h-4 w-1/2 bg-gray-100 dark:bg-gray-600 rounded" />
@@ -118,6 +155,7 @@ export default function EventsPage() {
         event_date: '',
         event_end_date: '',
         event_time: '',
+        event_end_time: '',
         timeline: '',
         location: '',
         description: '',
@@ -180,6 +218,7 @@ export default function EventsPage() {
             event_date: '',
             event_end_date: '',
             event_time: '',
+            event_end_time: '',
             timeline: '',
             location: '',
             description: '',
@@ -223,6 +262,7 @@ export default function EventsPage() {
             fd.append('event_date', formData.event_date);
             if (formData.event_end_date) fd.append('event_end_date', formData.event_end_date);
             if (formData.event_time) fd.append('event_time', formData.event_time);
+            if (formData.event_end_time) fd.append('event_end_time', formData.event_end_time);
             if (formData.timeline) fd.append('timeline', formData.timeline);
             fd.append('location', formData.location);
             if (formData.description) fd.append('description', formData.description);
@@ -262,6 +302,7 @@ export default function EventsPage() {
             event_date: event.event_date,
             event_end_date: event.event_end_date || '',
             event_time: event.event_time || '',
+            event_end_time: event.event_end_time || '',
             timeline: event.timeline || '',
             location: event.location,
             description: event.description || '',
@@ -291,6 +332,7 @@ export default function EventsPage() {
             fd.append('event_date', formData.event_date);
             if (formData.event_end_date) fd.append('event_end_date', formData.event_end_date);
             if (formData.event_time) fd.append('event_time', formData.event_time);
+            if (formData.event_end_time) fd.append('event_end_time', formData.event_end_time);
             if (formData.timeline) fd.append('timeline', formData.timeline);
             fd.append('location', formData.location);
             if (formData.description) fd.append('description', formData.description);
@@ -414,7 +456,7 @@ export default function EventsPage() {
                 </div>
 
                 {/* Header & Actions */}
-                <div className="rounded-2xl border border-gray-200 bg-white dark:border-gray-800 dark:bg-white/[0.03]">
+                <div className="rounded-2xl border border-gray-200 bg-white dark:border-gray-800 dark:bg-white/3">
                     <div className="flex flex-col gap-4 border-b px-6 py-4 dark:border-gray-800 sm:flex-row sm:items-center sm:justify-between">
                         <div>
                             <h2 className="text-lg font-semibold text-gray-800 dark:text-white">
@@ -503,7 +545,7 @@ export default function EventsPage() {
                                         className="group bg-white dark:bg-gray-800 rounded-2xl overflow-hidden border border-gray-200 dark:border-gray-700 hover:shadow-lg transition-all duration-200"
                                     >
                                         {/* Thumbnail */}
-                                        <div className="relative aspect-[4/5] bg-gray-100 dark:bg-gray-700">
+                                        <div className="relative aspect-4/5 bg-gray-100 dark:bg-gray-700">
                                             {event.thumbnail_url ? (
                                                 <Image
                                                     src={event.thumbnail_url}
@@ -525,7 +567,7 @@ export default function EventsPage() {
                                                     {event.is_open ? <CheckCircle className="h-3 w-3" /> : <XCircle className="h-3 w-3" />}
                                                     {event.is_open ? 'Buka' : 'Tutup'}
                                                 </span>
-                                                <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium bg-gray-900/60 text-white">
+                                                <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium bg-gray-900/60 text-white w-fit">
                                                     <Eye className="h-3 w-3" />
                                                     {event.view_count}
                                                 </span>
@@ -572,17 +614,19 @@ export default function EventsPage() {
                                                 {event.title}
                                             </h3>
                                             <div className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400">
-                                                <Calendar className="h-4 w-4 flex-shrink-0" />
-                                                <span>{formatDate(event.event_date)}</span>
+                                                <Calendar className="h-4 w-4 shrink-0" />
+                                                <span>{formatDate(event.event_date, event.event_end_date)}</span>
                                                 {event.event_time && (
                                                     <>
-                                                        <Clock className="h-4 w-4 flex-shrink-0 ml-1" />
-                                                        <span>{event.event_time}</span>
+                                                        <>
+                                                            <Clock className="h-4 w-4 shrink-0 ml-1" />
+                                                            <span>{formatTime(event.event_time, event.event_end_time)}</span>
+                                                        </>
                                                     </>
                                                 )}
                                             </div>
                                             <div className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400">
-                                                <MapPin className="h-4 w-4 flex-shrink-0" />
+                                                <MapPin className="h-4 w-4 shrink-0" />
                                                 <span className="line-clamp-1">{event.location}</span>
                                             </div>
                                             {event.link_url && (
@@ -699,10 +743,10 @@ export default function EventsPage() {
                                         fill
                                         className="object-cover"
                                     />
-                                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+                                    <div className="absolute inset-0 bg-linear-to-t from-black/60 to-transparent" />
                                 </div>
                             ) : (
-                                <div className="h-32 bg-gradient-to-r from-brand-500 to-brand-600" />
+                                <div className="h-32 bg-linear-to-r from-brand-500 to-brand-600" />
                             )}
 
                             {/* Close Button */}
@@ -767,7 +811,7 @@ export default function EventsPage() {
                                         <Clock className="h-5 w-5 text-brand-500 mt-0.5" />
                                         <div>
                                             <p className="text-sm font-medium text-gray-900 dark:text-white">Waktu</p>
-                                            <p className="text-sm text-gray-600 dark:text-gray-400">{previewEvent.event_time}</p>
+                                            <p className="text-sm text-gray-600 dark:text-gray-400">{formatTime(previewEvent.event_time, previewEvent.event_end_time)}</p>
                                         </div>
                                     </div>
                                 )}

@@ -2,6 +2,7 @@ import React from "react";
 import Image from "next/image";
 import { Instagram, MessageCircle } from "lucide-react";
 import { getPhotoPatternStyle, DEFAULT_HIMA_INTI_PATTERN_COLOR } from "@/lib/pattern";
+import SambutanText from "@/components/public/SambutanText";
 
 interface SambutanSectionProps {
     settings: {
@@ -120,12 +121,7 @@ export default function SambutanSection({ settings, ketua }: SambutanSectionProp
                             )}
                         </div>
 
-                        <div
-                            className="prose prose-lg prose-brand max-w-none text-gray-600 text-justify"
-                            dangerouslySetInnerHTML={{
-                                __html: settings.sambutan_content || "",
-                            }}
-                        />
+                        <SambutanText content={settings.sambutan_content} />
                     </div>
                 </div>
             </div>

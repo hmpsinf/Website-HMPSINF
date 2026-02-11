@@ -4,7 +4,7 @@ import { useState, useEffect, useCallback } from 'react';
 import {
     Plus, Search, X, Edit2, Trash2, Calendar,
     ChevronLeft, ChevronRight, Filter, ExternalLink,
-    CheckCircle, XCircle, Image as ImageIcon, Eye, FileText, Tag, MessageCircle
+    CheckCircle, XCircle, Image as ImageIcon, Eye, FileText, Tag, MessageCircle, User
 } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -878,9 +878,15 @@ export default function NewsPage() {
                                                 </span>
                                             </div>
                                         </div>
-                                        <div className="flex items-center gap-2 text-xs text-gray-400">
-                                            <Calendar className="h-3 w-3" />
-                                            {formatDate(item.created_at)}
+                                        <div className="flex items-center gap-4 text-xs text-gray-400">
+                                            <div className="flex items-center gap-1.5" title="Penulis">
+                                                <User className="h-3 w-3" />
+                                                {item.author_name || 'Admin'}
+                                            </div>
+                                            <div className="flex items-center gap-1.5" title="Tanggal">
+                                                <Calendar className="h-3 w-3" />
+                                                {formatDate(item.created_at)}
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -957,6 +963,9 @@ export default function NewsPage() {
                                                     {previewNews.category_name}
                                                 </span>
                                             )}
+                                            <span className="inline-flex items-center gap-1 text-xs text-gray-500">
+                                                <User className="h-3 w-3" /> {previewNews.author_name || 'Admin'}
+                                            </span>
                                             <span className="inline-flex items-center gap-1 text-xs text-gray-500">
                                                 <Eye className="h-3 w-3" /> {previewNews.view_count} views
                                             </span>

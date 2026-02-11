@@ -161,7 +161,7 @@ export default function HeroSettingsPage() {
         description: string;
         aspectRatioClass?: string;
     }) => (
-        <div className="rounded-2xl border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-white/[0.03]">
+        <div className="rounded-2xl border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-white/3">
             <h4 className="mb-2 text-lg font-semibold text-gray-800 dark:text-white/90">
                 {title}
             </h4>
@@ -229,10 +229,10 @@ export default function HeroSettingsPage() {
                     <Skeleton className="h-96 w-full" />
                 </div>
             ) : (
-                <div className="space-y-6">
-                    <form onSubmit={handleSaveSettings}>
+                <div className="rounded-lg bg-white p-6 dark:bg-gray-800 border border-gray-200 dark:border-gray-700">
+                    <form onSubmit={handleSaveSettings} className="space-y-6">
                         {/* Text Content */}
-                        <div className="rounded-2xl border border-gray-200 bg-white dark:border-gray-800 dark:bg-white/[0.03] mb-6">
+                        <div className="rounded-2xl border border-gray-200 bg-white dark:border-gray-800 dark:bg-white/3 mb-6">
                             <div className="border-b border-gray-200 px-6 py-4 dark:border-gray-800">
                                 <h3 className="text-lg font-semibold text-gray-800 dark:text-white/90">
                                     Konten Teks
@@ -344,7 +344,7 @@ export default function HeroSettingsPage() {
                         </div>
 
                         {/* Background Settings */}
-                        <div className="rounded-2xl border border-gray-200 bg-white dark:border-gray-800 dark:bg-white/[0.03] mb-6">
+                        <div className="rounded-2xl border border-gray-200 bg-white dark:border-gray-800 dark:bg-white/3 mb-6">
                             <div className="p-6">
                                 <label className="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-300">
                                     Ukuran Background

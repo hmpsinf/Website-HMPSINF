@@ -70,10 +70,10 @@ export default function SambutanSettingsPage() {
                 pageTitle="Sambutan Ketua Himpunan"
             />
 
-            <div className="mt-6">
+            <div className="rounded-lg bg-white p-6 dark:bg-gray-800 border border-gray-200 dark:border-gray-700">
                 <form onSubmit={handleSubmit} className="space-y-6">
                     {/* Content Settings */}
-                    <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-800 dark:bg-gray-900">
+                    <div className="rounded-2xl border border-gray-200 bg-white p-6 dark:border-gray-800 dark:bg-white/3">
                         <div className="mb-6 border-b border-gray-100 pb-4 dark:border-gray-800">
                             <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
                                 Konten Sambutan

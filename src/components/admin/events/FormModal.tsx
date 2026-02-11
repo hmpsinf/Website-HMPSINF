@@ -8,6 +8,7 @@ export interface EventFormData {
     event_date: string;
     event_end_date: string;
     event_time: string;
+    event_end_time: string;
     timeline: string;
     location: string;
     description: string;
@@ -124,7 +125,7 @@ export default function FormModal({
                     </div>
 
                     {/* Date & Time */}
-                    <div className="grid grid-cols-3 gap-4">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
                             <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                                 Tanggal Mulai <span className="text-red-500">*</span>
@@ -152,12 +153,23 @@ export default function FormModal({
                         </div>
                         <div>
                             <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                                Waktu
+                                Waktu Mulai
                             </label>
                             <input
                                 type="time"
                                 value={formData.event_time}
                                 onChange={(e) => setFormData({ ...formData, event_time: e.target.value })}
+                                className="w-full px-4 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-brand-500 focus:border-transparent"
+                            />
+                        </div>
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                                Waktu Selesai
+                            </label>
+                            <input
+                                type="time"
+                                value={formData.event_end_time}
+                                onChange={(e) => setFormData({ ...formData, event_end_time: e.target.value })}
                                 className="w-full px-4 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-brand-500 focus:border-transparent"
                             />
                         </div>

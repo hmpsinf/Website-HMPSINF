@@ -17,7 +17,7 @@ export async function POST(request: Request) {
 
     const formData = await request.formData();
     const file = formData.get('file') as File | null;
-    const type = formData.get('type') as string; // 'logo' | 'logo_dark' | 'favicon' | 'hero_bg' | 'hero_side_image'
+    const type = formData.get('type') as string; // 'logo' | 'logo_dark' | 'favicon' | 'hero_bg' | 'hero_side_image' | 'landing_video_bg_image'
 
     if (!file) {
       return NextResponse.json(
@@ -26,7 +26,7 @@ export async function POST(request: Request) {
       );
     }
 
-    if (!['logo', 'logo_dark', 'favicon', 'hero_bg', 'hero_side_image'].includes(type)) {
+    if (!['logo', 'logo_dark', 'favicon', 'hero_bg', 'hero_side_image', 'landing_video_bg_image'].includes(type)) {
       return NextResponse.json(
         { error: 'Tipe tidak valid' },
         { status: 400 }
@@ -42,10 +42,9 @@ export async function POST(request: Request) {
       );
     }
 
-    // Validate file size (1MB for logos/favicon/side_image, 5MB for hero_bg)
-    // Validate file size (1MB for logos/favicon, 2MB for side_image, 5MB for hero_bg)
+    // Validate file size (1MB for logos/favicon, 2MB for side_image, 5MB for hero_bg/video_bg)
     let maxSize = 1 * 1024 * 1024; // Default 1MB
-    if (type === 'hero_bg') maxSize = 5 * 1024 * 1024;
+    if (type === 'hero_bg' || type === 'landing_video_bg_image') maxSize = 5 * 1024 * 1024;
     else if (type === 'hero_side_image') maxSize = 2 * 1024 * 1024;
 
     if (file.size > maxSize) {
@@ -63,6 +62,7 @@ export async function POST(request: Request) {
       favicon: { url: 'favicon_url', publicId: 'favicon_public_id' },
       hero_bg: { url: 'hero_bg_image', publicId: 'hero_bg_public_id' },
       hero_side_image: { url: 'hero_side_image', publicId: 'hero_side_image_public_id' },
+      landing_video_bg_image: { url: 'landing_video_bg_image', publicId: 'landing_video_bg_image_public_id' },
     };
     const urlKey = keyMap[type].url;
     const publicIdKey = keyMap[type].publicId;
@@ -135,9 +135,9 @@ export async function DELETE(request: Request) {
     }
 
     const { searchParams } = new URL(request.url);
-    const type = searchParams.get('type'); // 'logo' | 'logo_dark' | 'favicon' | 'hero_bg' | 'hero_side_image'
+    const type = searchParams.get('type'); // 'logo' | 'logo_dark' | 'favicon' | 'hero_bg' | 'hero_side_image' | 'landing_video_bg_image'
 
-    if (!type || !['logo', 'logo_dark', 'favicon', 'hero_bg', 'hero_side_image'].includes(type)) {
+    if (!type || !['logo', 'logo_dark', 'favicon', 'hero_bg', 'hero_side_image', 'landing_video_bg_image'].includes(type)) {
       return NextResponse.json(
         { error: 'Tipe tidak valid' },
         { status: 400 }
@@ -150,6 +150,7 @@ export async function DELETE(request: Request) {
       favicon: { url: 'favicon_url', publicId: 'favicon_public_id' },
       hero_bg: { url: 'hero_bg_image', publicId: 'hero_bg_public_id' },
       hero_side_image: { url: 'hero_side_image', publicId: 'hero_side_image_public_id' },
+      landing_video_bg_image: { url: 'landing_video_bg_image', publicId: 'landing_video_bg_image_public_id' },
     };
     const urlKey = keyMap[type].url;
     const publicIdKey = keyMap[type].publicId;

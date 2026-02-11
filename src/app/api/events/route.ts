@@ -19,6 +19,7 @@ interface EventRow {
   event_date: string;
   event_end_date: string | null;
   event_time: string | null;
+  event_end_time: string | null;
   timeline: string | null;
   location: string;
   description: string | null;
@@ -94,6 +95,7 @@ export async function GET(request: NextRequest) {
       event_date: row.event_date,
       event_end_date: row.event_end_date,
       event_time: row.event_time,
+      event_end_time: row.event_end_time,
       timeline: row.timeline,
       location: row.location,
       description: row.description,
@@ -138,6 +140,7 @@ export async function POST(request: NextRequest) {
     const eventDate = formData.get("event_date") as string;
     const eventEndDate = formData.get("event_end_date") as string | null;
     const eventTime = formData.get("event_time") as string | null;
+    const eventEndTime = formData.get("event_end_time") as string | null;
     const timeline = formData.get("timeline") as string | null;
     const location = formData.get("location") as string;
     const description = formData.get("description") as string | null;
@@ -190,9 +193,9 @@ export async function POST(request: NextRequest) {
       sql: `
         INSERT INTO events (
           id, title, thumbnail_url, thumbnail_public_id, 
-          event_date, event_end_date, event_time, timeline, location, 
+          event_date, event_end_date, event_time, event_end_time, timeline, location, 
           description, kontak, link_url, link_text, is_open
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
       `,
       args: [
         id,
@@ -202,6 +205,7 @@ export async function POST(request: NextRequest) {
         eventDate,
         eventEndDate?.trim() || null,
         eventTime?.trim() || null,
+        eventEndTime?.trim() || null,
         timeline?.trim() || null,
         location.trim(),
         description?.trim() || null,
