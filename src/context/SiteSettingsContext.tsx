@@ -29,6 +29,10 @@ export interface SiteSettings {
     hero_bg_size: string | null;
     hero_side_image: string | null;
     hero_side_image_public_id: string | null;
+    sambutan_section_title: string | null;
+    sambutan_section_subtitle: string | null;
+    sambutan_content: string | null;
+    hima_inti_pattern_color: string | null;
 }
 
 interface SiteSettingsContextType {
@@ -64,6 +68,10 @@ const defaultSettings: SiteSettings = {
     hero_bg_size: null,
     hero_side_image: null,
     hero_side_image_public_id: null,
+    sambutan_section_title: null,
+    sambutan_section_subtitle: null,
+    sambutan_content: null,
+    hima_inti_pattern_color: null,
 };
 
 const SiteSettingsContext = createContext<SiteSettingsContextType | undefined>(undefined);

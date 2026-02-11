@@ -58,6 +58,7 @@ const navItems: NavItem[] = [
     name: "Landing Page",
     subItems: [
       { name: "Hero Section", path: "/landing-page/hero", pro: false },
+      { name: "Sambutan", path: "/landing-page/sambutan", pro: false },
     ],
   },
   {

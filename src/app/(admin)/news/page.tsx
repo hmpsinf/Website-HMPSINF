@@ -8,6 +8,7 @@ import {
 } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { useAuth } from "@/context/AuthContext";
 import PageBreadcrumb from '@/components/common/PageBreadCrumb';
 import { useToast } from '@/components/ui/Toast';
 import { DeleteConfirmationModal } from '@/components/ui/modal/DeleteConfirmationModal';
@@ -26,6 +27,7 @@ interface News {
     category_slug: string | null;
     is_published: boolean;
     view_count: number;
+    author_name: string | null;
     meta_title: string | null;
     meta_description: string | null;
     meta_keywords: string | null;
@@ -105,7 +107,9 @@ export default function NewsPage() {
     const [search, setSearch] = useState('');
     const [statusFilter, setStatusFilter] = useState('');
     const [categoryFilter, setCategoryFilter] = useState('');
+    const [selectedCategory, setSelectedCategory] = useState<string>('');
     const [debouncedSearch, setDebouncedSearch] = useState('');
+    const { user } = useAuth();
 
     // Modal states
     const [showCreateModal, setShowCreateModal] = useState(false);
@@ -128,6 +132,7 @@ export default function NewsPage() {
         excerpt: '',
         content: '',
         category_id: '',
+        author_name: '',
         is_published: false,
         meta_title: '',
         meta_description: '',
@@ -209,6 +214,7 @@ export default function NewsPage() {
             excerpt: '',
             content: '',
             category_id: '',
+            author_name: '',
             is_published: false,
             meta_title: '',
             meta_description: '',
@@ -249,6 +255,11 @@ export default function NewsPage() {
             fd.append('content', formData.content);
             if (formData.excerpt) fd.append('excerpt', formData.excerpt);
             if (formData.category_id) fd.append('category_id', formData.category_id);
+
+            // Auto-fill author name with fallback
+            const authorName = user?.name || 'Admin HMPSINF';
+            fd.append('author_name', authorName);
+
             fd.append('is_published', formData.is_published.toString());
             if (formData.meta_title) fd.append('meta_title', formData.meta_title);
             if (formData.meta_description) fd.append('meta_description', formData.meta_description);
@@ -285,6 +296,7 @@ export default function NewsPage() {
             excerpt: item.excerpt || '',
             content: item.content,
             category_id: item.category_id || '',
+            author_name: item.author_name || '',
             is_published: item.is_published,
             meta_title: item.meta_title || '',
             meta_description: item.meta_description || '',
@@ -311,6 +323,7 @@ export default function NewsPage() {
             fd.append('content', formData.content);
             if (formData.excerpt) fd.append('excerpt', formData.excerpt);
             if (formData.category_id) fd.append('category_id', formData.category_id);
+            if (formData.author_name) fd.append('author_name', formData.author_name);
             fd.append('is_published', formData.is_published.toString());
             if (formData.meta_title) fd.append('meta_title', formData.meta_title);
             if (formData.meta_description) fd.append('meta_description', formData.meta_description);
@@ -510,6 +523,7 @@ export default function NewsPage() {
                                 ))}
                             </select>
                         </div>
+
 
                         {/* Excerpt */}
                         <div>

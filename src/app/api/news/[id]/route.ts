@@ -67,6 +67,7 @@ export async function PUT(
     const meta_title = formData.get("meta_title") as string | null;
     const meta_description = formData.get("meta_description") as string | null;
     const meta_keywords = formData.get("meta_keywords") as string | null;
+    const author_name = formData.get("author_name") as string | null;
     const thumbnail = formData.get("thumbnail") as File | null;
     const remove_thumbnail = formData.get("remove_thumbnail") === "true";
 
@@ -150,7 +151,7 @@ export async function PUT(
         UPDATE news SET
           title = ?, thumbnail_url = ?, thumbnail_public_id = ?,
           excerpt = ?, content = ?, category_id = ?,
-          is_published = ?, meta_title = ?, meta_description = ?, meta_keywords = ?,
+          is_published = ?, meta_title = ?, meta_description = ?, meta_keywords = ?, author_name = ?,
           published_at = ?, updated_at = ?
         WHERE id = ?
       `,
@@ -165,6 +166,7 @@ export async function PUT(
         meta_title?.trim() || null,
         meta_description?.trim() || null,
         meta_keywords?.trim() || null,
+        author_name?.trim() || null,
         publishedAt,
         now,
         id,

@@ -3,13 +3,14 @@ import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import Particles from "@/components/ui/Particles";
 import {
-    getLatestNews,
     getUpcomingEvents,
     getVisiMisi,
     getSiteSettings,
+    getKetuaHimpunan,
 } from "@/lib/queries/public";
-import NewsCard from "@/components/public/NewsCard";
 import EventCard from "@/components/public/EventCard";
+import SambutanSection from "@/components/public/SambutanSection";
+import NewsSection from "@/components/public/NewsSection";
 
 export const metadata: Metadata = {
     title: "HMPSINF — Himpunan Mahasiswa Program Studi Informatika",
@@ -18,11 +19,11 @@ export const metadata: Metadata = {
 };
 
 export default async function LandingPage() {
-    const [news, events, visiMisi, settings] = await Promise.all([
-        getLatestNews(4),
+    const [events, visiMisi, settings, ketua] = await Promise.all([
         getUpcomingEvents(3),
         getVisiMisi(),
         getSiteSettings(),
+        getKetuaHimpunan(),
     ]);
 
     return (
@@ -125,54 +126,11 @@ export default async function LandingPage() {
                 </div >
             </section >
 
+            {/* ─── SAMBUTAN KETUA ─── */}
+            <SambutanSection settings={settings} ketua={ketua} />
+
             {/* ─── BERITA TERBARU ─── */}
-            < section className="mx-auto max-w-7xl px-6 py-20 md:py-24" >
-                <div className="flex items-end justify-between">
-                    <div>
-                        <h2 className="text-2xl font-bold tracking-tight text-gray-900 md:text-3xl">
-                            Berita Terbaru
-                        </h2>
-                        <p className="mt-2 text-gray-500">
-                            Informasi dan kegiatan terkini dari HMPSINF.
-                        </p>
-                    </div>
-                    <Link
-                        href="/berita"
-                        className="hidden items-center gap-1 text-sm font-medium text-brand-600 transition-colors hover:text-brand-700 md:inline-flex"
-                    >
-                        Semua Berita
-                        <ArrowRight className="h-3.5 w-3.5" />
-                    </Link>
-                </div>
-
-                {
-                    news.length > 0 ? (
-                        <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-                            {news.map((item, index) => (
-                                <NewsCard
-                                    key={item.id}
-                                    {...item}
-                                    featured={index === 0}
-                                />
-                            ))}
-                        </div>
-                    ) : (
-                        <div className="mt-10 rounded-xl border border-dashed border-gray-200 py-16 text-center">
-                            <p className="text-sm text-gray-400">Belum ada berita saat ini.</p>
-                        </div>
-                    )
-                }
-
-                <div className="mt-8 text-center md:hidden">
-                    <Link
-                        href="/berita"
-                        className="inline-flex items-center gap-1 text-sm font-medium text-brand-600"
-                    >
-                        Semua Berita
-                        <ArrowRight className="h-3.5 w-3.5" />
-                    </Link>
-                </div>
-            </section >
+            <NewsSection />
 
             {/* ─── EVENT MENDATANG ─── */}
             < section className="border-t border-gray-100 bg-gray-25" >

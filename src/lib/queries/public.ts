@@ -1,12 +1,14 @@
 import db from "@/lib/db";
 
 // ── Berita Terbaru ──
+// ── Berita Terbaru ──
 export async function getLatestNews(limit = 4) {
   const result = await db.execute({
     sql: `
       SELECT 
         n.id, n.title, n.slug, n.excerpt, n.thumbnail_url,
-        n.published_at, n.created_at,
+        n.published_at, n.created_at, n.view_count, n.author_name,
+        (SELECT COUNT(*) FROM news_comments WHERE news_id = n.id AND is_approved = 1) as comment_count,
         c.name as category_name, c.slug as category_slug
       FROM news n
       LEFT JOIN news_categories c ON n.category_id = c.id
@@ -25,9 +27,82 @@ export async function getLatestNews(limit = 4) {
     thumbnail_url: row.thumbnail_url as string | null,
     published_at: row.published_at as string | null,
     created_at: row.created_at as string,
+    view_count: Number(row.view_count || 0),
+    comment_count: Number(row.comment_count || 0),
+    author_name: row.author_name as string | null,
     category_name: row.category_name as string | null,
     category_slug: row.category_slug as string | null,
   }));
+}
+
+// ── Semua Berita (Pagination) ──
+export async function getAllNews(page = 1, limit = 12, search = "", category = "") {
+  const offset = (page - 1) * limit;
+  let whereClause = "n.is_published = 1";
+  const args: (string | number)[] = [];
+
+  if (search) {
+    whereClause += " AND (n.title LIKE ? OR n.excerpt LIKE ?)";
+    args.push(`%${search}%`, `%${search}%`);
+  }
+
+  if (category) {
+    whereClause += " AND c.slug = ?";
+    args.push(category);
+  }
+
+  // Get total
+  const countResult = await db.execute({
+    sql: `
+      SELECT COUNT(*) as total 
+      FROM news n 
+      LEFT JOIN news_categories c ON n.category_id = c.id
+      WHERE ${whereClause}
+    `,
+    args,
+  });
+  const total = Number(countResult.rows[0]?.total || 0);
+
+  // Get data
+  const result = await db.execute({
+    sql: `
+      SELECT 
+        n.id, n.title, n.slug, n.excerpt, n.thumbnail_url,
+        n.published_at, n.created_at, n.view_count,
+        (SELECT COUNT(*) FROM news_comments WHERE news_id = n.id AND is_approved = 1) as comment_count,
+        c.name as category_name, c.slug as category_slug
+      FROM news n
+      LEFT JOIN news_categories c ON n.category_id = c.id
+      WHERE ${whereClause}
+      ORDER BY n.published_at DESC
+      LIMIT ? OFFSET ?
+    `,
+    args: [...args, limit, offset],
+  });
+
+  const news = result.rows.map((row) => ({
+    id: row.id as string,
+    title: row.title as string,
+    slug: row.slug as string,
+    excerpt: row.excerpt as string | null,
+    thumbnail_url: row.thumbnail_url as string | null,
+    published_at: row.published_at as string | null,
+    created_at: row.created_at as string,
+    view_count: Number(row.view_count || 0),
+    comment_count: Number(row.comment_count || 0),
+    category_name: row.category_name as string | null,
+    category_slug: row.category_slug as string | null,
+  }));
+
+  return {
+    data: news,
+    meta: {
+      page,
+      limit,
+      total,
+      totalPages: Math.ceil(total / limit),
+    },
+  };
 }
 
 // ── Event Mendatang ──
@@ -112,5 +187,63 @@ export async function getSiteSettings() {
     hero_bg_image: settings.hero_bg_image || null,
     hero_bg_size: settings.hero_bg_size || "cover",
     hero_side_image: settings.hero_side_image || null,
+    // Sambutan fields
+    sambutan_section_title: settings.sambutan_section_title || "Sambutan Ketua Himpunan",
+    sambutan_section_subtitle: settings.sambutan_section_subtitle || "Pesan dari Ketua Himpunan Periode Ini",
+    sambutan_content: settings.sambutan_content || "Selamat datang di website resmi HMPSINF...",
+    hima_inti_pattern_color: settings.hima_inti_pattern_color || null,
   };
+}
+
+// ── Ketua Himpunan ──
+export async function getKetuaHimpunan() {
+  const result = await db.execute({
+    sql: `
+      SELECT i.name, i.photo_url, i.position, i.instagram, i.whatsapp
+      FROM hima_inti i
+      JOIN hima_periods p ON i.period_id = p.id
+      WHERE p.is_active = 1 AND (i.position = 'Ketua Himpunan' OR i.position LIKE 'Ketua%')
+      LIMIT 1
+    `,
+    args: [],
+  });
+
+  if (result.rows.length === 0) return null;
+
+  const row = result.rows[0];
+  return {
+    name: row.name as string,
+    photo_url: row.photo_url as string || null,
+    position: row.position as string,
+    instagram: row.instagram as string || null,
+    whatsapp: row.whatsapp as string || null,
+  };
+}
+
+// ── Divisions ──
+// ── Divisions ──
+export async function getDivisions() {
+  const result = await db.execute({
+    sql: `
+      SELECT 
+        d.id, 
+        d.name, 
+        d.description, 
+        d.color, 
+        COUNT(dm.id) as member_count
+      FROM divisions d
+      LEFT JOIN division_members dm ON d.id = dm.division_id
+      GROUP BY d.id
+      ORDER BY d.name ASC
+    `,
+    args: [],
+  });
+
+  return result.rows.map((row) => ({
+    id: row.id as string,
+    name: row.name as string,
+    description: row.description as string | null,
+    color: row.color as string,
+    member_count: row.member_count as number,
+  }));
 }

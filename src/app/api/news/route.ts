@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import fs from 'fs';
 import db from "@/lib/db";
 import { v4 as uuidv4 } from "uuid";
 import { v2 as cloudinary } from "cloudinary";
@@ -125,6 +126,13 @@ export async function POST(request: NextRequest) {
     const meta_title = formData.get("meta_title") as string | null;
     const meta_description = formData.get("meta_description") as string | null;
     const meta_keywords = formData.get("meta_keywords") as string | null;
+    const author_name = formData.get("author_name") as string | null;
+
+    try {
+      fs.appendFileSync('debug-news.log', `[${new Date().toISOString()}] Create News - Title: ${title}, Author: ${author_name}\n`);
+    } catch (e) {
+      console.error('Failed to write to debug log', e);
+    }
     const thumbnail = formData.get("thumbnail") as File | null;
 
     if (!title || !title.trim()) {
@@ -185,9 +193,9 @@ export async function POST(request: NextRequest) {
         INSERT INTO news (
           id, title, slug, thumbnail_url, thumbnail_public_id,
           excerpt, content, category_id, is_published,
-          meta_title, meta_description, meta_keywords, published_at,
+          meta_title, meta_description, meta_keywords, author_name, published_at,
           created_at, updated_at
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
       `,
       args: [
         id,
@@ -202,6 +210,7 @@ export async function POST(request: NextRequest) {
         meta_title?.trim() || null,
         meta_description?.trim() || null,
         meta_keywords?.trim() || null,
+        author_name?.trim() || null,
         publishedAt,
         now,
         now,
