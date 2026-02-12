@@ -13,10 +13,16 @@ import EventsSection from "@/components/public/EventsSection";
 import VideoSection from "@/components/public/VideoSection";
 import CTASection from "@/components/public/CTASection";
 
+import JsonLd from "@/components/seo/JsonLd";
+
 export const metadata: Metadata = {
-    title: "Himpunan Mahasiswa Program Studi Informatika UNUHA",
+    title: "Himpunan Mahasiswa Program Studi Informatika (HMPSINF) - Universitas Nurul Huda",
     description:
-        "Wadah aspirasi dan pengembangan potensi mahasiswa Program Studi Informatika.",
+        "Website resmi HMPSINF Universitas Nurul Huda. Wadah aspirasi, informasi, dan kreativitas mahasiswa Informatika UNUHA.",
+    keywords: ["HMPSINF", "Himpunan Mahasiswa Informatika", "Universitas Nurul Huda", "Organisasi Mahasiswa", "Informatika"],
+    alternates: {
+        canonical: process.env.NEXT_PUBLIC_SITE_URL,
+    },
 };
 
 export default async function LandingPage() {
@@ -25,8 +31,25 @@ export default async function LandingPage() {
         getKetuaHimpunan(),
     ]);
 
+    const jsonLd = {
+        "@context": "https://schema.org",
+        "@type": "Organization",
+        "name": "HMPSINF Universitas Nurul Huda",
+        "url": process.env.NEXT_PUBLIC_SITE_URL,
+        "logo": "https://res.cloudinary.com/dxujag3yy/image/upload/v1770508758/hmpsinf/logo.png",
+        "sameAs": [
+            "https://instagram.com/infunuha",
+        ],
+        "contactPoint": {
+            "@type": "ContactPoint",
+            "contactType": "customer service",
+            "email": process.env.NEXT_PUBLIC_CONTACT_EMAIL
+        }
+    };
+
     return (
         <>
+            <JsonLd data={jsonLd} />
             {/* ─── HERO ─── */}
             <section className="relative pt-8 pb-10 md:pt-12 md:pb-16 lg:pt-16 lg:pb-20">
                 <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">

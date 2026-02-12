@@ -5,9 +5,15 @@ import { getVisiMisi } from '@/lib/queries/public';
 import { Target, Eye, ChevronRight } from 'lucide-react';
 import Link from 'next/link';
 
+import JsonLd from '@/components/seo/JsonLd';
+
 export const metadata = {
-    title: 'Visi & Misi - HMPSINF',
-    description: 'Visi dan Misi Himpunan Mahasiswa Program Studi Informatika.',
+    title: 'Visi & Misi HMPSINF - Arah dan Tujuan',
+    description: 'Visi dan Misi Himpunan Mahasiswa Program Studi Informatika (HMPSINF) Universitas Nurul Huda. Landasan gerak dan tujuan organisasi.',
+    keywords: ['Visi Misi HMPSINF', 'Tujuan HMPSINF', 'Arah Organisasi', 'Informatika UNUHA'],
+    alternates: {
+        canonical: `${process.env.NEXT_PUBLIC_SITE_URL}/profil/visi-misi`,
+    },
 };
 
 export default async function VisiMisiPage() {
@@ -24,8 +30,21 @@ export default async function VisiMisiPage() {
         );
     }
 
+    const jsonLd = {
+        "@context": "https://schema.org",
+        "@type": "AboutPage",
+        "name": "Visi & Misi HMPSINF",
+        "description": "Visi dan Misi Himpunan Mahasiswa Program Studi Informatika Universitas Nurul Huda.",
+        "publisher": {
+            "@type": "Organization",
+            "name": "HMPSINF Universitas Nurul Huda",
+            "url": process.env.NEXT_PUBLIC_SITE_URL
+        }
+    };
+
     return (
         <main className="min-h-screen bg-white dark:bg-gray-950">
+            <JsonLd data={jsonLd} />
             <div className="max-w-7xl mx-auto px-6 pt-6 pb-12 md:pt-10 md:pb-20 lg:px-8">
                 {/* Breadcrumb */}
                 <div className="flex items-center gap-2 text-sm text-gray-500 mb-8">
@@ -86,9 +105,6 @@ export default async function VisiMisiPage() {
                                 </Link>
                                 <Link href="/profil/struktur" className="text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors">
                                     Struktur Organisasi
-                                </Link>
-                                <Link href="/profil/tentang" className="text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors">
-                                    Tentang Kami
                                 </Link>
                             </nav>
                         </div>
