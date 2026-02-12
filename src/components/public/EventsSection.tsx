@@ -103,11 +103,11 @@ export default async function EventsSection() {
                                     {formatDate(mainEvent.event_date, mainEvent.event_end_date)}
                                 </span>
                                 {mainEvent.is_open ? (
-                                    <span className="inline-flex items-center px-3 py-1 rounded-full border border-emerald-500/30 bg-emerald-500/20 backdrop-blur-md text-xs font-mono text-emerald-300 uppercase shadow-[0_0_10px_rgba(16,185,129,0.2)]">
+                                    <span className="inline-flex items-center px-3 py-1 rounded-full border border-emerald-500/80 bg-emerald-500/80 backdrop-blur-md text-xs font-mono text-white uppercase shadow-[0_0_10px_rgba(16,185,129,0.2)]">
                                         Pendaftaran Dibuka
                                     </span>
                                 ) : (
-                                    <span className="inline-flex items-center px-3 py-1 rounded-full border border-gray-500/30 bg-gray-500/20 backdrop-blur-md text-xs font-mono text-gray-300 uppercase">
+                                    <span className="inline-flex items-center px-3 py-1 rounded-full border border-gray-500/80 bg-gray-500/80 backdrop-blur-md text-xs font-mono text-gray-300 uppercase">
                                         Ditutup
                                     </span>
                                 )}
@@ -156,8 +156,11 @@ export default async function EventsSection() {
                                                     {new Date(event.event_date).getDate().toString().padStart(2, '0')}
                                                 </span>
                                                 <span className="text-xs font-mono text-gray-500 uppercase mt-1 tracking-widest">
-                                                    {new Date(event.event_date).toLocaleDateString('id-ID', { month: 'long' })}
-                                                    {event.event_end_date && event.event_end_date !== event.event_date && (new Date(event.event_end_date).getMonth() !== new Date(event.event_date).getMonth()) ? ` - ${new Date(event.event_end_date).toLocaleDateString('id-ID', { month: 'long' })}` : ''}
+                                                    {new Date(event.event_date).toLocaleDateString('id-ID', { month: 'long', year: 'numeric' })}
+                                                    {event.event_end_date && event.event_end_date !== event.event_date &&
+                                                        (new Date(event.event_end_date).getMonth() !== new Date(event.event_date).getMonth() ||
+                                                            new Date(event.event_end_date).getFullYear() !== new Date(event.event_date).getFullYear())
+                                                        ? ` - ${new Date(event.event_end_date).toLocaleDateString('id-ID', { month: 'long', year: 'numeric' })}` : ''}
                                                 </span>
                                             </div>
                                             {event.is_open && (

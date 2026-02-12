@@ -139,7 +139,7 @@ export async function getUpcomingEvents(limit = 3) {
 // ── Visi Misi ──
 export async function getVisiMisi() {
   const result = await db.execute({
-    sql: "SELECT * FROM visi_misi ORDER BY created_at DESC LIMIT 1",
+    sql: "SELECT visi, misi FROM visi_misi ORDER BY created_at DESC LIMIT 1",
     args: [],
   });
 
@@ -149,7 +149,6 @@ export async function getVisiMisi() {
   return {
     visi: row.visi as string | null,
     misi: row.misi as string | null,
-    image_url: row.image_url as string | null,
   };
 }
 
@@ -229,14 +228,13 @@ export async function getKetuaHimpunan() {
   const row = result.rows[0];
   return {
     name: row.name as string,
-    photo_url: row.photo_url as string || null,
+    photo_url: row.photo_url as string | null,
     position: row.position as string,
-    instagram: row.instagram as string || null,
-    whatsapp: row.whatsapp as string || null,
+    instagram: row.instagram as string | null,
+    whatsapp: row.whatsapp as string | null,
   };
 }
 
-// ── Divisions ──
 // ── Divisions ──
 export async function getDivisions() {
   const result = await db.execute({
@@ -262,4 +260,21 @@ export async function getDivisions() {
     color: row.color as string,
     member_count: row.member_count as number,
   }));
+}
+
+
+// ── Sejarah ──
+export async function getSejarah() {
+  const result = await db.execute({
+    sql: `SELECT title, content FROM sejarah ORDER BY created_at DESC LIMIT 1`,
+    args: [],
+  });
+  
+  if (result.rows.length === 0) return undefined;
+
+  const row = result.rows[0];
+  return {
+    title: row.title as string,
+    content: row.content as string | null,
+  };
 }

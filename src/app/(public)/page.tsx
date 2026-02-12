@@ -14,7 +14,7 @@ import VideoSection from "@/components/public/VideoSection";
 import CTASection from "@/components/public/CTASection";
 
 export const metadata: Metadata = {
-    title: "HMPSINF — Himpunan Mahasiswa Program Studi Informatika",
+    title: "Himpunan Mahasiswa Program Studi Informatika UNUHA",
     description:
         "Wadah aspirasi dan pengembangan potensi mahasiswa Program Studi Informatika.",
 };

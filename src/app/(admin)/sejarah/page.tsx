@@ -12,8 +12,6 @@ interface SejarahData {
     id: string;
     title: string;
     content: string | null;
-    image_url: string | null;
-    image_public_id: string | null;
     created_at: string;
     updated_at: string;
 }
@@ -44,11 +42,6 @@ export default function SejarahPage() {
 
     const [title, setTitle] = useState('');
     const [content, setContent] = useState('');
-    const [imageFile, setImageFile] = useState<File | null>(null);
-    const [imagePreview, setImagePreview] = useState<string | null>(null);
-    const [removeImage, setRemoveImage] = useState(false);
-
-    const imageInputRef = useRef<HTMLInputElement>(null);
 
     const fetchData = useCallback(async () => {
         try {
@@ -60,11 +53,9 @@ export default function SejarahPage() {
                 if (json.data) {
                     setTitle(json.data.title || '');
                     setContent(json.data.content || '');
-                    setImagePreview(json.data.image_url || null);
                 } else {
                     setTitle('Sejarah');
                     setContent('');
-                    setImagePreview(null);
                 }
             }
         } catch {
@@ -77,31 +68,6 @@ export default function SejarahPage() {
     useEffect(() => {
         fetchData();
     }, [fetchData]);
-
-    const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const file = e.target.files?.[0];
-        if (!file) return;
-
-        if (file.size > 1 * 1024 * 1024) {
-            showToast('error', 'Ukuran gambar maksimal 1MB');
-            return;
-        }
-
-        setImageFile(file);
-        setRemoveImage(false);
-        const reader = new FileReader();
-        reader.onload = () => setImagePreview(reader.result as string);
-        reader.readAsDataURL(file);
-    };
-
-    const handleRemoveImage = () => {
-        setImageFile(null);
-        setImagePreview(null);
-        setRemoveImage(true);
-        if (imageInputRef.current) {
-            imageInputRef.current.value = '';
-        }
-    };
 
     const handleSave = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -116,12 +82,6 @@ export default function SejarahPage() {
             const formData = new FormData();
             formData.append('title', title.trim());
             formData.append('content', content || '');
-            if (imageFile) {
-                formData.append('image', imageFile);
-            }
-            if (removeImage) {
-                formData.append('remove_image', 'true');
-            }
 
             const res = await fetch('/api/sejarah', {
                 method: 'POST',
@@ -130,8 +90,6 @@ export default function SejarahPage() {
 
             if (res.ok) {
                 showToast('success', data ? 'Sejarah berhasil diperbarui' : 'Sejarah berhasil dibuat');
-                setImageFile(null);
-                setRemoveImage(false);
                 await fetchData();
             } else {
                 const json = await res.json();
@@ -153,9 +111,6 @@ export default function SejarahPage() {
                 setData(null);
                 setTitle('Sejarah');
                 setContent('');
-                setImageFile(null);
-                setImagePreview(null);
-                setRemoveImage(false);
                 setShowDeleteModal(false);
             } else {
                 const json = await res.json();
@@ -194,7 +149,7 @@ export default function SejarahPage() {
                 {loading ? (
                     <>
                         {/* Skeleton - Title */}
-                        <div className="rounded-2xl border border-gray-200 bg-white dark:border-gray-800 dark:bg-white/[0.03]">
+                        <div className="rounded-2xl border border-gray-200 bg-white dark:border-gray-800 dark:bg-white/3">
                             <div className="border-b border-gray-200 px-6 py-4 dark:border-gray-800">
                                 <Skeleton className="h-6 w-40" />
                             </div>
@@ -216,8 +171,8 @@ export default function SejarahPage() {
                     </>
                 ) : (
                     <form onSubmit={handleSave}>
-                        {/* Title & Image */}
-                        <div className="rounded-2xl border border-gray-200 bg-white dark:border-gray-800 dark:bg-white/[0.03]">
+                        {/* Title & Content */}
+                        <div className="rounded-2xl border border-gray-200 bg-white dark:border-gray-800 dark:bg-white/3">
                             <div className="border-b border-gray-200 px-6 py-4 dark:border-gray-800">
                                 <h3 className="text-lg font-semibold text-gray-800 dark:text-white/90">
                                     {data ? 'Edit Sejarah' : 'Buat Sejarah'}
@@ -240,61 +195,6 @@ export default function SejarahPage() {
                                         placeholder="Judul sejarah..."
                                         required
                                     />
-                                </div>
-
-                                {/* Image Upload */}
-                                <div>
-                                    <label className="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-300">
-                                        Gambar (Opsional)
-                                    </label>
-                                    <div className="flex flex-col sm:flex-row items-start gap-4">
-                                        <div className="flex h-32 w-full sm:w-48 items-center justify-center rounded-xl border-2 border-dashed border-gray-300 bg-gray-50 dark:border-gray-600 dark:bg-gray-800 overflow-hidden">
-                                            {imagePreview ? (
-                                                <Image
-                                                    src={imagePreview}
-                                                    alt="Preview"
-                                                    width={192}
-                                                    height={128}
-                                                    className="max-h-full max-w-full object-cover"
-                                                />
-                                            ) : (
-                                                <div className="flex flex-col items-center gap-1 text-gray-400">
-                                                    <ImageIcon className="h-8 w-8" />
-                                                    <span className="text-xs">Tidak ada gambar</span>
-                                                </div>
-                                            )}
-                                        </div>
-                                        <div className="flex flex-col gap-2">
-                                            <input
-                                                type="file"
-                                                ref={imageInputRef}
-                                                className="hidden"
-                                                accept="image/jpeg,image/png,image/gif,image/webp"
-                                                onChange={handleImageChange}
-                                            />
-                                            <button
-                                                type="button"
-                                                onClick={() => imageInputRef.current?.click()}
-                                                className="flex items-center gap-2 rounded-lg bg-brand-500 px-4 py-2 text-sm font-medium text-white hover:bg-brand-600 transition-colors"
-                                            >
-                                                <Upload className="h-4 w-4" />
-                                                Upload Gambar
-                                            </button>
-                                            {imagePreview && (
-                                                <button
-                                                    type="button"
-                                                    onClick={handleRemoveImage}
-                                                    className="flex items-center gap-2 rounded-lg border border-red-300 px-4 py-2 text-sm font-medium text-red-600 hover:bg-red-50 dark:border-red-700 dark:text-red-400 dark:hover:bg-red-900/20 transition-colors"
-                                                >
-                                                    <Trash2 className="h-4 w-4" />
-                                                    Hapus Gambar
-                                                </button>
-                                            )}
-                                            <p className="text-xs text-gray-500 dark:text-gray-400">
-                                                Format: JPG, PNG, GIF, WebP. Maks 1MB.
-                                            </p>
-                                        </div>
-                                    </div>
                                 </div>
 
                                 {/* Content */}
@@ -332,7 +232,7 @@ export default function SejarahPage() {
                 onClose={() => setShowDeleteModal(false)}
                 onConfirm={handleDelete}
                 title="Hapus Sejarah"
-                description="Apakah Anda yakin ingin menghapus konten sejarah? Semua data termasuk gambar akan dihapus permanen."
+                description="Apakah Anda yakin ingin menghapus konten sejarah?"
                 isLoading={deleting}
             />
         </div>

@@ -193,7 +193,7 @@ export default function SiteSettingsPage() {
         inputRef: React.RefObject<HTMLInputElement | null>;
         description: string;
     }) => (
-        <div className="rounded-2xl border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-white/[0.03]">
+        <div className="rounded-2xl border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-white/3">
             <h4 className="mb-2 text-lg font-semibold text-gray-800 dark:text-white/90">
                 {title}
             </h4>
@@ -257,7 +257,7 @@ export default function SiteSettingsPage() {
 
             <div className="space-y-6">
                 {/* Logo Settings */}
-                <div className="rounded-2xl border border-gray-200 bg-white dark:border-gray-800 dark:bg-white/[0.03]">
+                <div className="rounded-2xl border border-gray-200 bg-white dark:border-gray-800 dark:bg-white/3">
                     <div className="border-b border-gray-200 px-6 py-4 dark:border-gray-800">
                         <h3 className="text-lg font-semibold text-gray-800 dark:text-white/90">
                             Logo & Branding
@@ -299,7 +299,7 @@ export default function SiteSettingsPage() {
                 </div>
 
                 {/* HIMA Inti Pattern Color */}
-                <div className="rounded-2xl border border-gray-200 bg-white dark:border-gray-800 dark:bg-white/[0.03]">
+                <div className="rounded-2xl border border-gray-200 bg-white dark:border-gray-800 dark:bg-white/3">
                     <div className="border-b border-gray-200 px-6 py-4 dark:border-gray-800">
                         <h3 className="text-lg font-semibold text-gray-800 dark:text-white/90">
                             Warna Pattern HIMA Inti
@@ -368,7 +368,7 @@ export default function SiteSettingsPage() {
                 </div>
 
                 {/* General Settings */}
-                <div className="rounded-2xl border border-gray-200 bg-white dark:border-gray-800 dark:bg-white/[0.03]">
+                <div className="rounded-2xl border border-gray-200 bg-white dark:border-gray-800 dark:bg-white/3">
                     <div className="border-b border-gray-200 px-6 py-4 dark:border-gray-800">
                         <h3 className="text-lg font-semibold text-gray-800 dark:text-white/90">
                             Informasi Umum
@@ -480,7 +480,7 @@ export default function SiteSettingsPage() {
                 </div>
 
                 {/* Social Media Settings */}
-                <div className="rounded-2xl border border-gray-200 bg-white dark:border-gray-800 dark:bg-white/[0.03]">
+                <div className="rounded-2xl border border-gray-200 bg-white dark:border-gray-800 dark:bg-white/3">
                     <div className="border-b border-gray-200 px-6 py-4 dark:border-gray-800">
                         <h3 className="text-lg font-semibold text-gray-800 dark:text-white/90">
                             Social Media
@@ -554,7 +554,7 @@ export default function SiteSettingsPage() {
                 </div>
 
                 {/* Location / Maps Settings */}
-                <div className="rounded-2xl border border-gray-200 bg-white dark:border-gray-800 dark:bg-white/[0.03]">
+                <div className="rounded-2xl border border-gray-200 bg-white dark:border-gray-800 dark:bg-white/3">
                     <div className="border-b border-gray-200 px-6 py-4 dark:border-gray-800">
                         <h3 className="text-lg font-semibold text-gray-800 dark:text-white/90">
                             Lokasi / Maps

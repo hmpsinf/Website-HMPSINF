@@ -4,6 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useState, useRef, useEffect } from "react";
+import { createPortal } from "react-dom";
 import { Menu, X, ChevronDown } from "lucide-react";
 
 // ── Navigation structure with dropdowns ──
@@ -41,6 +42,7 @@ interface PublicHeaderProps {
 
 export default function PublicHeader({ logoUrl, siteName }: PublicHeaderProps) {
     const pathname = usePathname();
+    const [mounted, setMounted] = useState(false);
     const [mobileOpen, setMobileOpen] = useState(false);
     const [openDropdown, setOpenDropdown] = useState<string | null>(null);
     const [mobileAccordion, setMobileAccordion] = useState<string | null>(null);
@@ -60,6 +62,7 @@ export default function PublicHeader({ logoUrl, siteName }: PublicHeaderProps) {
 
     // Close dropdown when clicking outside
     useEffect(() => {
+        setMounted(true);
         const handleClickOutside = () => setOpenDropdown(null);
         document.addEventListener("click", handleClickOutside);
         return () => document.removeEventListener("click", handleClickOutside);
@@ -162,76 +165,117 @@ export default function PublicHeader({ logoUrl, siteName }: PublicHeaderProps) {
                     )}
                 </nav>
 
-                {/* Mobile Hamburger */}
+                {/* Mobile Hamburger - Animated */}
                 <button
+                    className="group inline-flex h-12 w-12 items-center justify-center text-slate-800 transition md:hidden"
+                    aria-pressed={mobileOpen}
                     onClick={() => setMobileOpen(!mobileOpen)}
-                    className="inline-flex items-center justify-center rounded-lg p-2 text-gray-600 hover:bg-gray-100 md:hidden"
                     aria-label="Toggle menu"
                 >
-                    {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+                    <svg className="w-6 h-6 fill-current pointer-events-none" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+                        <rect className="origin-center -translate-y-[5px] translate-x-[7px] transition-all duration-300 ease-[cubic-bezier(.5,.85,.25,1.1)] group-[[aria-pressed=true]]:translate-x-0 group-[[aria-pressed=true]]:translate-y-0 group-[[aria-pressed=true]]:rotate-[315deg]" y="7" width="9" height="2" rx="1"></rect>
+                        <rect className="origin-center transition-all duration-300 ease-[cubic-bezier(.5,.85,.25,1.8)] group-[[aria-pressed=true]]:rotate-45" y="7" width="16" height="2" rx="1"></rect>
+                        <rect className="origin-center translate-y-[5px] transition-all duration-300 ease-[cubic-bezier(.5,.85,.25,1.1)] group-[[aria-pressed=true]]:translate-y-0 group-[[aria-pressed=true]]:rotate-[135deg]" y="7" width="9" height="2" rx="1"></rect>
+                    </svg>
                 </button>
             </div>
 
-            {/* Mobile Menu */}
-            {mobileOpen && (
-                <div className="border-t border-gray-100 bg-white px-6 pb-6 pt-4 md:hidden">
-                    <nav className="flex flex-col gap-0.5">
-                        {navItems.map((item) =>
-                            item.children ? (
-                                // Mobile accordion dropdown
-                                <div key={item.label}>
-                                    <button
-                                        onClick={() =>
-                                            setMobileAccordion(
-                                                mobileAccordion === item.label ? null : item.label
-                                            )
-                                        }
-                                        className={`flex w-full items-center justify-between rounded-lg px-4 py-2.5 text-sm font-medium transition-colors ${isDropdownActive(item)
-                                            ? "text-brand-600"
-                                            : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
-                                            }`}
-                                    >
-                                        {item.label}
-                                        <ChevronDown
-                                            className={`h-4 w-4 transition-transform duration-200 ${mobileAccordion === item.label ? "rotate-180" : ""
-                                                }`}
-                                        />
-                                    </button>
-                                    {mobileAccordion === item.label && (
-                                        <div className="ml-4 flex flex-col gap-0.5 border-l-2 border-gray-100 pl-3">
-                                            {item.children.map((child) => (
-                                                <Link
-                                                    key={child.href}
-                                                    href={child.href}
-                                                    onClick={() => setMobileOpen(false)}
-                                                    className={`rounded-lg px-3 py-2 text-sm transition-colors ${isActive(child.href)
-                                                        ? "bg-brand-50 font-medium text-brand-600"
-                                                        : "text-gray-500 hover:text-gray-900"
+            {/* Mobile Sidebar (Portal to Body) */}
+            {mounted && mobileOpen && createPortal(
+                <div className="md:hidden">
+                    <div
+                        className="fixed inset-0 z-[999] bg-gray-900/50 backdrop-blur-sm transition-opacity duration-300"
+                        onClick={() => setMobileOpen(false)}
+                    />
+                    <div
+                        className="fixed inset-y-0 right-0 z-[1000] h-full w-full max-w-[300px] overflow-y-auto bg-white shadow-2xl transition-transform duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]"
+                    >
+                        <div className="flex min-h-full flex-col">
+                            <div className="flex items-center justify-between border-b border-gray-100 px-6 py-4">
+                                <span className="text-lg font-bold text-gray-900">{siteName}</span>
+                                <button
+                                    onClick={() => setMobileOpen(false)}
+                                    className="rounded-full p-2 text-gray-500 hover:bg-gray-100"
+                                >
+                                    <X className="h-6 w-6" />
+                                </button>
+                            </div>
+
+                            <div className="flex-1 px-6 py-6">
+                                <nav className="flex flex-col gap-1">
+                                    {navItems.map((item) =>
+                                        item.children ? (
+                                            // Mobile accordion dropdown
+                                            <div key={item.label} className="py-1">
+                                                <button
+                                                    onClick={() =>
+                                                        setMobileAccordion(
+                                                            mobileAccordion === item.label ? null : item.label
+                                                        )
+                                                    }
+                                                    className={`flex w-full items-center justify-between rounded-xl px-4 py-3 text-base font-medium transition-all ${isDropdownActive(item)
+                                                        ? "bg-brand-50 text-brand-600"
+                                                        : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
                                                         }`}
                                                 >
-                                                    {child.label}
-                                                </Link>
-                                            ))}
-                                        </div>
+                                                    {item.label}
+                                                    <ChevronDown
+                                                        className={`h-5 w-5 transition-transform duration-300 ${mobileAccordion === item.label ? "rotate-180" : ""
+                                                            }`}
+                                                    />
+                                                </button>
+                                                <div
+                                                    className={`grid transition-all duration-300 ease-in-out ${mobileAccordion === item.label
+                                                        ? "grid-rows-[1fr] opacity-100"
+                                                        : "grid-rows-[0fr] opacity-0"
+                                                        }`}
+                                                >
+                                                    <div className="overflow-hidden">
+                                                        <div className="ml-4 mt-1 flex flex-col gap-1 border-l-2 border-gray-100 pl-3">
+                                                            {item.children.map((child) => (
+                                                                <Link
+                                                                    key={child.href}
+                                                                    href={child.href}
+                                                                    onClick={() => setMobileOpen(false)}
+                                                                    className={`rounded-lg px-3 py-2.5 text-sm transition-colors ${isActive(child.href)
+                                                                        ? "text-brand-600 font-medium"
+                                                                        : "text-gray-500 hover:text-gray-900"
+                                                                        }`}
+                                                                >
+                                                                    {child.label}
+                                                                </Link>
+                                                            ))}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        ) : (
+                                            // Simple mobile link
+                                            <Link
+                                                key={item.href}
+                                                href={item.href!}
+                                                onClick={() => setMobileOpen(false)}
+                                                className={`rounded-xl px-4 py-3 text-base font-medium transition-all ${isActive(item.href!)
+                                                    ? "bg-brand-50 text-brand-600"
+                                                    : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
+                                                    }`}
+                                            >
+                                                {item.label}
+                                            </Link>
+                                        )
                                     )}
-                                </div>
-                            ) : (
-                                // Simple mobile link
-                                <Link
-                                    key={item.href}
-                                    href={item.href!}
-                                    onClick={() => setMobileOpen(false)}
-                                    className={`rounded-lg px-4 py-2.5 text-sm font-medium transition-colors ${isActive(item.href!)
-                                        ? "bg-brand-50 text-brand-600"
-                                        : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
-                                        }`}
-                                >
-                                    {item.label}
-                                </Link>
-                            )
-                        )}
-                    </nav>
-                </div>
+                                </nav>
+                            </div>
+
+                            <div className="border-t border-gray-100 p-6 bg-gray-50/50">
+                                <p className="text-xs text-center text-gray-400">
+                                    © {new Date().getFullYear()} {siteName}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>,
+                document.body
             )}
         </header>
     );
