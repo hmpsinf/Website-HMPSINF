@@ -16,7 +16,6 @@ const publicRoutes = [
   '/galeri',
   '/unduhan',
   '/kontak',
-  '/dokumen'
 ];
 
 export async function middleware(request: NextRequest) {

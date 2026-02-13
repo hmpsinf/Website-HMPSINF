@@ -95,7 +95,7 @@ export default async function SejarahPage() {
                                 <Link href="/profil/visi-misi" className="text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors">
                                     Visi & Misi
                                 </Link>
-                                <Link href="/profil/struktur" className="text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors">
+                                <Link href="/profil/struktur-organisasi" className="text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors">
                                     Struktur Organisasi
                                 </Link>
                             </nav>

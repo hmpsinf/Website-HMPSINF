@@ -1,4 +1,3 @@
-
 import { Metadata } from 'next';
 import { getDocuments, getDocumentCategories } from '@/lib/queries/documents';
 import DocumentFilters from '@/components/documents/DocumentFilters';
@@ -7,10 +6,28 @@ import DocumentSearch from '@/components/documents/DocumentSearch';
 import { Suspense } from 'react';
 import { Loader2, ChevronLeft, ChevronRight } from 'lucide-react';
 import Link from 'next/link';
+import JsonLd from '@/components/seo/JsonLd';
 
 export const metadata: Metadata = {
-    title: 'Dokumen Publik - HIMA IF UNIKOM',
-    description: 'Kumpulan dokumen, panduan, dan arsip publik HIMA IF UNIKOM.',
+    title: 'Unduhan & Dokumen - HMPSINF Universitas Nurul Huda',
+    description: 'Pusat unduhan dokumen publik, panduan, dan arsip Himpunan Mahasiswa Program Studi Informatika Universitas Nurul Huda.',
+    keywords: ["Materi Kuliah", "E-Book Informatika", "Modul Praktikum", "Jurnal Informatika", "Skripsi Informatika", "Unduhan UNUHA", "HMPSINF"],
+    alternates: {
+        canonical: `${process.env.NEXT_PUBLIC_SITE_URL}/unduhan`,
+    },
+    openGraph: {
+        title: 'Unduhan & Dokumen - HMPSINF Universitas Nurul Huda',
+        description: 'Pusat unduhan dokumen publik, panduan, dan arsip Himpunan Mahasiswa Program Studi Informatika Universitas Nurul Huda.',
+        url: `${process.env.NEXT_PUBLIC_SITE_URL}/unduhan`,
+        siteName: 'HMPSINF Universitas Nurul Huda',
+        locale: 'id_ID',
+        type: 'website',
+    },
+    twitter: {
+        card: "summary_large_image",
+        title: 'Unduhan & Dokumen - HMPSINF Universitas Nurul Huda',
+        description: 'Pusat unduhan dokumen publik, panduan, dan arsip Himpunan Mahasiswa Program Studi Informatika Universitas Nurul Huda.',
+    },
 };
 
 interface PageProps {
@@ -38,6 +55,32 @@ export default async function DocumentsPage({ searchParams }: PageProps) {
 
     return (
         <main className="min-h-screen bg-white dark:bg-gray-950 pb-20">
+            <JsonLd
+                data={{
+                    '@context': 'https://schema.org',
+                    '@type': 'CollectionPage',
+                    name: 'Unduhan & Dokumen - HMPSINF Universitas Nurul Huda',
+                    description: 'Pusat unduhan dokumen publik, panduan, dan arsip Himpunan Mahasiswa Program Studi Informatika Universitas Nurul Huda.',
+                    url: `${process.env.NEXT_PUBLIC_SITE_URL}/unduhan`,
+                    breadcrumb: {
+                        '@type': 'BreadcrumbList',
+                        itemListElement: [
+                            {
+                                '@type': 'ListItem',
+                                position: 1,
+                                name: 'Beranda',
+                                item: process.env.NEXT_PUBLIC_SITE_URL,
+                            },
+                            {
+                                '@type': 'ListItem',
+                                position: 2,
+                                name: 'Unduhan',
+                                item: `${process.env.NEXT_PUBLIC_SITE_URL}/unduhan`,
+                            },
+                        ],
+                    },
+                }}
+            />
             {/* Header / Background Decoration */}
             <div className="absolute top-0 inset-x-0 h-96 bg-linear-to-b from-gray-50 to-white dark:from-gray-900 dark:to-gray-950 -z-10" />
 

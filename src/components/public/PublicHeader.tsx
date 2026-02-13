@@ -22,6 +22,7 @@ const navItems: NavItem[] = [
             { label: "Sejarah", href: "/profil/sejarah" },
             { label: "Visi dan Misi", href: "/profil/visi-misi" },
             { label: "Struktur Organisasi", href: "/profil/struktur-organisasi" },
+            { label: "Divisi", href: "/profil/divisi" },
             { label: "Logo", href: "/logo" },
         ],
     },

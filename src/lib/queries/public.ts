@@ -303,7 +303,8 @@ export async function getSiteSettings() {
     landing_cta_title: settings.landing_cta_title || "Siap Berinovasi Bersama Kami?",
     landing_cta_subtitle: settings.landing_cta_subtitle || "Mari bergabung dan wujudkan masa depan teknologi bersama HMPSINF.",
     landing_cta_btn_text: settings.landing_cta_btn_text || "Hubungi Kami",
-    landing_cta_btn_link: settings.landing_cta_btn_link || "/contact",
+    landing_cta_btn_link: settings.landing_cta_btn_link || "/kontak",
+    maps_embed_url: settings.maps_embed_url || null,
   };
 }
 
@@ -481,6 +482,78 @@ export async function getDivisionLeaders() {
     // Only add if there's a matching member (LEFT JOIN may return nulls)
     if (row.member_id) {
       divisionsMap.get(divId)!.leaders.push({
+        id: row.member_id as string,
+        member_name: row.member_name as string,
+        position: row.position as string,
+        photo_url: row.photo_url as string | null,
+        instagram: row.instagram as string | null,
+        whatsapp: row.whatsapp as string | null,
+      });
+    }
+  }
+
+  return Array.from(divisionsMap.values());
+}
+
+export async function getAllDivisionsWithMembers() {
+  const result = await db.execute({
+    sql: `
+      SELECT 
+        d.id as division_id,
+        d.name as division_name,
+        d.description as division_description,
+        d.color as division_color,
+        dm.id as member_id,
+        dm.member_name,
+        dm.position,
+        dm.photo_url,
+        dm.instagram,
+        dm.whatsapp,
+        dm.created_at
+      FROM divisions d
+      LEFT JOIN division_members dm ON d.id = dm.division_id
+      ORDER BY d.name ASC,
+        CASE 
+            WHEN dm.position LIKE 'Ketua%' THEN 1
+            WHEN dm.position LIKE 'Wakil%' THEN 2
+            WHEN dm.position LIKE 'Sekretaris%' THEN 3
+            WHEN dm.position LIKE 'Bendahara%' THEN 4
+            ELSE 5
+        END,
+        dm.member_name ASC
+    `,
+    args: [],
+  });
+
+  const divisionsMap = new Map<string, {
+    id: string;
+    name: string;
+    description: string | null;
+    color: string;
+    members: {
+      id: string;
+      member_name: string;
+      position: string;
+      photo_url: string | null;
+      instagram: string | null;
+      whatsapp: string | null;
+    }[];
+  }>();
+
+  for (const row of result.rows) {
+    const divId = row.division_id as string;
+    if (!divisionsMap.has(divId)) {
+      divisionsMap.set(divId, {
+        id: divId,
+        name: row.division_name as string,
+        description: row.division_description as string | null,
+        color: row.division_color as string,
+        members: [],
+      });
+    }
+
+    if (row.member_id) {
+      divisionsMap.get(divId)!.members.push({
         id: row.member_id as string,
         member_name: row.member_name as string,
         position: row.position as string,

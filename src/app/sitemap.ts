@@ -9,10 +9,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     '',
     '/profil/sejarah',
     '/profil/visi-misi',
-    '/profil/struktur',
+    '/profil/struktur-organisasi',
     '/logo',
     '/berita',
     '/galeri',
+    '/unduhan',
     '/kontak',
   ].map((route) => ({
     url: `${baseUrl}${route}`,

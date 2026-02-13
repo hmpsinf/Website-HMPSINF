@@ -19,6 +19,7 @@ const quickLinks = [
     { label: "Berita", href: "/berita" },
     { label: "Galeri", href: "/galeri" },
     { label: "Unduhan", href: "/unduhan" },
+    { label: "Kontak", href: "/kontak" },
 ];
 
 const profilLinks = [

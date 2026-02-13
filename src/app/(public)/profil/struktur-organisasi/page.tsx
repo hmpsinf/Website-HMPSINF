@@ -13,7 +13,7 @@ export const metadata = {
     description: 'Struktur organisasi dan kepengurusan Himpunan Mahasiswa Program Studi Informatika (HMPSINF) Universitas Nurul Huda. Ketua, Wakil, Sekretaris, Bendahara, dan Divisi.',
     keywords: ['Struktur Organisasi HMPSINF', 'Kepengurusan HMPSINF', 'Pengurus HMPSINF', 'Divisi HMPSINF', 'Informatika UNUHA'],
     alternates: {
-        canonical: `${process.env.NEXT_PUBLIC_SITE_URL}/profil/struktur`,
+        canonical: `${process.env.NEXT_PUBLIC_SITE_URL}/profil/struktur-organisasi`,
     },
 };
 
