@@ -6,24 +6,15 @@ import { usePathname } from "next/navigation";
 import { useSidebar } from "../context/SidebarContext";
 import { useSiteSettings } from "../context/SiteSettingsContext";
 import {
-  BoxCubeIcon,
   CalenderIcon,
   ChevronDownIcon,
-  DocsIcon,
   GridIcon,
-  FolderIcon,
   GroupIcon,
   HorizontaLDots,
-  ListIcon,
   ChatIcon,
   PageIcon,
-  PieChartIcon,
-  PlugInIcon,
-  ShootingStarIcon,
-  TableIcon,
   UserCircleIcon,
 } from "../icons/index";
-import SidebarWidget from "./SidebarWidget";
 
 type NavItem = {
   name: string;
@@ -36,26 +27,11 @@ const navItems: NavItem[] = [
   {
     icon: <GridIcon />,
     name: "Dashboard",
-    subItems: [{ name: "Dashboard", path: "/dashboard", pro: false }],
-  },
-  {
-    icon: <CalenderIcon />,
-    name: "Calendar",
-    path: "/calendar",
-  },
-  {
-    icon: <UserCircleIcon />,
-    name: "User Profile",
-    path: "/profile",
-  },
-  {
-    icon: <DocsIcon />,
-    name: "Site Settings",
-    path: "/site-settings",
+    path: "/dashboard",
   },
   {
     icon: <PageIcon />,
-    name: "Landing Page",
+    name: "Konten Beranda",
     subItems: [
       { name: "Hero Section", path: "/landing-page/hero", pro: false },
       { name: "Sambutan", path: "/landing-page/sambutan", pro: false },
@@ -64,104 +40,45 @@ const navItems: NavItem[] = [
     ],
   },
   {
-    icon: <PageIcon />,
-    name: "Tentang",
+    icon: <GroupIcon />,
+    name: "Profil Organisasi",
     subItems: [
       { name: "Sejarah", path: "/sejarah", pro: false },
       { name: "Visi & Misi", path: "/visi-misi", pro: false },
+      { name: "HIMA Inti", path: "/hima-inti", pro: false },
+      { name: "Manajemen Divisi", path: "/divisions", pro: false },
     ],
   },
   {
-    icon: <GroupIcon />,
-    name: "Manajemen Divisi",
-    path: "/divisions",
-  },
-  {
-    icon: <ShootingStarIcon />,
-    name: "HIMA Inti",
-    path: "/hima-inti",
-  },
-  {
     icon: <CalenderIcon />,
-    name: "Event",
-    path: "/events",
-  },
-  {
-    icon: <ListIcon />,
-    name: "Program Kerja",
-    path: "/programs",
-  },
-  {
-    icon: <FolderIcon />,
-    name: "Galeri Kegiatan",
-    path: "/galleries",
-  },
-  {
-    icon: <DocsIcon />,
-    name: "Dokumen",
+    name: "Kegiatan & Program",
     subItems: [
-      { name: "Semua Dokumen", path: "/documents", pro: false },
-      { name: "Kategori", path: "/documents/categories", pro: false },
+      { name: "Event", path: "/events", pro: false },
+      { name: "Program Kerja", path: "/programs", pro: false },
+      { name: "Galeri Kegiatan", path: "/galleries", pro: false },
     ],
   },
   {
     icon: <ChatIcon />,
-    name: "Berita",
+    name: "Publikasi & Arsip",
     subItems: [
       { name: "Semua Berita", path: "/news", pro: false },
-      { name: "Kategori", path: "/news/categories", pro: false },
+      { name: "Kategori Berita", path: "/news/categories", pro: false },
+      { name: "Semua Dokumen", path: "/documents", pro: false },
+      { name: "Kategori Dokumen", path: "/documents/categories", pro: false },
     ],
   },
-
   {
-    name: "Forms",
-    icon: <ListIcon />,
-    subItems: [{ name: "Form Elements", path: "/form-elements", pro: false }],
-  },
-  {
-    name: "Tables",
-    icon: <TableIcon />,
-    subItems: [{ name: "Basic Tables", path: "/basic-tables", pro: false }],
-  },
-  {
-    name: "Pages",
-    icon: <PageIcon />,
+    icon: <UserCircleIcon />,
+    name: "Pengaturan",
     subItems: [
-      { name: "Blank Page", path: "/blank", pro: false },
-      { name: "404 Error", path: "/error-404", pro: false },
+      { name: "Pengaturan Situs", path: "/site-settings", pro: false },
+      { name: "Pengaturan Admin", path: "/settings", pro: false },
     ],
   },
 ];
 
-const othersItems: NavItem[] = [
-  {
-    icon: <PieChartIcon />,
-    name: "Charts",
-    subItems: [
-      { name: "Line Chart", path: "/line-chart", pro: false },
-      { name: "Bar Chart", path: "/bar-chart", pro: false },
-    ],
-  },
-  {
-    icon: <BoxCubeIcon />,
-    name: "UI Elements",
-    subItems: [
-      { name: "Alerts", path: "/alerts", pro: false },
-      { name: "Avatar", path: "/avatars", pro: false },
-      { name: "Badge", path: "/badge", pro: false },
-      { name: "Buttons", path: "/buttons", pro: false },
-      { name: "Images", path: "/images", pro: false },
-      { name: "Videos", path: "/videos", pro: false },
-    ],
-  },
-  {
-    icon: <PlugInIcon />,
-    name: "Authentication",
-    subItems: [
-      { name: "Login", path: "/login", pro: false },
-    ],
-  },
-];
+const othersItems: NavItem[] = [];
 
 const AppSidebar: React.FC = () => {
   const { isExpanded, isMobileOpen, isHovered, setIsHovered } = useSidebar();
@@ -422,13 +339,13 @@ const AppSidebar: React.FC = () => {
           <div className="flex flex-col gap-4">
             <div>
               <h2
-                className={`mb-4 text-xs uppercase flex leading-[20px] text-gray-400 ${!isExpanded && !isHovered
+                className={`mb-4 text-xs uppercase flex leading-5 text-gray-400 ${!isExpanded && !isHovered
                   ? "lg:justify-center"
                   : "justify-start"
                   }`}
               >
                 {isExpanded || isHovered || isMobileOpen ? (
-                  "Menu"
+                  "Menu Utama"
                 ) : (
                   <HorizontaLDots />
                 )}
@@ -436,24 +353,25 @@ const AppSidebar: React.FC = () => {
               {renderMenuItems(navItems, "main")}
             </div>
 
-            <div className="">
-              <h2
-                className={`mb-4 text-xs uppercase flex leading-[20px] text-gray-400 ${!isExpanded && !isHovered
-                  ? "lg:justify-center"
-                  : "justify-start"
-                  }`}
-              >
-                {isExpanded || isHovered || isMobileOpen ? (
-                  "Others"
-                ) : (
-                  <HorizontaLDots />
-                )}
-              </h2>
-              {renderMenuItems(othersItems, "others")}
-            </div>
+            {othersItems.length > 0 && (
+              <div className="">
+                <h2
+                  className={`mb-4 text-xs uppercase flex leading-5 text-gray-400 ${!isExpanded && !isHovered
+                    ? "lg:justify-center"
+                    : "justify-start"
+                    }`}
+                >
+                  {isExpanded || isHovered || isMobileOpen ? (
+                    "Lainnya"
+                  ) : (
+                    <HorizontaLDots />
+                  )}
+                </h2>
+                {renderMenuItems(othersItems, "others")}
+              </div>
+            )}
           </div>
         </nav>
-        {isExpanded || isHovered || isMobileOpen ? <SidebarWidget /> : null}
       </div>
     </aside>
   );

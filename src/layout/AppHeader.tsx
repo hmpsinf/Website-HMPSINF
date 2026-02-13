@@ -1,16 +1,49 @@
 "use client";
 import { ThemeToggleButton } from "@/components/common/ThemeToggleButton";
-import NotificationDropdown from "@/components/header/NotificationDropdown";
 import UserDropdown from "@/components/header/UserDropdown";
 import { useSidebar } from "@/context/SidebarContext";
 import { useSiteSettings } from "@/context/SiteSettingsContext";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import React, { useState, useEffect, useRef } from "react";
+
+type HeaderSearchPage = {
+  name: string;
+  path: string;
+  group: string;
+};
+
+const HEADER_SEARCH_PAGES: HeaderSearchPage[] = [
+  { name: "Dashboard", path: "/dashboard", group: "Menu Utama" },
+  { name: "Hero Section", path: "/landing-page/hero", group: "Konten Beranda" },
+  { name: "Sambutan", path: "/landing-page/sambutan", group: "Konten Beranda" },
+  { name: "Video Section", path: "/landing-page/video", group: "Konten Beranda" },
+  { name: "CTA Section", path: "/landing-page/cta", group: "Konten Beranda" },
+  { name: "Sejarah", path: "/sejarah", group: "Profil Organisasi" },
+  { name: "Visi & Misi", path: "/visi-misi", group: "Profil Organisasi" },
+  { name: "HIMA Inti", path: "/hima-inti", group: "Profil Organisasi" },
+  { name: "Manajemen Divisi", path: "/divisions", group: "Profil Organisasi" },
+  { name: "Event", path: "/events", group: "Kegiatan & Program" },
+  { name: "Program Kerja", path: "/programs", group: "Kegiatan & Program" },
+  { name: "Galeri Kegiatan", path: "/galleries", group: "Kegiatan & Program" },
+  { name: "Semua Berita", path: "/news", group: "Publikasi & Arsip" },
+  { name: "Kategori Berita", path: "/news/categories", group: "Publikasi & Arsip" },
+  { name: "Semua Dokumen", path: "/documents", group: "Publikasi & Arsip" },
+  { name: "Kategori Dokumen", path: "/documents/categories", group: "Publikasi & Arsip" },
+  { name: "Pengaturan Situs", path: "/site-settings", group: "Pengaturan" },
+  { name: "Pengaturan Admin", path: "/settings", group: "Pengaturan" },
+  { name: "Profil Saya", path: "/profile", group: "Akun" },
+  { name: "Login", path: "/login", group: "Autentikasi" },
+  { name: "404 Error", path: "/error-404", group: "Sistem" },
+];
 
 const AppHeader: React.FC = () => {
   const [isApplicationMenuOpen, setApplicationMenuOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
   const { settings, loading: settingsLoading } = useSiteSettings();
+  const router = useRouter();
 
   const { isMobileOpen, toggleSidebar, toggleMobileSidebar } = useSidebar();
 
@@ -26,6 +59,22 @@ const AppHeader: React.FC = () => {
     setApplicationMenuOpen(!isApplicationMenuOpen);
   };
   const inputRef = useRef<HTMLInputElement>(null);
+  const searchWrapperRef = useRef<HTMLDivElement>(null);
+
+  const normalizedQuery = searchQuery.trim().toLowerCase();
+  const searchResults =
+    normalizedQuery.length === 0
+      ? []
+      : HEADER_SEARCH_PAGES.filter((item) => {
+        const haystack = `${item.name} ${item.group} ${item.path}`.toLowerCase();
+        return haystack.includes(normalizedQuery);
+      }).slice(0, 8);
+
+  const goToPage = (path: string) => {
+    router.push(path);
+    setSearchQuery("");
+    setIsSearchOpen(false);
+  };
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
@@ -39,6 +88,22 @@ const AppHeader: React.FC = () => {
 
     return () => {
       document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, []);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        searchWrapperRef.current &&
+        !searchWrapperRef.current.contains(event.target as Node)
+      ) {
+        setIsSearchOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
 
@@ -144,8 +209,15 @@ const AppHeader: React.FC = () => {
           </button>
 
           <div className="hidden lg:block">
-            <form>
-              <div className="relative">
+            <form
+              onSubmit={(event) => {
+                event.preventDefault();
+                if (searchResults.length > 0) {
+                  goToPage(searchResults[0].path);
+                }
+              }}
+            >
+              <div className="relative" ref={searchWrapperRef}>
                 <span className="absolute -translate-y-1/2 left-4 top-1/2 pointer-events-none">
                   <svg
                     className="fill-gray-500 dark:fill-gray-400"
@@ -166,14 +238,53 @@ const AppHeader: React.FC = () => {
                 <input
                   ref={inputRef}
                   type="text"
-                  placeholder="Search or type command..."
-                  className="dark:bg-dark-900 h-11 w-full rounded-lg border border-gray-200 bg-transparent py-2.5 pl-12 pr-14 text-sm text-gray-800 shadow-theme-xs placeholder:text-gray-400 focus:border-brand-300 focus:outline-hidden focus:ring-3 focus:ring-brand-500/10 dark:border-gray-800 dark:bg-gray-900 dark:bg-white/[0.03] dark:text-white/90 dark:placeholder:text-white/30 dark:focus:border-brand-800 xl:w-[430px]"
+                  placeholder="Cari halaman admin..."
+                  value={searchQuery}
+                  onFocus={() => setIsSearchOpen(true)}
+                  onChange={(event) => {
+                    setSearchQuery(event.target.value);
+                    setIsSearchOpen(true);
+                  }}
+                  className="dark:bg-dark-900 h-11 w-full rounded-lg border border-gray-200 bg-transparent py-2.5 pl-12 pr-14 text-sm text-gray-800 shadow-theme-xs placeholder:text-gray-400 focus:border-brand-300 focus:outline-hidden focus:ring-3 focus:ring-brand-500/10 dark:border-gray-800 dark:bg-white/3 dark:text-white/90 dark:placeholder:text-white/30 dark:focus:border-brand-800 xl:w-[430px]"
                 />
 
-                <button className="absolute right-2.5 top-1/2 inline-flex -translate-y-1/2 items-center gap-0.5 rounded-lg border border-gray-200 bg-gray-50 px-[7px] py-[4.5px] text-xs -tracking-[0.2px] text-gray-500 dark:border-gray-800 dark:bg-white/[0.03] dark:text-gray-400">
+                <button
+                  type="button"
+                  onClick={() => inputRef.current?.focus()}
+                  className="absolute right-2.5 top-1/2 inline-flex -translate-y-1/2 items-center gap-0.5 rounded-lg border border-gray-200 bg-gray-50 px-[7px] py-[4.5px] text-xs -tracking-[0.2px] text-gray-500 dark:border-gray-800 dark:bg-white/3 dark:text-gray-400"
+                >
                   <span> ⌘ </span>
                   <span> K </span>
                 </button>
+
+                {isSearchOpen && normalizedQuery.length > 0 && (
+                  <div className="absolute top-full z-99999 mt-2 w-full overflow-hidden rounded-xl border border-gray-200 bg-white shadow-theme-lg dark:border-gray-800 dark:bg-gray-900">
+                    {searchResults.length > 0 ? (
+                      <ul className="max-h-80 overflow-y-auto py-2">
+                        {searchResults.map((item) => (
+                          <li key={item.path}>
+                            <button
+                              type="button"
+                              onClick={() => goToPage(item.path)}
+                              className="flex w-full items-start justify-between gap-3 px-4 py-2.5 text-left hover:bg-gray-100 dark:hover:bg-white/5"
+                            >
+                              <span className="text-sm text-gray-800 dark:text-white/90">
+                                {item.name}
+                              </span>
+                              <span className="text-xs text-gray-500 dark:text-gray-400">
+                                {item.group}
+                              </span>
+                            </button>
+                          </li>
+                        ))}
+                      </ul>
+                    ) : (
+                      <div className="px-4 py-3 text-sm text-gray-500 dark:text-gray-400">
+                        Halaman tidak ditemukan
+                      </div>
+                    )}
+                  </div>
+                )}
               </div>
             </form>
           </div>
@@ -186,9 +297,6 @@ const AppHeader: React.FC = () => {
             {/* <!-- Dark Mode Toggler --> */}
             <ThemeToggleButton />
             {/* <!-- Dark Mode Toggler --> */}
-
-            <NotificationDropdown />
-            {/* <!-- Notification Menu Area --> */}
           </div>
           {/* <!-- User Area --> */}
           <UserDropdown />

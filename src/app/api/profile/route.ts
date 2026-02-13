@@ -57,7 +57,7 @@ export async function PUT(request: NextRequest) {
       );
     }
 
-    const { name, phone, bio } = await request.json();
+    const { name, email, phone, bio } = await request.json();
 
     if (!name || name.trim() === '') {
       return NextResponse.json(
@@ -66,11 +66,40 @@ export async function PUT(request: NextRequest) {
       );
     }
 
+    if (!email || email.trim() === '') {
+      return NextResponse.json(
+        { error: 'Email harus diisi' },
+        { status: 400 }
+      );
+    }
+
+    const normalizedEmail = email.trim().toLowerCase();
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    if (!emailRegex.test(normalizedEmail)) {
+      return NextResponse.json(
+        { error: 'Format email tidak valid' },
+        { status: 400 }
+      );
+    }
+
+    const existingEmail = await db.execute({
+      sql: 'SELECT id FROM users WHERE LOWER(email) = ? AND id != ? LIMIT 1',
+      args: [normalizedEmail, authUser.id],
+    });
+
+    if (existingEmail.rows.length > 0) {
+      return NextResponse.json(
+        { error: 'Email sudah digunakan akun lain' },
+        { status: 400 }
+      );
+    }
+
     await db.execute({
       sql: `UPDATE users 
-            SET name = ?, phone = ?, bio = ?, updated_at = CURRENT_TIMESTAMP 
+            SET name = ?, email = ?, phone = ?, bio = ?, updated_at = CURRENT_TIMESTAMP 
             WHERE id = ?`,
-      args: [name.trim(), phone || null, bio || null, authUser.id],
+      args: [name.trim(), normalizedEmail, phone || null, bio || null, authUser.id],
     });
 
     return NextResponse.json({

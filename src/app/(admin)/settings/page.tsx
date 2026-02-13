@@ -22,6 +22,7 @@ export default function SettingsPage() {
 
     // Profile form state
     const [name, setName] = useState("");
+    const [email, setEmail] = useState("");
     const [phone, setPhone] = useState("");
     const [bio, setBio] = useState("");
     const [profileLoading, setProfileLoading] = useState(false);
@@ -39,6 +40,7 @@ export default function SettingsPage() {
     useEffect(() => {
         if (user) {
             setName(user.name || "");
+            setEmail(user.email || "");
             setPhone(user.phone || "");
             setBio(user.bio || "");
         }
@@ -52,7 +54,7 @@ export default function SettingsPage() {
             const res = await fetch("/api/profile", {
                 method: "PUT",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ name, phone, bio }),
+                body: JSON.stringify({ name, email, phone, bio }),
             });
 
             const data = await res.json();
@@ -181,7 +183,7 @@ export default function SettingsPage() {
                 <PageBreadcrumb pageTitle="Pengaturan" />
 
                 {/* Photo Section Skeleton */}
-                <div className="rounded-2xl border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-white/[0.03]">
+                <div className="rounded-2xl border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-white/3">
                     <Skeleton className="h-6 w-32 mb-4" />
                     <div className="flex items-center gap-5">
                         <Skeleton className="h-20 w-20 rounded-full" />
@@ -193,7 +195,7 @@ export default function SettingsPage() {
                 </div>
 
                 {/* Profile Form Skeleton */}
-                <div className="rounded-2xl border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-white/[0.03]">
+                <div className="rounded-2xl border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-white/3">
                     <Skeleton className="h-6 w-40 mb-4" />
                     <div className="space-y-4">
                         <div>
@@ -221,7 +223,7 @@ export default function SettingsPage() {
             <PageBreadcrumb pageTitle="Pengaturan" />
 
             {/* Photo Section */}
-            <div className="rounded-2xl border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-white/[0.03]">
+            <div className="rounded-2xl border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-white/3">
                 <h3 className="mb-4 text-lg font-medium text-gray-800 dark:text-white">
                     Foto Profil
                 </h3>
@@ -268,7 +270,7 @@ export default function SettingsPage() {
             </div>
 
             {/* Profile Form */}
-            <div className="rounded-2xl border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-white/[0.03]">
+            <div className="rounded-2xl border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-white/3">
                 <h3 className="mb-4 text-lg font-medium text-gray-800 dark:text-white">
                     Informasi Profil
                 </h3>
@@ -287,10 +289,11 @@ export default function SettingsPage() {
                         <Label>Email</Label>
                         <Input
                             type="email"
-                            value={user?.email || ""}
-                            disabled
+                            placeholder="Masukkan email"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
                         />
-                        <p className="mt-1 text-xs text-gray-500">Email tidak dapat diubah</p>
+                        <p className="mt-1 text-xs text-gray-500">Email digunakan untuk login admin</p>
                     </div>
                     <div>
                         <Label>Nomor Telepon</Label>
@@ -319,7 +322,7 @@ export default function SettingsPage() {
             </div>
 
             {/* Password Form */}
-            <div className="rounded-2xl border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-white/[0.03]">
+            <div className="rounded-2xl border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-white/3">
                 <h3 className="mb-4 text-lg font-medium text-gray-800 dark:text-white">
                     Ubah Password
                 </h3>
