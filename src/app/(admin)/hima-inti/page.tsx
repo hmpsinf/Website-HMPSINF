@@ -15,19 +15,21 @@ import { DEFAULT_HIMA_INTI_PATTERN_COLOR } from "@/lib/pattern";
 
 // Label posisi HIMA Inti
 const POSITION_LABELS: Record<string, string> = {
-    dosen_pembimbing: "Dosen Pembimbing",
-    ketua: "Ketua Himpunan",
-    wakil_ketua: "Wakil Ketua Himpunan",
-    sekretaris: "Sekretaris",
-    bendahara: "Bendahara",
+    penasehat: "Penasehat",
+    pembina: "Pembina",
+    ketua_umum: "Ketua Umum",
+    sekretaris_umum: "Sekretaris Umum",
+    wakil_ketua: "Wakil Ketua",
+    bendahara_umum: "Bendahara Umum",
 };
 
 const POSITION_ORDER = [
-    "dosen_pembimbing",
-    "ketua",
+    "penasehat",
+    "pembina",
+    "ketua_umum",
+    "sekretaris_umum",
     "wakil_ketua",
-    "sekretaris",
-    "bendahara",
+    "bendahara_umum",
 ];
 
 interface Period {
@@ -303,7 +305,7 @@ export default function HimaIntiPage() {
 
                         {/* Loading state */}
                         {loadingMembers && selectedPeriodId && (
-                            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
+                            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
                                 {[...Array(5)].map((_, i) => (
                                     <HimaIntiSkeleton key={i} />
                                 ))}
@@ -327,7 +329,7 @@ export default function HimaIntiPage() {
 
                         {/* Members Grid - 5 kolom untuk 5 posisi */}
                         {!loadingMembers && selectedPeriodId && members.length > 0 && (
-                            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
+                            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
                                 {members.map((member) => (
                                     <HimaIntiCard
                                         key={member.id}

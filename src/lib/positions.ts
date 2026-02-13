@@ -4,21 +4,26 @@ export const OFFICER_POSITIONS = [
   'Bendahara',
 ] as const;
 
+export const DOSEN_PENDAMPING_POSITION = 'Dosen Pendamping';
+
 // Campus head positions that get photo support
 export const KETUA_CAMPUS_POSITIONS = [
   'Ketua Divisi Kampus B',
   'Ketua Divisi Kampus C',
 ] as const;
 
+// Positions with photo support (leaders displayed with photo cards)
+export const PHOTO_POSITIONS = [DOSEN_PENDAMPING_POSITION, ...KETUA_CAMPUS_POSITIONS];
+
 export const MEMBER_POSITION = 'Anggota';
 
-export const ALL_POSITIONS = [...KETUA_CAMPUS_POSITIONS, ...OFFICER_POSITIONS, MEMBER_POSITION];
+export const ALL_POSITIONS = [DOSEN_PENDAMPING_POSITION, ...KETUA_CAMPUS_POSITIONS, ...OFFICER_POSITIONS, MEMBER_POSITION];
 
 /**
  * Check if a position requires photo support
  */
 export function isPhotoPosition(position: string): boolean {
-  return KETUA_CAMPUS_POSITIONS.includes(position as any);
+  return PHOTO_POSITIONS.includes(position as any);
 }
 
 /**

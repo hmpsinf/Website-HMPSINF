@@ -23,6 +23,7 @@ export async function GET(
             WHERE division_id = ? 
             ORDER BY 
               CASE 
+                WHEN position = 'Dosen Pendamping' THEN 0
                 WHEN position = 'Ketua Divisi Kampus B' THEN 1
                 WHEN position = 'Ketua Divisi Kampus C' THEN 2
                 WHEN position = 'Sekretaris' THEN 3
@@ -68,7 +69,7 @@ export async function POST(
     const params = await context.params;
     const { id: division_id } = params;
     const body = await request.json();
-    const { member_name, position, instagram, whatsapp } = body;
+    const { member_name, position, photo_url, instagram, whatsapp } = body;
 
     if (!member_name || !member_name.trim()) {
       return NextResponse.json(
@@ -101,9 +102,9 @@ export async function POST(
     const id = nanoid();
 
     await db.execute({
-      sql: `INSERT INTO division_members (id, division_id, member_name, position, instagram, whatsapp, created_at, updated_at) 
-            VALUES (?, ?, ?, ?, ?, ?, datetime('now'), datetime('now'))`,
-      args: [id, division_id, member_name.trim(), position.trim(), instagram?.trim() || null, whatsapp?.trim() || null],
+      sql: `INSERT INTO division_members (id, division_id, member_name, position, photo_url, instagram, whatsapp, created_at, updated_at) 
+            VALUES (?, ?, ?, ?, ?, ?, ?, datetime('now'), datetime('now'))`,
+      args: [id, division_id, member_name.trim(), position.trim(), photo_url || null, instagram?.trim() || null, whatsapp?.trim() || null],
     });
 
     return NextResponse.json(

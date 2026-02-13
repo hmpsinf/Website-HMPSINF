@@ -5,19 +5,21 @@ import { v4 as uuidv4 } from "uuid";
 
 // Label jabatan dalam bahasa Indonesia
 export const POSITION_LABELS: Record<string, string> = {
-  dosen_pembimbing: "Dosen Pembimbing HIMA",
-  ketua: "Ketua HIMA",
-  wakil_ketua: "Wakil Ketua HIMA",
-  sekretaris: "Sekretaris",
-  bendahara: "Bendahara",
+  penasehat: "Penasehat",
+  pembina: "Pembina",
+  ketua_umum: "Ketua Umum",
+  sekretaris_umum: "Sekretaris Umum",
+  wakil_ketua: "Wakil Ketua",
+  bendahara_umum: "Bendahara Umum",
 };
 
 export const POSITION_ORDER = [
-  "dosen_pembimbing",
-  "ketua",
+  "penasehat",
+  "pembina",
+  "ketua_umum",
+  "sekretaris_umum",
   "wakil_ketua",
-  "sekretaris",
-  "bendahara",
+  "bendahara_umum",
 ];
 
 // GET /api/hima-inti - Ambil semua anggota inti

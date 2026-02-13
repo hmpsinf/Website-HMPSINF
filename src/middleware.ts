@@ -7,13 +7,23 @@ const JWT_SECRET = new TextEncoder().encode(
 );
 
 // Routes that don't require authentication
-const publicRoutes = ['/signin', '/signup', '/api/auth/login'];
+const publicRoutes = [
+  '/login', 
+  '/api/auth',
+  '/berita',
+  '/profil',
+  '/logo',
+  '/galeri',
+  '/unduhan',
+  '/kontak',
+  '/dokumen'
+];
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   // Allow public routes
-  if (publicRoutes.some(route => pathname.startsWith(route))) {
+  if (pathname === '/' || publicRoutes.some(route => pathname.startsWith(route))) {
     return NextResponse.next();
   }
 
@@ -30,9 +40,9 @@ export async function middleware(request: NextRequest) {
   const token = request.cookies.get('auth_token')?.value;
 
   if (!token) {
-    // Redirect to signin if no token
-    const signinUrl = new URL('/signin', request.url);
-    return NextResponse.redirect(signinUrl);
+    // Redirect to login if no token
+    const loginUrl = new URL('/login', request.url);
+    return NextResponse.redirect(loginUrl);
   }
 
   try {
@@ -40,9 +50,9 @@ export async function middleware(request: NextRequest) {
     await jwtVerify(token, JWT_SECRET);
     return NextResponse.next();
   } catch {
-    // Invalid token, redirect to signin
-    const signinUrl = new URL('/signin', request.url);
-    const response = NextResponse.redirect(signinUrl);
+    // Invalid token, redirect to login
+    const loginUrl = new URL('/login', request.url);
+    const response = NextResponse.redirect(loginUrl);
     response.cookies.delete('auth_token');
     return response;
   }

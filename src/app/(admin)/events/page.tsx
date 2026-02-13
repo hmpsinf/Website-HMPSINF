@@ -12,10 +12,12 @@ import { useToast } from '@/components/ui/Toast';
 import { DeleteConfirmationModal } from '@/components/ui/modal/DeleteConfirmationModal';
 import RichTextEditor from '@/components/ui/RichTextEditor';
 import FormModal from '@/components/admin/events/FormModal';
+import { formatDate, formatTime } from '@/lib/utils';
 
 interface Event {
     id: string;
     title: string;
+    slug: string; // Add slug
     thumbnail_url: string | null;
     thumbnail_public_id: string | null;
     event_date: string;
@@ -47,50 +49,7 @@ interface Pagination {
     totalPages: number;
 }
 
-// Format date
-function formatDate(dateString: string, endDateString?: string | null): string {
-    const d = new Date(dateString);
-    const options: Intl.DateTimeFormatOptions = { day: 'numeric', month: 'long', year: 'numeric' };
 
-    if (endDateString && endDateString !== dateString) {
-        const endD = new Date(endDateString);
-        // Same year and month
-        if (d.getFullYear() === endD.getFullYear() && d.getMonth() === endD.getMonth()) {
-            return `${d.getDate()} - ${endD.getDate()} ${d.toLocaleDateString('id-ID', { month: 'long', year: 'numeric' })}`;
-        }
-        // Same year different month
-        if (d.getFullYear() === endD.getFullYear()) {
-            return `${d.getDate()} ${d.toLocaleDateString('id-ID', { month: 'short' })} - ${endD.getDate()} ${endD.toLocaleDateString('id-ID', { month: 'long', year: 'numeric' })}`;
-        }
-        // Different year
-        return `${d.toLocaleDateString('id-ID', options)} - ${endD.toLocaleDateString('id-ID', options)}`;
-    }
-    return d.toLocaleDateString('id-ID', {
-        day: 'numeric',
-        month: 'long',
-        year: 'numeric'
-    });
-    return d.toLocaleDateString('id-ID', {
-        day: 'numeric',
-        month: 'long',
-        year: 'numeric'
-    });
-}
-
-// Format time
-function formatTime(timeStr: string | null, endTimeStr?: string | null) {
-    if (!timeStr) return "";
-
-    const cleanTime = (t: string) => t.replace(/\s*WIB/i, "").trim();
-    const start = cleanTime(timeStr);
-
-    if (endTimeStr) {
-        const end = cleanTime(endTimeStr);
-        return `${start} - ${end} WIB`;
-    }
-
-    return `${start} WIB`;
-}
 
 // Card Skeleton
 function CardSkeleton() {
@@ -605,6 +564,15 @@ export default function EventsPage() {
                                                 >
                                                     <Trash2 className="h-4 w-4" />
                                                 </button>
+                                                <a
+                                                    href={`/event/${(event as any).slug}`}
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
+                                                    className="p-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
+                                                    title="Lihat di Website"
+                                                >
+                                                    <ExternalLink className="h-4 w-4" />
+                                                </a>
                                             </div>
                                         </div>
 

@@ -22,7 +22,8 @@ export async function GET(
               d.color as division_color,
               hp.name as period_name,
               doc.title as document_title,
-              doc.file_url as document_file_url
+              doc.file_url as document_file_url,
+              pk.location
             FROM program_kerja pk
             LEFT JOIN divisions d ON pk.division_id = d.id
             LEFT JOIN hima_periods hp ON pk.period_id = hp.id
@@ -58,6 +59,7 @@ export async function GET(
       end_date: row.end_date,
       created_at: row.created_at,
       updated_at: row.updated_at,
+      location: row.location,
     };
 
     return NextResponse.json(program);
@@ -124,6 +126,7 @@ export async function PUT(
               priority = ?,
               start_date = ?,
               end_date = ?,
+              location = ?,
               updated_at = ?
             WHERE id = ?`,
       args: [
@@ -137,6 +140,7 @@ export async function PUT(
         priority,
         start_date || null,
         end_date || null,
+        body.location || null,
         now,
         id,
       ],

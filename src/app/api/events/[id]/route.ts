@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import db from "@/lib/db";
 import { getCurrentUser } from "@/lib/auth";
 import { v2 as cloudinary } from "cloudinary";
+import { generateSlug } from "@/lib/utils";
 
 // Configure Cloudinary
 cloudinary.config({
@@ -13,6 +14,7 @@ cloudinary.config({
 interface EventRow {
   id: string;
   title: string;
+  slug: string; // Add slug
   thumbnail_url: string | null;
   thumbnail_public_id: string | null;
   event_date: string;
@@ -54,6 +56,7 @@ export async function GET(
     const event = {
       id: row.id,
       title: row.title,
+      slug: row.slug,
       thumbnail_url: row.thumbnail_url,
       thumbnail_public_id: row.thumbnail_public_id,
       event_date: row.event_date,
@@ -183,10 +186,25 @@ export async function PUT(
       thumbnailPublicId = uploadResult.public_id;
     }
 
+    // Cek slug jika judul berubah
+    let slug = (existingEvent as any).slug;
+    if (title !== existingEvent.title) {
+        slug = generateSlug(title);
+        // Check uniqueness
+        const check = await db.execute({
+             sql: "SELECT id FROM events WHERE slug = ? AND id != ?",
+             args: [slug, id]
+        });
+        if (check.rows.length > 0) {
+             slug = `${slug}-${id.slice(0, 8)}`;
+        }
+    }
+
     await db.execute({
       sql: `
         UPDATE events SET
           title = ?,
+          slug = ?,
           thumbnail_url = ?,
           thumbnail_public_id = ?,
           event_date = ?,
@@ -205,6 +223,7 @@ export async function PUT(
       `,
       args: [
         title.trim(),
+        slug,
         thumbnailUrl,
         thumbnailPublicId,
         eventDate,
@@ -222,7 +241,7 @@ export async function PUT(
       ],
     });
 
-    return NextResponse.json({ message: "Event berhasil diperbarui" });
+    return NextResponse.json({ message: "Event berhasil diperbarui", slug });
   } catch (error: unknown) {
     console.error("Error updating event:", error);
     return NextResponse.json(

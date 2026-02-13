@@ -3,7 +3,7 @@
 import React, { useState, useRef } from "react";
 import Image from "next/image";
 import { Plus, Pencil, Trash2, AlertTriangle, Users, Upload, X, Loader2, User, MessageCircle, Instagram } from "lucide-react";
-import { ALL_POSITIONS, OFFICER_POSITIONS, MEMBER_POSITION, isPhotoPosition, KETUA_CAMPUS_POSITIONS } from "@/lib/positions";
+import { ALL_POSITIONS, OFFICER_POSITIONS, MEMBER_POSITION, isPhotoPosition, PHOTO_POSITIONS, DOSEN_PENDAMPING_POSITION } from "@/lib/positions";
 import { useToast } from "@/components/ui/Toast";
 import { DeleteConfirmationModal } from "@/components/ui/modal/DeleteConfirmationModal";
 import { generatePatternSvg } from "@/lib/pattern";
@@ -135,6 +135,7 @@ export default function MemberManagement({
                     body: JSON.stringify({
                         member_name: memberName.trim(),
                         position: selectedPosition,
+                        photo_url: photoUrl || null,
                         instagram: instagram.trim() || null,
                         whatsapp: whatsapp.trim() || null,
                     }),
@@ -529,10 +530,10 @@ export default function MemberManagement({
                     </div>
                 ) : (
                     <>
-                        {/* Leaders Section - Ketua Divisi with 2:3 photo cards */}
+                        {/* Leaders Section - Pimpinan Divisi with 2:3 photo cards */}
                         {(() => {
                             const leaders = members.filter((m) =>
-                                KETUA_CAMPUS_POSITIONS.includes(m.position as any)
+                                PHOTO_POSITIONS.includes(m.position as any)
                             );
                             if (leaders.length === 0) return null;
 
@@ -545,17 +546,17 @@ export default function MemberManagement({
                             return (
                                 <div className="space-y-3">
                                     <h4 className="text-sm font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wide">
-                                        Ketua Divisi
+                                        Pimpinan Divisi
                                     </h4>
                                     <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
                                         {leaders.map((leader) => (
                                             <div
                                                 key={leader.id}
-                                                className="group relative overflow-hidden rounded-xl border border-gray-200 bg-white transition-shadow duration-300 hover:shadow-theme-md dark:border-gray-800 dark:bg-white/[0.03]"
+                                                className="group relative overflow-hidden rounded-2xl border border-gray-200 bg-white transition-shadow duration-300 hover:shadow-theme-md dark:border-gray-800 dark:bg-white/3"
                                             >
-                                                {/* Photo with 3:4 ratio (smaller than 2:3) + pattern background */}
+                                                {/* Photo with 2:3 ratio + pattern background */}
                                                 <div
-                                                    className="relative aspect-[3/4] w-full overflow-hidden bg-white dark:bg-gray-900"
+                                                    className="relative aspect-2/3 w-full overflow-hidden bg-white dark:bg-gray-900"
                                                     style={patternStyle}
                                                 >
                                                     {leader.photo_url ? (
@@ -568,7 +569,7 @@ export default function MemberManagement({
                                                         />
                                                     ) : (
                                                         <div className="flex h-full w-full items-center justify-center">
-                                                            <User className="h-16 w-16 text-gray-300 dark:text-gray-600" />
+                                                            <User className="h-14 w-14 text-gray-300 dark:text-gray-600" />
                                                         </div>
                                                     )}
 
@@ -592,31 +593,31 @@ export default function MemberManagement({
                                                 </div>
 
                                                 {/* Content */}
-                                                <div className="p-4">
+                                                <div className="p-3.5">
                                                     <div className="mb-2">
                                                         <span
-                                                            className="inline-block rounded-full px-2.5 py-0.5 text-xs font-semibold text-white"
+                                                            className="inline-block rounded-full px-2.5 py-0.5 text-[11px] font-semibold leading-relaxed text-white"
                                                             style={{ backgroundColor: divisionColor }}
                                                         >
                                                             {leader.position}
                                                         </span>
                                                     </div>
-                                                    <p className="font-semibold text-gray-800 dark:text-white">
+                                                    <p className="text-sm font-bold text-gray-800 dark:text-white font-outfit leading-snug wrap-break-word">
                                                         {leader.member_name}
                                                     </p>
-                                                    {/* Social Links - same style as HimaIntiCard */}
+                                                    {/* Social Links */}
                                                     {(leader.instagram || leader.whatsapp) && (
-                                                        <div className="flex flex-wrap items-center gap-3 mt-2">
+                                                        <div className="flex flex-col gap-1.5 mt-2">
                                                             {leader.instagram && (
                                                                 <a
                                                                     href={`https://instagram.com/${leader.instagram.replace("@", "")}`}
                                                                     target="_blank"
                                                                     rel="noopener noreferrer"
                                                                     title={`Instagram: @${leader.instagram.replace("@", "")}`}
-                                                                    className="flex items-center gap-1 text-gray-500 hover:text-pink-500 transition-colors dark:text-gray-400 dark:hover:text-pink-400"
+                                                                    className="flex items-center gap-1.5 text-gray-500 hover:text-pink-500 transition-colors dark:text-gray-400 dark:hover:text-pink-400"
                                                                 >
-                                                                    <Instagram className="h-3.5 w-3.5" />
-                                                                    <span className="text-xs">@{leader.instagram.replace("@", "")}</span>
+                                                                    <Instagram className="h-3.5 w-3.5 shrink-0" />
+                                                                    <span className="text-xs break-all leading-tight">@{leader.instagram.replace("@", "")}</span>
                                                                 </a>
                                                             )}
                                                             {leader.whatsapp && (
@@ -625,10 +626,10 @@ export default function MemberManagement({
                                                                     target="_blank"
                                                                     rel="noopener noreferrer"
                                                                     title={`WhatsApp: ${leader.whatsapp}`}
-                                                                    className="flex items-center gap-1 text-gray-500 hover:text-green-500 transition-colors dark:text-gray-400 dark:hover:text-green-400"
+                                                                    className="flex items-center gap-1.5 text-gray-500 hover:text-green-500 transition-colors dark:text-gray-400 dark:hover:text-green-400"
                                                                 >
-                                                                    <MessageCircle className="h-3.5 w-3.5" />
-                                                                    <span className="text-xs">{leader.whatsapp}</span>
+                                                                    <MessageCircle className="h-3.5 w-3.5 shrink-0" />
+                                                                    <span className="text-xs break-all leading-tight">{leader.whatsapp}</span>
                                                                 </a>
                                                             )}
                                                         </div>
@@ -644,7 +645,7 @@ export default function MemberManagement({
                         {/* Other Staff/Members Section */}
                         {(() => {
                             const staffMembers = members.filter((m) =>
-                                !KETUA_CAMPUS_POSITIONS.includes(m.position as any)
+                                !PHOTO_POSITIONS.includes(m.position as any)
                             );
                             if (staffMembers.length === 0) return null;
 

@@ -27,6 +27,13 @@ const navItems: NavItem[] = [
     },
     { label: "Berita", href: "/berita" },
     {
+        label: "Agenda",
+        children: [
+            { label: "Program Kerja", href: "/program-kerja" }, // Assumption: /program-kerja exists or will exist
+            { label: "Event", href: "/event" },
+        ],
+    },
+    {
         label: "Informasi",
         children: [
             { label: "Galeri", href: "/galeri" },

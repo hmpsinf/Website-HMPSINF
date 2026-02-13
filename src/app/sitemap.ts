@@ -9,7 +9,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     '',
     '/profil/sejarah',
     '/profil/visi-misi',
-    '/profil/struktur-organisasi',
+    '/profil/struktur',
     '/logo',
     '/berita',
     '/galeri',

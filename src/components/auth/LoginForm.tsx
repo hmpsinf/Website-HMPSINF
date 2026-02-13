@@ -8,7 +8,7 @@ import React, { useState } from "react";
 import { useAuth } from "@/context/AuthContext";
 import { useRouter } from "next/navigation";
 
-export default function SignInForm() {
+export default function LoginForm() {
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -48,7 +48,7 @@ export default function SignInForm() {
           className="inline-flex items-center text-sm text-gray-500 transition-colors hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300"
         >
           <ChevronLeftIcon />
-          Kembali ke Dashboard
+          Kembali ke Beranda
         </Link>
       </div>
       <div className="flex flex-col justify-center flex-1 w-full max-w-md mx-auto">
@@ -74,7 +74,7 @@ export default function SignInForm() {
                     Email <span className="text-error-500">*</span>
                   </Label>
                   <Input
-                    placeholder="email@hmpsinf.org"
+                    placeholder="nama@email.com"
                     type="email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
@@ -87,7 +87,7 @@ export default function SignInForm() {
                   <div className="relative">
                     <Input
                       type={showPassword ? "text" : "password"}
-                      placeholder="Masukkan password Anda"
+                      placeholder="Masukkan kata sandi Anda"
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
                     />

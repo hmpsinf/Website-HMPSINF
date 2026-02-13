@@ -68,7 +68,7 @@ export async function getAllNews(page = 1, limit = 12, search = "", category = "
     sql: `
       SELECT 
         n.id, n.title, n.slug, n.excerpt, n.thumbnail_url,
-        n.published_at, n.created_at, n.view_count,
+        n.published_at, n.created_at, n.view_count, n.author_name,
         (SELECT COUNT(*) FROM news_comments WHERE news_id = n.id AND is_approved = 1) as comment_count,
         c.name as category_name, c.slug as category_slug
       FROM news n
@@ -90,6 +90,7 @@ export async function getAllNews(page = 1, limit = 12, search = "", category = "
     created_at: row.created_at as string,
     view_count: Number(row.view_count || 0),
     comment_count: Number(row.comment_count || 0),
+    author_name: row.author_name as string | null,
     category_name: row.category_name as string | null,
     category_slug: row.category_slug as string | null,
   }));
@@ -103,6 +104,102 @@ export async function getAllNews(page = 1, limit = 12, search = "", category = "
       totalPages: Math.ceil(total / limit),
     },
   };
+}
+
+// ── Single News by Slug ──
+export async function getNewsBySlug(slug: string) {
+  const result = await db.execute({
+    sql: `
+      SELECT 
+        n.id, n.title, n.slug, n.excerpt, n.content, n.thumbnail_url,
+        n.published_at, n.created_at, n.updated_at, n.view_count, n.author_name,
+        n.meta_title, n.meta_description, n.meta_keywords,
+        n.category_id,
+        (SELECT COUNT(*) FROM news_comments WHERE news_id = n.id AND is_approved = 1) as comment_count,
+        c.name as category_name, c.slug as category_slug
+      FROM news n
+      LEFT JOIN news_categories c ON n.category_id = c.id
+      WHERE n.slug = ? AND n.is_published = 1
+      LIMIT 1
+    `,
+    args: [slug],
+  });
+
+  if (result.rows.length === 0) return null;
+
+  const row = result.rows[0];
+  return {
+    id: row.id as string,
+    title: row.title as string,
+    slug: row.slug as string,
+    excerpt: row.excerpt as string | null,
+    content: row.content as string | null,
+    thumbnail_url: row.thumbnail_url as string | null,
+    published_at: row.published_at as string | null,
+    created_at: row.created_at as string,
+    updated_at: row.updated_at as string | null,
+    view_count: Number(row.view_count || 0),
+    comment_count: Number(row.comment_count || 0),
+    author_name: row.author_name as string | null,
+    category_id: row.category_id as string | null,
+    category_name: row.category_name as string | null,
+    category_slug: row.category_slug as string | null,
+    meta_title: row.meta_title as string | null,
+    meta_description: row.meta_description as string | null,
+    meta_keywords: row.meta_keywords as string | null,
+  };
+}
+
+// ── Related News (same category) ──
+export async function getRelatedNews(newsId: string, categoryId: string | null, limit = 3) {
+  if (!categoryId) return [];
+
+  const result = await db.execute({
+    sql: `
+      SELECT 
+        n.id, n.title, n.slug, n.thumbnail_url,
+        n.published_at, n.view_count, n.author_name,
+        c.name as category_name
+      FROM news n
+      LEFT JOIN news_categories c ON n.category_id = c.id
+      WHERE n.category_id = ? AND n.id != ? AND n.is_published = 1
+      ORDER BY n.published_at DESC
+      LIMIT ?
+    `,
+    args: [categoryId, newsId, limit],
+  });
+
+  return result.rows.map((row) => ({
+    id: row.id as string,
+    title: row.title as string,
+    slug: row.slug as string,
+    thumbnail_url: row.thumbnail_url as string | null,
+    published_at: row.published_at as string | null,
+    view_count: Number(row.view_count || 0),
+    author_name: row.author_name as string | null,
+    category_name: row.category_name as string | null,
+  }));
+}
+
+// ── Approved Comments for a News Article ──
+export async function getNewsComments(newsId: string) {
+  const result = await db.execute({
+    sql: `
+      SELECT id, name, email, comment, created_at
+      FROM news_comments
+      WHERE news_id = ? AND is_approved = 1
+      ORDER BY created_at DESC
+    `,
+    args: [newsId],
+  });
+
+  return result.rows.map((row) => ({
+    id: row.id as string,
+    name: row.name as string,
+    email: row.email as string | null,
+    comment: row.comment as string,
+    created_at: row.created_at as string,
+  }));
 }
 
 // ── Event Mendatang ──
@@ -244,7 +341,8 @@ export async function getDivisions() {
         d.name, 
         d.description, 
         d.color, 
-        COUNT(dm.id) as member_count
+        COUNT(dm.id) as member_count,
+        (SELECT member_name FROM division_members WHERE division_id = d.id AND position = 'Dosen Pendamping' LIMIT 1) as dosen_pendamping_name
       FROM divisions d
       LEFT JOIN division_members dm ON d.id = dm.division_id
       GROUP BY d.id
@@ -259,6 +357,7 @@ export async function getDivisions() {
     description: row.description as string | null,
     color: row.color as string,
     member_count: row.member_count as number,
+    dosen_pendamping_name: row.dosen_pendamping_name as string | null,
   }));
 }
 
@@ -277,4 +376,327 @@ export async function getSejarah() {
     title: row.title as string,
     content: row.content as string | null,
   };
+}
+
+// ── Struktur Organisasi ──
+export async function getStrukturOrganisasi() {
+  // Get active period name
+  const periodResult = await db.execute({
+    sql: `SELECT id, name FROM hima_periods WHERE is_active = 1 LIMIT 1`,
+    args: [],
+  });
+
+  const activePeriod = periodResult.rows.length > 0
+    ? { id: periodResult.rows[0].id as string, name: periodResult.rows[0].name as string }
+    : null;
+
+  if (!activePeriod) return { period: null, members: [] };
+
+  // Get all HIMA Inti members for active period, ordered by position hierarchy
+  const membersResult = await db.execute({
+    sql: `
+      SELECT i.id, i.position, i.name, i.photo_url, i.instagram, i.whatsapp
+      FROM hima_inti i
+      JOIN hima_periods p ON i.period_id = p.id
+      WHERE p.is_active = 1
+      ORDER BY 
+        CASE i.position
+          WHEN 'dosen_pembimbing' THEN 1
+          WHEN 'ketua' THEN 2
+          WHEN 'wakil_ketua' THEN 3
+          WHEN 'sekretaris' THEN 4
+          WHEN 'bendahara' THEN 5
+          ELSE 6
+        END,
+        i.created_at ASC
+    `,
+    args: [],
+  });
+
+  const members = membersResult.rows.map((row) => ({
+    id: row.id as string,
+    position: row.position as string,
+    name: row.name as string,
+    photo_url: row.photo_url as string | null,
+    instagram: row.instagram as string | null,
+    whatsapp: row.whatsapp as string | null,
+  }));
+
+  return { period: activePeriod, members };
+}
+
+export async function getDivisionLeaders() {
+  // Get all divisions with only their ketua (leaders), not all members
+  const result = await db.execute({
+    sql: `
+      SELECT 
+        d.id as division_id,
+        d.name as division_name,
+        d.description as division_description,
+        d.color as division_color,
+        dm.id as member_id,
+        dm.member_name,
+        dm.position,
+        dm.photo_url,
+        dm.instagram,
+        dm.whatsapp
+      FROM divisions d
+      LEFT JOIN division_members dm ON d.id = dm.division_id 
+        AND (dm.position = 'Dosen Pendamping' OR dm.position LIKE 'Ketua%')
+      ORDER BY d.name ASC,
+        CASE WHEN dm.position = 'Dosen Pendamping' THEN 0 ELSE 1 END,
+        dm.position ASC, dm.created_at ASC
+    `,
+    args: [],
+  });
+
+  // Group by division
+  const divisionsMap = new Map<string, {
+    id: string;
+    name: string;
+    description: string | null;
+    color: string;
+    leaders: {
+      id: string;
+      member_name: string;
+      position: string;
+      photo_url: string | null;
+      instagram: string | null;
+      whatsapp: string | null;
+    }[];
+  }>();
+
+  for (const row of result.rows) {
+    const divId = row.division_id as string;
+    if (!divisionsMap.has(divId)) {
+      divisionsMap.set(divId, {
+        id: divId,
+        name: row.division_name as string,
+        description: row.division_description as string | null,
+        color: row.division_color as string,
+        leaders: [],
+      });
+    }
+
+    // Only add if there's a matching member (LEFT JOIN may return nulls)
+    if (row.member_id) {
+      divisionsMap.get(divId)!.leaders.push({
+        id: row.member_id as string,
+        member_name: row.member_name as string,
+        position: row.position as string,
+        photo_url: row.photo_url as string | null,
+        instagram: row.instagram as string | null,
+        whatsapp: row.whatsapp as string | null,
+      });
+    }
+  }
+
+  return Array.from(divisionsMap.values());
+}
+
+// ── Kategori Berita ──
+export async function getNewsCategories() {
+  const result = await db.execute({
+    sql: `
+      SELECT id, name, slug, description 
+      FROM news_categories 
+      ORDER BY name ASC
+    `,
+    args: [],
+  });
+
+  return result.rows.map((row) => ({
+    id: row.id as string,
+    name: row.name as string,
+    slug: row.slug as string,
+    description: row.description as string | null,
+  }));
+}
+
+
+// ── All Events (Pagination) ──
+// ── All Events (Pagination & Filter) ──
+export async function getEvents(page = 1, limit = 12, search = "", filter = "") {
+  const offset = (page - 1) * limit;
+  let whereClause = "1=1"; // Default always true
+  const args: (string | number)[] = [];
+
+  if (search) {
+    whereClause += " AND (title LIKE ? OR description LIKE ? OR location LIKE ?)";
+    args.push(`%${search}%`, `%${search}%`, `%${search}%`);
+  }
+
+  // Filter Logic
+  const now = new Date().toISOString();
+  if (filter === "upcoming") {
+    whereClause += " AND event_date >= ?";
+    args.push(now);
+  } else if (filter === "open") {
+    whereClause += " AND is_open = 1 AND event_date >= ?";
+    args.push(now);
+  } else if (filter === "closed") {
+    // Closed usually means registration closed OR event passed. 
+    // Let's assume 'Selesai' means event passed OR manually closed.
+    whereClause += " AND (is_open = 0 OR event_date < ?)";
+    args.push(now);
+  }
+
+  // Get total
+  const countResult = await db.execute({
+    sql: `SELECT COUNT(*) as total FROM events WHERE ${whereClause}`,
+    args,
+  });
+  const total = Number(countResult.rows[0]?.total || 0);
+
+  // Get data
+  const result = await db.execute({
+    sql: `
+      SELECT 
+        id, title, slug, thumbnail_url, event_date, event_end_date,
+        event_time, event_end_time, location, description, link_url, link_text, is_open, view_count
+      FROM events
+      WHERE ${whereClause}
+      ORDER BY event_date DESC
+      LIMIT ? OFFSET ?
+    `,
+    args: [...args, limit, offset],
+  });
+
+  const events = result.rows.map((row) => ({
+    id: row.id as string,
+    title: row.title as string,
+    slug: row.slug as string,
+    thumbnail_url: row.thumbnail_url as string,
+    event_date: row.event_date as string,
+    event_end_date: row.event_end_date as string,
+    event_time: row.event_time as string,
+    event_end_time: row.event_end_time as string,
+    location: row.location as string,
+    description: row.description as string,
+    link_url: row.link_url as string,
+    link_text: row.link_text as string,
+    is_open: Boolean(row.is_open),
+    view_count: Number(row.view_count || 0),
+  }));
+
+  return {
+    data: events,
+    meta: {
+      page,
+      limit,
+      total,
+      totalPages: Math.ceil(total / limit),
+    },
+  };
+}
+
+export async function getEventBySlug(slug: string) {
+  const result = await db.execute({
+    sql: `
+      SELECT 
+        id, title, slug, thumbnail_url, event_date, event_end_date,
+        event_time, event_end_time, location, description, link_url, link_text, is_open, view_count, timeline, kontak,
+        created_at, updated_at
+      FROM events
+      WHERE slug = ?
+    `,
+    args: [slug],
+  });
+
+  if (result.rows.length === 0) return null;
+
+  const row = result.rows[0];
+  return {
+    id: row.id as string,
+    title: row.title as string,
+    slug: row.slug as string,
+    thumbnail_url: row.thumbnail_url as string,
+    event_date: row.event_date as string,
+    event_end_date: row.event_end_date as string,
+    event_time: row.event_time as string,
+    event_end_time: row.event_end_time as string,
+    location: row.location as string,
+    description: row.description as string,
+    timeline: row.timeline as string,
+    kontak: row.kontak as string,
+    link_url: row.link_url as string,
+    link_text: row.link_text as string,
+    is_open: Boolean(row.is_open),
+    view_count: Number(row.view_count || 0),
+    created_at: row.created_at as string,
+    updated_at: row.updated_at as string,
+  };
+}
+
+// ── Program Kerja ──
+export async function getProgramKerja() {
+  const result = await db.execute({
+    sql: `
+      SELECT 
+        pk.id, pk.title, pk.description, pk.status, pk.priority,
+        pk.start_date, pk.end_date, pk.owner_type, pk.division_id,
+        d.name as division_name, d.color as division_color,
+        doc.file_url as document_url, doc.name as document_name,
+        pk.location
+      FROM program_kerja pk
+      LEFT JOIN divisions d ON pk.division_id = d.id
+      LEFT JOIN documents doc ON pk.document_id = doc.id
+      WHERE pk.status != 'dibatalkan'
+      ORDER BY 
+        CASE pk.priority 
+          WHEN 'tinggi' THEN 1 
+          WHEN 'sedang' THEN 2 
+          WHEN 'rendah' THEN 3 
+          ELSE 4 
+        END,
+        pk.status DESC, -- 'berjalan' first usually, but string sort might not be perfect. Let's rely on priority first.
+        pk.created_at DESC
+    `,
+    args: [],
+  });
+
+  return result.rows.map((row) => ({
+    id: row.id as string,
+    title: row.title as string,
+    description: row.description as string | null,
+    status: row.status as string,
+    priority: row.priority as string,
+    start_date: row.start_date as string | null,
+    end_date: row.end_date as string | null,
+    owner_type: row.owner_type as string,
+    division_id: row.division_id as string | null,
+    division_name: row.division_name as string | null,
+    division_color: row.division_color as string | null,
+    document_url: row.document_url as string | null,
+    document_name: row.document_name as string | null,
+    location: row.location as string | null,
+  }));
+}
+
+// ── Dokumen Program Kerja (General) ──
+export async function getProgramKerjaDocuments() {
+  // Category ID for "Program Kerja" from document_categories table
+  const PROGRAM_KERJA_CATEGORY_ID = 'afced389-9087-4c2d-9517-87d75757c342';
+
+  const result = await db.execute({
+    sql: `
+      SELECT 
+        id, name, file_url, file_type, file_size, created_at, owner_type, division_id
+      FROM documents
+      WHERE category_id = ?
+      ORDER BY created_at DESC
+    `,
+    args: [PROGRAM_KERJA_CATEGORY_ID],
+  });
+
+  return result.rows.map((row) => ({
+    id: row.id as string,
+    name: row.name as string,
+    file_url: row.file_url as string,
+    file_type: row.file_type as string | null,
+    file_size: Number(row.file_size || 0),
+    created_at: row.created_at as string,
+    owner_type: row.owner_type as string,
+    division_id: row.division_id as string | null,
+  }));
 }

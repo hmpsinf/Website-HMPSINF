@@ -2,6 +2,7 @@ import React from "react";
 import Link from "next/link";
 import { ArrowRight, Calendar, Eye, MessageCircle, User } from "lucide-react";
 import { getLatestNews } from "@/lib/queries/public";
+import { formatSmartDate } from "@/lib/utils";
 
 export default async function NewsSection() {
     const news = await getLatestNews(3);
@@ -10,28 +11,6 @@ export default async function NewsSection() {
 
     const featured = news[0];
     const others = news.slice(1);
-
-    const getRelativeTime = (dateString: string | null) => {
-        if (!dateString) return "Tanggal tidak tersedia";
-        try {
-            const date = new Date(dateString);
-            const now = new Date();
-            const diffInSeconds = Math.floor((now.getTime() - date.getTime()) / 1000);
-
-            if (diffInSeconds < 60) return "Baru saja";
-            if (diffInSeconds < 3600) return `${Math.floor(diffInSeconds / 60)} menit yang lalu`;
-            if (diffInSeconds < 86400) return `${Math.floor(diffInSeconds / 3600)} jam yang lalu`;
-            if (diffInSeconds < 172800) return "1 hari yang lalu"; // Less than 48 hours
-
-            return date.toLocaleDateString("id-ID", {
-                day: "numeric",
-                month: "long",
-                year: "numeric",
-            });
-        } catch (e) {
-            return dateString;
-        }
-    };
 
     return (
         <section className="bg-white py-16 md:py-24 overflow-hidden relative">
@@ -72,7 +51,7 @@ export default async function NewsSection() {
 
                             <div className="absolute top-4 left-4 sm:top-6 sm:left-6">
                                 {featured.category_name && (
-                                    <span className="inline-flex items-center rounded-full bg-brand-600/90 px-3 py-1 text-xs font-medium text-white backdrop-blur-sm">
+                                    <span className="inline-flex items-center rounded-full bg-white px-3 py-1 text-xs font-semibold text-gray-900 backdrop-blur-md shadow-sm">
                                         {featured.category_name}
                                     </span>
                                 )}
@@ -87,7 +66,7 @@ export default async function NewsSection() {
                                     </div>
                                     <div className="flex items-center gap-1.5">
                                         <Calendar className="h-4 w-4" />
-                                        <span>{getRelativeTime(featured.published_at)}</span>
+                                        <span>{formatSmartDate(featured.published_at)}</span>
                                     </div>
                                     <div className="flex items-center gap-1.5">
                                         <Eye className="h-4 w-4" />
@@ -127,7 +106,7 @@ export default async function NewsSection() {
                                         )}
                                         <div className="absolute top-3 left-3">
                                             {item.category_name && (
-                                                <span className="inline-flex items-center rounded-full bg-brand-600/90 px-2.5 py-0.5 text-xs font-medium text-white backdrop-blur-sm shadow-sm">
+                                                <span className="inline-flex items-center rounded-full bg-white px-2.5 py-0.5 text-xs font-semibold text-gray-900 backdrop-blur-md shadow-sm">
                                                     {item.category_name}
                                                 </span>
                                             )}
@@ -136,7 +115,7 @@ export default async function NewsSection() {
                                     <div className="flex flex-col p-5 sm:p-6 grow">
                                         <div className="flex items-center gap-2 text-xs text-gray-500 mb-3 font-medium">
                                             <Calendar className="h-3.5 w-3.5" />
-                                            <span>{getRelativeTime(item.published_at)}</span>
+                                            <span>{formatSmartDate(item.published_at)}</span>
                                         </div>
                                         <h3 className="text-lg font-bold text-gray-900 mb-2 line-clamp-2 group-hover:text-brand-600 transition-colors">
                                             <Link href={`/berita/${item.slug}`}>

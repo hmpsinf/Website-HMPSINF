@@ -4,7 +4,7 @@ import { useState, useEffect, useCallback } from 'react';
 import {
     Plus, Search, X, Edit2, Trash2, Calendar,
     Target, Briefcase, Filter, ExternalLink,
-    CheckCircle, Clock, AlertCircle, XCircle, FileText, Download
+    CheckCircle, Clock, AlertCircle, XCircle, FileText, Download, MapPin
 } from 'lucide-react';
 import PageBreadcrumb from '@/components/common/PageBreadCrumb';
 import { useToast } from '@/components/ui/Toast';
@@ -28,6 +28,7 @@ interface ProgramKerja {
     start_date: string | null;
     end_date: string | null;
     created_at: string;
+    location: string | null;
 }
 
 interface Division {
@@ -140,6 +141,7 @@ export default function ProgramKerjaPage() {
         priority: 'sedang' as ProgramKerja['priority'],
         start_date: '',
         end_date: '',
+        location: '',
     });
 
     // Fetch data
@@ -202,6 +204,7 @@ export default function ProgramKerjaPage() {
             priority: 'sedang',
             start_date: '',
             end_date: '',
+            location: '',
         });
         setEditingProgram(null);
     };
@@ -224,6 +227,7 @@ export default function ProgramKerjaPage() {
             priority: program.priority,
             start_date: program.start_date || '',
             end_date: program.end_date || '',
+            location: program.location || '',
         });
         setEditingProgram(program);
         setShowModal(true);
@@ -355,6 +359,14 @@ export default function ProgramKerjaPage() {
                     </p>
                 )}
 
+                {/* Location */}
+                {program.location && (
+                    <div className="flex items-center gap-1.5 text-xs text-gray-500 dark:text-gray-400 mb-2">
+                        <MapPin className="h-3.5 w-3.5" />
+                        <span className="line-clamp-1">{program.location}</span>
+                    </div>
+                )}
+
                 {/* Priority Badge */}
                 <div className="flex items-center gap-2 mb-3">
                     <span className={`w-2 h-2 rounded-full ${priorityConfig.color}`}></span>
@@ -420,7 +432,7 @@ export default function ProgramKerjaPage() {
         const statusPrograms = getProgramsByStatus(status);
 
         return (
-            <div className={`flex-1 min-w-[280px] rounded-xl border ${config.borderColor} overflow-hidden`}>
+            <div className={`flex-1 min-w-[240px] rounded-xl border ${config.borderColor} overflow-hidden`}>
                 {/* Column Header */}
                 <div className={`${config.headerBg} px-4 py-3 border-b ${config.borderColor}`}>
                     <div className="flex items-center justify-between">
@@ -505,72 +517,80 @@ export default function ProgramKerjaPage() {
                     </div>
 
                     {/* Tabs & Filters */}
-                    <div className="flex flex-col sm:flex-row gap-4">
-                        {/* Tabs */}
-                        <div className="flex-1 flex flex-wrap gap-2">
-                            <button
-                                onClick={() => setActiveTab('hima')}
-                                className={`inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-colors ${activeTab === 'hima'
-                                    ? 'bg-brand-500 text-white'
-                                    : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700'
-                                    }`}
-                            >
-                                <Target className="h-4 w-4" />
-                                HIMA Inti
-                            </button>
-                            {divisions.map((div) => (
-                                <button
-                                    key={div.id}
-                                    onClick={() => setActiveTab(div.id)}
-                                    className={`inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-colors ${activeTab === div.id
-                                        ? 'text-white'
-                                        : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700'
-                                        }`}
-                                    style={activeTab === div.id ? { backgroundColor: div.color } : {}}
-                                >
-                                    <Briefcase className="h-4 w-4" />
-                                    {div.name}
-                                </button>
-                            ))}
-                        </div>
-
-                        {/* Filters */}
-                        <div className="flex gap-3">
-                            {/* Period Filter */}
-                            <div className="relative">
-                                <Filter className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
-                                <select
-                                    value={periodFilter}
-                                    onChange={(e) => setPeriodFilter(e.target.value)}
-                                    className="appearance-none rounded-lg border border-gray-300 bg-white pl-10 pr-10 py-2.5 text-sm text-gray-800 focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500 dark:border-gray-700 dark:bg-gray-800 dark:text-white min-w-[160px]"
-                                >
-                                    <option value="">Semua Periode</option>
-                                    {periods.map((period) => (
-                                        <option key={period.id} value={period.id}>
-                                            {period.name} {period.is_active && '(Aktif)'}
-                                        </option>
+                    <div className="flex flex-col gap-4">
+                        <div className="flex flex-col sm:flex-row gap-4 justify-between items-start sm:items-center">
+                            {/* Tabs */}
+                            <div className="w-full sm:flex-1 overflow-x-auto scrollbar-hide pb-2 sm:pb-0">
+                                <div className="flex gap-2 min-w-max">
+                                    <button
+                                        onClick={() => setActiveTab('hima')}
+                                        className={`inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium transition-colors whitespace-nowrap ${activeTab === 'hima'
+                                            ? 'bg-brand-500 text-white'
+                                            : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700'
+                                            }`}
+                                    >
+                                        <Target className="h-4 w-4" />
+                                        HIMA Inti
+                                    </button>
+                                    {divisions.map((div) => (
+                                        <button
+                                            key={div.id}
+                                            onClick={() => setActiveTab(div.id)}
+                                            className={`inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium transition-colors whitespace-nowrap ${activeTab === div.id
+                                                ? 'text-white'
+                                                : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700'
+                                                }`}
+                                            style={activeTab === div.id ? { backgroundColor: div.color } : {}}
+                                        >
+                                            <Briefcase className="h-4 w-4" />
+                                            {div.name}
+                                        </button>
                                     ))}
-                                </select>
+                                </div>
                             </div>
 
-                            {/* Search */}
-                            <div className="relative">
-                                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
-                                <input
-                                    type="text"
-                                    value={search}
-                                    onChange={(e) => setSearch(e.target.value)}
-                                    placeholder="Cari program..."
-                                    className="w-full rounded-lg border border-gray-300 bg-white pl-10 pr-4 py-2.5 text-sm text-gray-800 placeholder-gray-400 focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500 dark:border-gray-700 dark:bg-gray-800 dark:text-white dark:placeholder-gray-500 min-w-[200px]"
-                                />
-                                {search && (
-                                    <button
-                                        onClick={() => setSearch('')}
-                                        className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                            {/* Filters */}
+                            <div className="flex gap-3 w-full sm:w-auto overflow-x-auto pb-2 sm:pb-0">
+                                {/* Period Filter */}
+                                <div className="relative min-w-[160px]">
+                                    <div className="absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none">
+                                        <Filter className="h-4 w-4 text-gray-400" />
+                                    </div>
+                                    <select
+                                        value={periodFilter}
+                                        onChange={(e) => setPeriodFilter(e.target.value)}
+                                        className="w-full appearance-none rounded-lg border border-gray-300 bg-white pl-10 pr-10 py-2.5 text-sm text-gray-800 focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500 dark:border-gray-700 dark:bg-gray-800 dark:text-white"
                                     >
-                                        <X className="h-4 w-4" />
-                                    </button>
-                                )}
+                                        <option value="">Semua Periode</option>
+                                        {periods.map((period) => (
+                                            <option key={period.id} value={period.id}>
+                                                {period.name} {period.is_active && '(Aktif)'}
+                                            </option>
+                                        ))}
+                                    </select>
+                                </div>
+
+                                {/* Search */}
+                                <div className="relative min-w-[200px] flex-1 sm:flex-none">
+                                    <div className="absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none">
+                                        <Search className="h-4 w-4 text-gray-400" />
+                                    </div>
+                                    <input
+                                        type="text"
+                                        value={search}
+                                        onChange={(e) => setSearch(e.target.value)}
+                                        placeholder="Cari program..."
+                                        className="w-full rounded-lg border border-gray-300 bg-white pl-10 pr-4 py-2.5 text-sm text-gray-800 placeholder-gray-400 focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500 dark:border-gray-700 dark:bg-gray-800 dark:text-white dark:placeholder-gray-500"
+                                    />
+                                    {search && (
+                                        <button
+                                            onClick={() => setSearch('')}
+                                            className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                                        >
+                                            <X className="h-4 w-4" />
+                                        </button>
+                                    )}
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -633,6 +653,20 @@ export default function ProgramKerjaPage() {
                                         rows={3}
                                         className="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 px-4 py-2.5 text-gray-900 dark:text-white focus:ring-2 focus:ring-brand-500 focus:border-transparent outline-none resize-none"
                                         placeholder="Deskripsi singkat program kerja"
+                                    />
+                                </div>
+
+                                {/* Location */}
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                                        Lokasi
+                                    </label>
+                                    <input
+                                        type="text"
+                                        value={formData.location}
+                                        onChange={(e) => setFormData({ ...formData, location: e.target.value })}
+                                        className="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 px-4 py-2.5 text-gray-900 dark:text-white focus:ring-2 focus:ring-brand-500 focus:border-transparent outline-none"
+                                        placeholder="Lokasi kegiatan (opsional)"
                                     />
                                 </div>
 

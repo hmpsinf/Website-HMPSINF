@@ -22,6 +22,7 @@ interface ProgramKerjaRow {
   period_name?: string | null;
   document_title?: string | null;
   document_file_url?: string | null;
+  location?: string | null;
 }
 
 // GET /api/program-kerja - List all program kerja with filters
@@ -98,7 +99,8 @@ export async function GET(request: NextRequest) {
               d.color as division_color,
               hp.name as period_name,
               doc.name as document_title,
-              doc.file_url as document_file_url
+              doc.file_url as document_file_url,
+              pk.location
             FROM program_kerja pk
             LEFT JOIN divisions d ON pk.division_id = d.id
             LEFT JOIN hima_periods hp ON pk.period_id = hp.id
@@ -139,6 +141,7 @@ export async function GET(request: NextRequest) {
       end_date: row.end_date,
       created_at: row.created_at,
       updated_at: row.updated_at,
+      location: row.location,
     }));
 
     // Get divisions for filter dropdown
@@ -236,9 +239,9 @@ export async function POST(request: NextRequest) {
     await db.execute({
       sql: `INSERT INTO program_kerja (
               id, title, description, owner_type, division_id, period_id,
-              document_id, status, priority, start_date, end_date,
+              document_id, status, priority, start_date, end_date, location,
               created_at, updated_at
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
       args: [
         id,
         title.trim(),
@@ -251,6 +254,7 @@ export async function POST(request: NextRequest) {
         priority,
         start_date || null,
         end_date || null,
+        body.location || null,
         now,
         now,
       ],

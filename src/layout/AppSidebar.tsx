@@ -89,7 +89,7 @@ const navItems: NavItem[] = [
   {
     icon: <ListIcon />,
     name: "Program Kerja",
-    path: "/program-kerja",
+    path: "/programs",
   },
   {
     icon: <FolderIcon />,
@@ -158,8 +158,7 @@ const othersItems: NavItem[] = [
     icon: <PlugInIcon />,
     name: "Authentication",
     subItems: [
-      { name: "Sign In", path: "/signin", pro: false },
-      { name: "Sign Up", path: "/signup", pro: false },
+      { name: "Login", path: "/login", pro: false },
     ],
   },
 ];

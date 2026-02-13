@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import {
     Plus, Search, X, Edit2, Trash2, Calendar,
     ImageIcon, Filter, ExternalLink, MoreVertical
@@ -46,7 +46,7 @@ export default function GalleriesPage() {
         images: []
     });
 
-    const fetchGalleries = async () => {
+    const fetchGalleries = useCallback(async () => {
         try {
             setLoading(true);
             const res = await fetch('/api/galleries');
@@ -59,11 +59,11 @@ export default function GalleriesPage() {
         } finally {
             setLoading(false);
         }
-    };
+    }, [showToast]);
 
     useEffect(() => {
         fetchGalleries();
-    }, []);
+    }, [fetchGalleries]);
 
     const resetForm = () => {
         setFormData({
@@ -207,7 +207,7 @@ export default function GalleriesPage() {
         <div className="space-y-6">
             <PageBreadcrumb pageTitle="Galeri Kegiatan" />
 
-            <div className="rounded-2xl border border-gray-200 bg-white dark:border-gray-800 dark:bg-white/[0.03]">
+            <div className="rounded-2xl border border-gray-200 bg-white dark:border-gray-800 dark:bg-white/3">
                 <div className="flex flex-col gap-4 border-b px-6 py-4 dark:border-gray-800 sm:flex-row sm:items-center sm:justify-between">
                     <div>
                         <h2 className="text-lg font-semibold text-gray-800 dark:text-white">
@@ -269,7 +269,7 @@ export default function GalleriesPage() {
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
                             {[...Array(6)].map((_, i) => (
                                 <div key={i} className="rounded-xl border border-gray-200 dark:border-gray-800 overflow-hidden animate-pulse">
-                                    <div className="aspect-[16/10] bg-gray-200 dark:bg-gray-700" />
+                                    <div className="aspect-16/10 bg-gray-200 dark:bg-gray-700" />
                                     <div className="p-4 space-y-3">
                                         <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-3/4" />
                                         <div className="h-3 bg-gray-200 dark:bg-gray-700 rounded w-1/2" />
@@ -299,9 +299,9 @@ export default function GalleriesPage() {
                     ) : (
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
                             {filteredGalleries.map((gallery) => (
-                                <div key={gallery.id} className="group rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-white/[0.03] overflow-hidden transition-shadow hover:shadow-theme-md">
+                                <div key={gallery.id} className="group rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-white/3 overflow-hidden transition-shadow hover:shadow-theme-md">
                                     {/* Thumbnail */}
-                                    <div className="relative aspect-[16/10] bg-gray-100 dark:bg-gray-800 overflow-hidden">
+                                    <div className="relative aspect-16/10 bg-gray-100 dark:bg-gray-800 overflow-hidden">
                                         {gallery.images.length > 0 ? (
                                             <Image
                                                 src={gallery.images[0].url}
@@ -316,7 +316,7 @@ export default function GalleriesPage() {
                                         )}
 
                                         {/* Gradient overlay at bottom for readability */}
-                                        <div className="absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-black/50 to-transparent" />
+                                        <div className="absolute inset-x-0 bottom-0 h-16 bg-linear-to-t from-black/50 to-transparent" />
 
                                         {/* Photo count badge */}
                                         <div className="absolute bottom-2.5 right-3 flex items-center gap-1 text-white text-xs font-medium">

@@ -17,7 +17,7 @@ export async function PUT(
     const params = await context.params;
     const { id: division_id, memberId } = params;
     const body = await request.json();
-    const { position, member_name, instagram, whatsapp } = body;
+    const { position, member_name, photo_url, instagram, whatsapp } = body;
 
     if (!position || !position.trim()) {
       return NextResponse.json(
@@ -55,11 +55,12 @@ export async function PUT(
     // Update member
     await db.execute({
       sql: `UPDATE division_members 
-         SET member_name = ?, position = ?, instagram = ?, whatsapp = ?, updated_at = datetime('now')
+         SET member_name = ?, position = ?, photo_url = ?, instagram = ?, whatsapp = ?, updated_at = datetime('now')
          WHERE id = ?`,
       args: [
         (member_name?.trim() || nameToCheck) as string,
         position.trim(),
+        photo_url !== undefined ? (photo_url || null) : null,
         instagram?.trim() || null,
         whatsapp?.trim() || null,
         memberId

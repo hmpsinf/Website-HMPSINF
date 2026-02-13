@@ -103,11 +103,11 @@ export default async function EventsSection() {
                                     {formatDate(mainEvent.event_date, mainEvent.event_end_date)}
                                 </span>
                                 {mainEvent.is_open ? (
-                                    <span className="inline-flex items-center px-3 py-1 rounded-full border border-emerald-500/80 bg-emerald-500/80 backdrop-blur-md text-xs font-mono text-white uppercase shadow-[0_0_10px_rgba(16,185,129,0.2)]">
+                                    <span className="inline-flex items-center px-3 py-1 rounded-full border border-white/20 bg-white/95 backdrop-blur-md text-xs font-bold text-gray-950 uppercase shadow-sm">
                                         Pendaftaran Dibuka
                                     </span>
                                 ) : (
-                                    <span className="inline-flex items-center px-3 py-1 rounded-full border border-gray-500/80 bg-gray-500/80 backdrop-blur-md text-xs font-mono text-gray-300 uppercase">
+                                    <span className="inline-flex items-center px-3 py-1 rounded-full border border-white/20 bg-white/95 backdrop-blur-md text-xs font-bold text-gray-500 uppercase shadow-sm">
                                         Ditutup
                                     </span>
                                 )}

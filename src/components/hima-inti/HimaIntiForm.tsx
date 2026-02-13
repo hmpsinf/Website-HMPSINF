@@ -7,11 +7,12 @@ import { useToast } from "@/components/ui/Toast";
 
 // Label posisi HIMA Inti
 const POSITION_OPTIONS = [
-    { value: "dosen_pembimbing", label: "Dosen Pembimbing" },
-    { value: "ketua", label: "Ketua Himpunan" },
-    { value: "wakil_ketua", label: "Wakil Ketua Himpunan" },
-    { value: "sekretaris", label: "Sekretaris" },
-    { value: "bendahara", label: "Bendahara" },
+    { value: "penasehat", label: "Penasehat" },
+    { value: "pembina", label: "Pembina" },
+    { value: "ketua_umum", label: "Ketua Umum" },
+    { value: "sekretaris_umum", label: "Sekretaris Umum" },
+    { value: "wakil_ketua", label: "Wakil Ketua" },
+    { value: "bendahara_umum", label: "Bendahara Umum" },
 ];
 
 interface HimaIntiMember {
@@ -43,7 +44,7 @@ export default function HimaIntiForm({
 
     // Form state
     const [name, setName] = useState(member?.name || "");
-    const [position, setPosition] = useState(member?.position || "ketua");
+    const [position, setPosition] = useState(member?.position || "ketua_umum");
     const [instagram, setInstagram] = useState(member?.instagram || "");
     const [whatsapp, setWhatsapp] = useState(member?.whatsapp || "");
     const [photoUrl, setPhotoUrl] = useState(member?.photo_url || "");

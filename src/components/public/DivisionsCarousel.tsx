@@ -9,6 +9,7 @@ interface Division {
     description: string | null;
     color: string;
     member_count: number;
+    dosen_pendamping_name: string | null;
 }
 
 interface DivisionsCarouselProps {
@@ -74,7 +75,9 @@ export default function DivisionsCarousel({ divisions }: DivisionsCarouselProps)
                         <div className="pt-6 border-t border-gray-100 flex items-center justify-between mt-auto">
                             <div className="flex items-center gap-2 text-sm text-gray-500 font-medium">
                                 <div className="h-1.5 w-1.5 rounded-full bg-gray-300 group-hover:bg-brand-500 transition-colors" />
-                                <span>{division.member_count} Anggota</span>
+                                <span className="truncate max-w-[150px]" title={division.dosen_pendamping_name || "Dosen Pendamping"}>
+                                    {division.dosen_pendamping_name || "Dosen Pendamping"}
+                                </span>
                             </div>
                             <button className="group/btn flex items-center gap-2 text-sm font-semibold text-gray-900 transition-colors group-hover:text-brand-600">
                                 Detail

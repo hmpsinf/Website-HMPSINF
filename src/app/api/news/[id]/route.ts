@@ -2,6 +2,15 @@ import { NextRequest, NextResponse } from "next/server";
 import db from "@/lib/db";
 import { v2 as cloudinary } from "cloudinary";
 
+function generateSlug(text: string): string {
+  return text
+    .toLowerCase()
+    .replace(/[^a-z0-9\s-]/g, "")
+    .replace(/\s+/g, "-")
+    .replace(/-+/g, "-")
+    .trim();
+}
+
 // Configure Cloudinary
 cloudinary.config({
   cloud_name: process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME,
@@ -78,9 +87,9 @@ export async function PUT(
       );
     }
 
-    // Get current news for old thumbnail
+    // Get current news for old thumbnail and slug comparison
     const current = await db.execute({
-      sql: "SELECT thumbnail_url, thumbnail_public_id, is_published, published_at FROM news WHERE id = ?",
+      sql: "SELECT title, slug, thumbnail_url, thumbnail_public_id, is_published, published_at FROM news WHERE id = ?",
       args: [id],
     });
 
@@ -92,10 +101,36 @@ export async function PUT(
     }
 
     const row = current.rows[0] as Record<string, unknown>;
+    const oldTitle = row.title as string;
+    const oldSlug = row.slug as string;
     const oldPublicId = row.thumbnail_public_id as string | null;
     const oldThumbnailUrl = row.thumbnail_url as string | null;
     const wasPublished = row.is_published as number;
     const oldPublishedAt = row.published_at as string | null;
+
+    // Regenerate slug if title changed
+    let newSlug = oldSlug;
+    if (title.trim() !== oldTitle) {
+      newSlug = generateSlug(title);
+      // Ensure unique slug (exclude current article)
+      let slugExists = true;
+      let slugCounter = 0;
+      while (slugExists) {
+        const candidateSlug = slugCounter > 0 ? `${newSlug}-${slugCounter}` : newSlug;
+        const existing = await db.execute({
+          sql: "SELECT id FROM news WHERE slug = ? AND id != ?",
+          args: [candidateSlug, id],
+        });
+        if (existing.rows.length === 0) {
+          slugExists = false;
+          if (slugCounter > 0) {
+            newSlug = `${newSlug}-${slugCounter}`;
+          }
+        } else {
+          slugCounter++;
+        }
+      }
+    }
 
     let thumbnailUrl = oldThumbnailUrl;
     let thumbnailPublicId = oldPublicId;
@@ -149,7 +184,7 @@ export async function PUT(
     await db.execute({
       sql: `
         UPDATE news SET
-          title = ?, thumbnail_url = ?, thumbnail_public_id = ?,
+          title = ?, slug = ?, thumbnail_url = ?, thumbnail_public_id = ?,
           excerpt = ?, content = ?, category_id = ?,
           is_published = ?, meta_title = ?, meta_description = ?, meta_keywords = ?, author_name = ?,
           published_at = ?, updated_at = ?
@@ -157,6 +192,7 @@ export async function PUT(
       `,
       args: [
         title.trim(),
+        newSlug,
         thumbnailUrl,
         thumbnailPublicId,
         excerpt?.trim() || null,
@@ -173,7 +209,7 @@ export async function PUT(
       ],
     });
 
-    return NextResponse.json({ success: true });
+    return NextResponse.json({ success: true, slug: newSlug });
   } catch (error) {
     console.error("Error updating news:", error);
     return NextResponse.json(

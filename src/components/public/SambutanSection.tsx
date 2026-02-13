@@ -61,8 +61,8 @@ export default function SambutanSection({ settings, ketua }: SambutanSectionProp
                                     <div className="absolute bottom-0 left-0 right-0 p-6 sm:p-8 text-white">
                                         <div className="transform translate-y-0 transition-transform duration-300">
                                             <span className="inline-block rounded-full bg-brand-600/90 px-4 py-1.5 text-xs font-bold uppercase tracking-wider text-white backdrop-blur-sm mb-3 shadow-sm border border-white/20">
-                                                {/* Force "Ketua Himpunan" for 'ketua' position */}
-                                                {ketua.position.toLowerCase() === 'ketua' ? 'Ketua Himpunan' : ketua.position}
+                                                {/* Force "Ketua Umum" for 'ketua_umum' or 'ketua' position */}
+                                                {['ketua', 'ketua_umum'].includes(ketua.position.toLowerCase()) ? 'Ketua Umum' : ketua.position}
                                             </span>
                                             <h3 className="text-2xl font-bold mb-4 drop-shadow-md leading-tight">{ketua.name}</h3>
 
