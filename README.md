@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="/public/images/logo/logo.svg" alt="HMPSINF Logo" width="80" height="80" />
+  <img src="https://res.cloudinary.com/dxujag3yy/image/upload/v1770508758/hmpsinf/logo.png" alt="HMPSINF Logo" width="80" height="80" />
 </p>
 
 <h1 align="center">Website Resmi HMPSINF</h1>
