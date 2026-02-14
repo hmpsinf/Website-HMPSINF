@@ -6,32 +6,46 @@ const JWT_SECRET = new TextEncoder().encode(
   process.env.JWT_SECRET || 'fallback_secret_key'
 );
 
-// Routes that don't require authentication
-const publicRoutes = [
-  '/login', 
-  '/api/auth',
-  '/berita',
-  '/profil',
-  '/logo',
-  '/galeri',
-  '/unduhan',
-  '/kontak',
+// Routes that require authentication (synced with src/app/(admin) routes)
+const protectedPrefixes = [
+  '/announcements',
+  '/dashboard',
+  '/divisions',
+  '/documents',
+  '/events',
+  '/galleries',
+  '/hima-inti',
+  '/landing-page',
+  '/news',
+  '/popup',
+  '/profile',
+  '/programs',
+  '/sejarah',
+  '/settings',
+  '/site-settings',
+  '/sponsorship',
+  '/visi-misi',
 ];
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  // Allow public routes
-  if (pathname === '/' || publicRoutes.some(route => pathname.startsWith(route))) {
-    return NextResponse.next();
-  }
-
-  // Allow static files and API routes (except protected ones)
+  // Allow static files and all API routes (API auth is handled per endpoint)
   if (
+    pathname.startsWith('/api') ||
     pathname.startsWith('/_next') ||
     pathname.startsWith('/images') ||
     pathname.startsWith('/favicon')
   ) {
+    return NextResponse.next();
+  }
+
+  // Public pages (including unknown routes) should not be redirected by middleware.
+  // Let Next.js render normal page/404.
+  const isProtectedPage = protectedPrefixes.some(
+    (prefix) => pathname === prefix || pathname.startsWith(`${prefix}/`)
+  );
+  if (!isProtectedPage) {
     return NextResponse.next();
   }
 

@@ -32,7 +32,8 @@ export default function LoginForm() {
     const result = await login(email, password);
 
     if (result.success) {
-      router.push("/");
+      router.replace("/dashboard");
+      router.refresh();
     } else {
       setError(result.error || "Login gagal");
     }
@@ -107,6 +108,7 @@ export default function LoginForm() {
                   <Button
                     className="w-full"
                     size="sm"
+                    type="submit"
                     disabled={loading}
                   >
                     {loading ? "Memproses..." : "Masuk"}

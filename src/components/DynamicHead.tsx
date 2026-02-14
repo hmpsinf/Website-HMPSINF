@@ -18,8 +18,7 @@ export default function DynamicHead() {
         const FAVICON_ID = 'app-favicon';
         const APPLE_ICON_ID = 'app-apple-icon';
 
-        // Add cache-buster to force browser to fetch new favicon
-        const faviconUrl = settings.favicon_url + '?v=' + Date.now();
+        const faviconUrl = settings.favicon_url;
         // console.log('[DynamicHead] Updating favicon to:', faviconUrl);
 
         // Find existing favicon link managed by us OR by Next.js

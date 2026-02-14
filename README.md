@@ -1,196 +1,250 @@
-# TailAdmin Next.js - Free Next.js Tailwind Admin Dashboard Template
+<p align="center">
+  <img src="/public/images/logo/logo.svg" alt="HMPSINF Logo" width="80" height="80" />
+</p>
 
-TailAdmin is a free and open-source admin dashboard template built on **Next.js and Tailwind CSS** providing developers with everything they need to create a feature-rich and data-driven: back-end, dashboard, or admin panel solution for any sort of web project.
+<h1 align="center">Website Resmi HMPSINF</h1>
 
-![TailAdmin - Next.js Dashboard Preview](./banner.png)
+<p align="center">
+  <strong>Himpunan Mahasiswa Program Studi Informatika</strong><br/>
+  Fakultas Sains dan Teknologi Universitas Nurul Huda
+</p>
 
-With TailAdmin Next.js, you get access to all the necessary dashboard UI components, elements, and pages required to build a high-quality and complete dashboard or admin panel. Whether you're building a dashboard or admin panel for a complex web application or a simple website.
+<p align="center">
+  <a href="https://hmpsinf.web.id">🌐 Live Website</a> ・
+  <a href="#fitur">✨ Fitur</a> ・
+  <a href="#instalasi">🚀 Instalasi</a> ・
+  <a href="#tech-stack">⚙️ Tech Stack</a>
+</p>
 
-TailAdmin utilizes the powerful features of **Next.js 16** and common features of Next.js such as server-side rendering (SSR), static site generation (SSG), and seamless API route integration. Combined with the advancements of **React 19** and the robustness of **TypeScript**, TailAdmin is the perfect solution to help get your project up and running quickly.
+---
 
-## Overview
+## 📋 Deskripsi
 
-TailAdmin provides essential UI components and layouts for building feature-rich, data-driven admin dashboards and control panels. It's built on:
+Website resmi **HMPSINF (Himpunan Mahasiswa Program Studi Informatika)** — Fakultas Sains dan Teknologi Universitas Nurul Huda. Platform ini berfungsi sebagai pusat informasi, media publikasi, dan pengelolaan kegiatan organisasi secara digital.
 
-* Next.js 16.x
-* React 19
-* TypeScript
-* Tailwind CSS V4
+Website ini memiliki dua sisi utama:
+- **Halaman Publik** — Menampilkan informasi organisasi kepada umum
+- **Panel Admin** — Dashboard untuk mengelola seluruh konten website
 
-### Quick Links
+---
 
-* [✨ Visit Website](https://tailadmin.com)
-* [📄 Documentation](https://tailadmin.com/docs)
-* [⬇️ Download](https://tailadmin.com/download)
-* [🖌️ Figma Design File (Community Edition)](https://www.figma.com/community/file/1463141366275764364)
-* [⚡ Get PRO Version](https://tailadmin.com/pricing)
+## ✨ Fitur
 
-### Demos
+### 🌐 Halaman Publik
 
-* [Free Version](https://nextjs-free-demo.tailadmin.com)
-* [Pro Version](https://nextjs-demo.tailadmin.com)
+| Halaman | Deskripsi |
+|---------|-----------|
+| **Beranda** | Landing page dengan hero section, statistik, berita terbaru, dan event terkini |
+| **Profil** | Visi & misi, sejarah, pengurus inti, dan struktur divisi |
+| **Berita** | Daftar berita dengan kategori, pencarian, dan halaman detail lengkap |
+| **Event** | Informasi kegiatan/acara dengan timeline dan detail kontak |
+| **Pengumuman** | Pengumuman resmi organisasi |
+| **Program Kerja** | Daftar program kerja per periode dan divisi |
+| **Galeri** | Dokumentasi foto kegiatan |
+| **Unduhan** | Dokumen-dokumen yang dapat diunduh publik |
+| **Kontak** | Informasi kontak dan media sosial |
 
-### Other Versions
+### 🔐 Panel Admin
 
-- [Next.js Version](https://github.com/TailAdmin/free-nextjs-admin-dashboard)
-- [React.js Version](https://github.com/TailAdmin/free-react-tailwind-admin-dashboard)
-- [Vue.js Version](https://github.com/TailAdmin/vue-tailwind-admin-dashboard)
-- [Angular Version](https://github.com/TailAdmin/free-angular-tailwind-dashboard)
-- [Laravel Version](https://github.com/TailAdmin/tailadmin-laravel)
+| Modul | Deskripsi |
+|-------|-----------|
+| **Dashboard** | Analytics real-time: metrik konten, chart views, tren publikasi, dan aktivitas terbaru |
+| **Manajemen Berita** | CRUD berita dengan rich text editor (TipTap), kategori, thumbnail, dan SEO metadata |
+| **Manajemen Event** | Kelola event dengan timeline, lokasi, kontak, dan link pendaftaran |
+| **Manajemen Pengumuman** | Buat dan kelola pengumuman dengan status publish/draft |
+| **Manajemen Divisi** | Kelola divisi dan anggota beserta foto dan kontak sosial media |
+| **Pengurus Inti** | Kelola data pengurus inti per periode kepengurusan |
+| **Program Kerja** | Tracking program kerja dengan status, prioritas, dan timeline |
+| **Galeri Foto** | Upload dan kelola galeri foto dengan integrasi Cloudinary |
+| **Dokumen** | Upload dan kategorisasi dokumen organisasi |
+| **Halaman Profil** | Edit konten visi & misi dan sejarah organisasi |
+| **Popup** | Konfigurasi popup pengumuman di halaman utama |
+| **Sponsorship** | Kelola logo dan pengaturan section sponsor |
+| **Pengaturan** | Konfigurasi umum website dan profil admin |
 
-## Installation
+---
 
-### Prerequisites
+## ⚙️ Tech Stack
 
-To get started with TailAdmin, ensure you have the following prerequisites installed and set up:
+| Kategori | Teknologi |
+|----------|-----------|
+| **Framework** | [Next.js 16](https://nextjs.org) (App Router, Server Components) |
+| **UI Library** | [React 19](https://react.dev) |
+| **Bahasa** | [TypeScript](https://typescriptlang.org) |
+| **Styling** | [Tailwind CSS v4](https://tailwindcss.com) |
+| **Database** | [Turso](https://turso.tech) (libSQL — SQLite edge database) |
+| **Media Storage** | [Cloudinary](https://cloudinary.com) |
+| **Rich Text Editor** | [TipTap](https://tiptap.dev) |
+| **Autentikasi** | JWT via [jose](https://github.com/panva/jose) + bcryptjs |
+| **Charts** | [ApexCharts](https://apexcharts.com) |
+| **Animasi** | [Framer Motion](https://motion.dev) |
+| **Ikon** | [Lucide React](https://lucide.dev) |
+| **Carousel/Slider** | [Swiper](https://swiperjs.com) |
 
-* Node.js 18.x or later (recommended to use Node.js 20.x or later)
+---
 
-### Cloning the Repository
+## 🚀 Instalasi
 
-Clone the repository using the following command:
+### Prasyarat
 
-```bash
-git clone https://github.com/TailAdmin/free-nextjs-admin-dashboard.git
-```
+- **Node.js** v18.x atau lebih baru (disarankan v20+)
+- **npm** atau **yarn**
+- Akun **Turso** (untuk database)
+- Akun **Cloudinary** (untuk media storage)
 
-> Windows Users: place the repository near the root of your drive if you face issues while cloning.
+### Langkah-langkah
 
-1. Install dependencies:
+1. **Clone repository**
+
+   ```bash
+   git clone https://github.com/username/hmpsinf-website.git
+   cd hmpsinf-website
+   ```
+
+2. **Install dependencies**
 
    ```bash
    npm install
-   # or
-   yarn install
    ```
 
-   > Use `--legacy-peer-deps` flag if you face peer-dependency error during installation.
+3. **Konfigurasi environment**
 
-2. Start the development server:
+   Buat file `.env.local` di root project:
+
+   ```env
+   # Database Turso
+   TURSO_DATABASE_URL=libsql://nama-database.turso.io
+   TURSO_AUTH_TOKEN=token_dari_turso
+
+   # JWT Secret
+   JWT_SECRET=ganti_dengan_secret_key_yang_kuat
+
+   # Site Configuration
+   NEXT_PUBLIC_SITE_NAME=HMPSINF
+   NEXT_PUBLIC_SITE_URL=https://domain-anda.com
+   NEXT_PUBLIC_CONTACT_EMAIL=email@contoh.com
+
+   # Cloudinary
+   CLOUDINARY_CLOUD_NAME=cloud_name_anda
+   CLOUDINARY_API_KEY=api_key_anda
+   CLOUDINARY_API_SECRET=api_secret_anda
+   NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME=cloud_name_anda
+   NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET=nama_upload_preset
+   ```
+
+4. **Setup database**
+
+   ```bash
+   npx tsx scripts/setup-new-database.ts
+   ```
+
+5. **Buat akun admin**
+
+   ```bash
+   npx tsx scripts/seed-admin.ts
+   ```
+
+6. **Jalankan development server**
 
    ```bash
    npm run dev
-   # or
-   yarn dev
    ```
 
-## Components
+   Buka [http://localhost:3000](http://localhost:3000) di browser.
 
-TailAdmin is a pre-designed starting point for building a web-based dashboard using Next.js and Tailwind CSS. The template includes:
+---
 
-* Sophisticated and accessible sidebar
-* Data visualization components
-* Profile management and custom 404 page
-* Tables and Charts(Line and Bar)
-* Authentication forms and input elements
-* Alerts, Dropdowns, Modals, Buttons and more
-* Can't forget Dark Mode 🕶️
+## 📁 Struktur Proyek
 
-All components are built with React and styled using Tailwind CSS for easy customization.
+```
+hmpsinf/
+├── public/                    # Aset statis (gambar, ikon, dsb.)
+├── scripts/                   # Script utilitas (migrasi, seeding)
+├── src/
+│   ├── app/
+│   │   ├── (public)/          # Halaman publik (beranda, berita, event, dll.)
+│   │   ├── (admin)/           # Panel admin (dashboard, manajemen konten)
+│   │   └── api/               # API routes (backend endpoints)
+│   ├── components/            # Komponen React reusable
+│   ├── context/               # React context providers
+│   ├── hooks/                 # Custom React hooks
+│   ├── layout/                # Layout components (sidebar, header)
+│   ├── lib/                   # Library utilities (database, auth, cloudinary)
+│   └── types/                 # TypeScript type definitions
+├── .env.local                 # Environment variables (tidak di-commit)
+├── next.config.ts             # Konfigurasi Next.js
+├── tailwind.config.ts         # Konfigurasi Tailwind CSS
+└── tsconfig.json              # Konfigurasi TypeScript
+```
 
-## Feature Comparison
+---
 
-### Free Version
+## 🗄️ Skema Database
 
-* 1 Unique Dashboard
-* 30+ dashboard components
-* 50+ UI elements
-* Basic Figma design files
-* Community support
+Website menggunakan **21 tabel** dengan **12 index** di Turso (libSQL):
 
-### Pro Version
+| Grup | Tabel |
+|------|-------|
+| **Pengguna** | `users` |
+| **Organisasi** | `hima_periods`, `hima_inti`, `divisions`, `division_members` |
+| **Konten** | `news`, `news_categories`, `news_comments`, `events`, `pengumuman` |
+| **Program** | `program_kerja` |
+| **Media** | `galleries`, `gallery_images`, `documents`, `document_categories` |
+| **Halaman** | `sejarah`, `visi_misi` |
+| **Pengaturan** | `site_settings`, `popup_settings`, `sponsorship_settings`, `sponsorship_logos` |
 
-* 7 Unique Dashboards: Analytics, Ecommerce, Marketing, CRM, SaaS, Stocks, Logistics (more coming soon)
-* 500+ dashboard components and UI elements
-* Complete Figma design file
-* Email support
+> File SQL lengkap tersedia di [`scripts/migration-schema.sql`](scripts/migration-schema.sql)
 
-To learn more about pro version features and pricing, visit our [pricing page](https://tailadmin.com/pricing).
+---
 
-## Changelog
+## 🔒 Environment Variables
 
-### Version 2.2.2 - [December 30, 2025]
+| Variable | Keterangan | Wajib |
+|----------|------------|:-----:|
+| `TURSO_DATABASE_URL` | URL database Turso | ✅ |
+| `TURSO_AUTH_TOKEN` | Token autentikasi Turso | ✅ |
+| `JWT_SECRET` | Secret key untuk JWT session | ✅ |
+| `CLOUDINARY_CLOUD_NAME` | Nama cloud Cloudinary | ✅ |
+| `CLOUDINARY_API_KEY` | API key Cloudinary | ✅ |
+| `CLOUDINARY_API_SECRET` | API secret Cloudinary | ✅ |
+| `NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME` | Cloud name (client-side) | ✅ |
+| `NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET` | Upload preset Cloudinary | ✅ |
+| `NEXT_PUBLIC_SITE_NAME` | Nama situs yang ditampilkan | ✅ |
+| `NEXT_PUBLIC_SITE_URL` | URL publik website | ✅ |
+| `NEXT_PUBLIC_CONTACT_EMAIL` | Email kontak | ✅ |
 
-* Fixed date picker positioning and functionality in Statistics Chart.
+---
 
+## 📜 Scripts
 
-### Version 2.1.0 - [November 15, 2025]
+| Perintah | Deskripsi |
+|----------|-----------|
+| `npm run dev` | Jalankan development server |
+| `npm run build` | Build untuk production |
+| `npm run start` | Jalankan production server |
+| `npm run lint` | Jalankan ESLint |
+| `npx tsx scripts/setup-new-database.ts` | Setup schema database baru |
+| `npx tsx scripts/seed-admin.ts` | Buat akun admin default |
 
-* Updated to Next.js 16.x
-* Fixed all reported minor bugs
+---
 
-### Version 2.0.2 - [March 25, 2025]
+## 🤝 Kontribusi
 
-* Upgraded to Next.js 16.x for [CVE-2025-29927](https://nextjs.org/blog/cve-2025-29927) concerns
-* Included overrides vectormap for packages to prevent peer dependency errors during installation.
-* Migrated from react-flatpickr to flatpickr package for React 19 support
+1. Fork repository ini
+2. Buat branch fitur baru (`git checkout -b fitur/fitur-baru`)
+3. Commit perubahan (`git commit -m 'Menambahkan fitur baru'`)
+4. Push ke branch (`git push origin fitur/fitur-baru`)
+5. Buat Pull Request
 
-### Version 2.0.1 - [February 27, 2025]
+---
 
-#### Update Overview
+## 📄 Lisensi
 
-* Upgraded to Tailwind CSS v4 for better performance and efficiency.
-* Updated class usage to match the latest syntax and features.
-* Replaced deprecated class and optimized styles.
+Hak cipta © 2025–2026 **HMPSINF** — Fakultas Sains dan Teknologi Universitas Nurul Huda.  
+Seluruh hak dilindungi.
 
-#### Next Steps
+---
 
-* Run npm install or yarn install to update dependencies.
-* Check for any style changes or compatibility issues.
-* Refer to the Tailwind CSS v4 [Migration Guide](https://tailwindcss.com/docs/upgrade-guide) on this release. if needed.
-* This update keeps the project up to date with the latest Tailwind improvements. 🚀
-
-### v2.0.0 (February 2025)
-
-A major update focused on Next.js 16 implementation and comprehensive redesign.
-
-#### Major Improvements
-
-* Complete redesign using Next.js 16 App Router and React Server Components
-* Enhanced user interface with Next.js-optimized components
-* Improved responsiveness and accessibility
-* New features including collapsible sidebar, chat screens, and calendar
-* Redesigned authentication using Next.js App Router and server actions
-* Updated data visualization using ApexCharts for React
-
-#### Breaking Changes
-
-* Migrated from Next.js 14 to Next.js 16
-* Chart components now use ApexCharts for React
-* Authentication flow updated to use Server Actions and middleware
-
-[Read more](https://tailadmin.com/docs/update-logs/nextjs) on this release.
-
-### v1.3.4 (July 01, 2024)
-
-* Fixed JSvectormap rendering issues
-
-### v1.3.3 (June 20, 2024)
-
-* Fixed build error related to Loader component
-
-### v1.3.2 (June 19, 2024)
-
-* Added ClickOutside component for dropdown menus
-* Refactored sidebar components
-* Updated Jsvectormap package
-
-### v1.3.1 (Feb 12, 2024)
-
-* Fixed layout naming consistency
-* Updated styles
-
-### v1.3.0 (Feb 05, 2024)
-
-* Upgraded to Next.js 14
-* Added Flatpickr integration
-* Improved form elements
-* Enhanced multiselect functionality
-* Added default layout component
-
-## License
-
-TailAdmin Next.js Free Version is released under the MIT License.
-
-## Support
-If you find this project helpful, please consider giving it a star on GitHub. Your support helps us continue developing and maintaining this template.
+<p align="center">
+  Dibuat dengan ❤️ oleh Tim HMPSINF
+</p>

@@ -3,6 +3,23 @@
 
 import { createClient } from "@libsql/client";
 import bcrypt from "bcryptjs";
+import fs from "fs";
+import path from "path";
+
+// Load environment variables from .env.local
+const envPath = path.resolve(process.cwd(), ".env.local");
+if (fs.existsSync(envPath)) {
+  const envContent = fs.readFileSync(envPath, "utf-8");
+  envContent.split(/\r?\n/).forEach((line) => {
+    const match = line.match(/^([^#][^=]*)=(.*)$/);
+    if (match) {
+      const key = match[1].trim();
+      const value = match[2].trim().replace(/^["']|["']$/g, "");
+      process.env[key] = value;
+    }
+  });
+  console.log("✅ Loaded environment from .env.local\n");
+}
 
 async function seedAdmin() {
   const db = createClient({

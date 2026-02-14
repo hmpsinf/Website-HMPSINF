@@ -2,10 +2,12 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import Particles from "@/components/ui/Particles";
+import { FadeIn, SectionReveal } from "@/components/ui/MotionWrapper";
 import {
     getSiteSettings,
     getKetuaHimpunan,
 } from "@/lib/queries/public";
+import SponsorshipSection from "@/components/public/SponsorshipSection";
 import SambutanSection from "@/components/public/SambutanSection";
 import NewsSection from "@/components/public/NewsSection";
 import DivisionsSection from "@/components/public/DivisionsSection";
@@ -14,6 +16,9 @@ import VideoSection from "@/components/public/VideoSection";
 import CTASection from "@/components/public/CTASection";
 
 import JsonLd from "@/components/seo/JsonLd";
+
+import MarketingPopup from "@/components/public/MarketingPopup";
+import LandingPreloader from "@/components/public/LandingPreloader";
 
 export const metadata: Metadata = {
     title: "Himpunan Mahasiswa Program Studi Informatika (HMPSINF) - Universitas Nurul Huda",
@@ -49,13 +54,15 @@ export default async function LandingPage() {
 
     return (
         <>
+            <LandingPreloader />
+            <MarketingPopup />
             <JsonLd data={jsonLd} />
             {/* ─── HERO ─── */}
-            <section className="relative pt-8 pb-10 md:pt-12 md:pb-16 lg:pt-16 lg:pb-20">
+            <section className="relative pt-4 pb-10 sm:pt-8 md:pt-12 md:pb-16 lg:pt-16 lg:pb-20">
                 <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                     {/* Rounded container with background image */}
-                    <div
-                        className="relative overflow-hidden rounded-3xl bg-gray-900"
+                    <SectionReveal
+                        className="relative overflow-hidden rounded-2xl sm:rounded-3xl bg-gray-900 min-h-[calc(100dvh-8rem)] sm:min-h-0"
                         style={
                             settings.hero_bg_image
                                 ? {
@@ -98,56 +105,67 @@ export default async function LandingPage() {
                         </div>
 
                         {/* Inner content — above particles */}
-                        <div className="relative z-10 grid grid-cols-1 items-center lg:grid-cols-5">
+                        <div className="relative z-10 grid grid-cols-1 items-center lg:grid-cols-5 min-h-[inherit] sm:min-h-0">
                             {/* Left Column: Text (60% width -> col-span-3) */}
-                            <div className="px-6 py-24 text-center sm:px-10 sm:py-20 lg:col-span-3 lg:px-14 lg:py-20 lg:text-left min-h-[500px] flex flex-col justify-center lg:min-h-0 lg:block">
-                                <h1
-                                    className="font-outfit text-2xl font-extrabold leading-[1.12] tracking-tight text-white sm:text-4xl lg:text-5xl"
-                                    dangerouslySetInnerHTML={{ __html: settings.hero_title }}
-                                />
-                                <p
-                                    className="mt-4 text-xs leading-relaxed text-white/75 sm:mt-5 sm:text-base lg:text-lg"
-                                    dangerouslySetInnerHTML={{ __html: settings.hero_subtitle }}
-                                />
+                            <div className="px-6 py-16 text-center sm:px-10 sm:py-20 lg:col-span-3 lg:px-14 lg:py-20 lg:text-left flex flex-col justify-center items-center lg:items-start sm:min-h-[500px] lg:min-h-0 lg:block">
+                                <FadeIn delay={0.15} direction="up" distance={20}>
+                                    <h1
+                                        className="font-outfit text-[25px] font-extrabold leading-[1.4] tracking-tight text-white sm:text-4xl sm:leading-[1.12] lg:text-5xl"
+                                        dangerouslySetInnerHTML={{ __html: settings.hero_title }}
+                                    />
+                                </FadeIn>
+                                <FadeIn delay={0.3} direction="up" distance={16}>
+                                    <p
+                                        className="mt-5 text-xs leading-[1.9] text-white/75 sm:mt-5 sm:text-base sm:leading-relaxed lg:text-lg"
+                                        dangerouslySetInnerHTML={{ __html: settings.hero_subtitle }}
+                                    />
+                                </FadeIn>
 
                                 {/* Buttons with fill-up animation - Stacked on Mobile */}
-                                <div className="mt-8 flex flex-row flex-wrap items-center justify-center gap-3 sm:mt-10 lg:justify-start">
-                                    <Link
-                                        href={settings.hero_btn1_link}
-                                        className="hero-btn hero-btn-primary inline-flex items-center justify-center gap-2 rounded-full px-6 py-2.5 text-xs font-semibold shadow-lg shadow-black/10 sm:px-8 sm:py-3 sm:text-sm"
-                                    >
-                                        <span className="relative z-10 flex items-center gap-2">
-                                            {settings.hero_btn1_text}
-                                            <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
-                                        </span>
-                                    </Link>
-                                    <Link
-                                        href={settings.hero_btn2_link}
-                                        className="hero-btn hero-btn-secondary inline-flex items-center justify-center gap-2 rounded-full px-6 py-2.5 text-xs font-semibold sm:px-8 sm:py-3 sm:text-sm"
-                                    >
-                                        <span className="relative z-10 flex items-center gap-2">
-                                            {settings.hero_btn2_text}
-                                            <ArrowRight className="h-4 w-4" />
-                                        </span>
-                                    </Link>
-                                </div>
+                                <FadeIn delay={0.45} direction="up" distance={12}>
+                                    <div className="mt-8 flex flex-row flex-wrap items-center justify-center gap-3 sm:mt-10 lg:justify-start">
+                                        <Link
+                                            href={settings.hero_btn1_link}
+                                            className="hero-btn hero-btn-primary inline-flex items-center justify-center gap-2 rounded-full px-6 py-2.5 text-xs font-semibold shadow-lg shadow-black/10 sm:px-8 sm:py-3 sm:text-sm"
+                                        >
+                                            <span className="relative z-10 flex items-center gap-2">
+                                                {settings.hero_btn1_text}
+                                                <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+                                            </span>
+                                        </Link>
+                                        <Link
+                                            href={settings.hero_btn2_link}
+                                            className="hero-btn hero-btn-secondary inline-flex items-center justify-center gap-2 rounded-full px-6 py-2.5 text-xs font-semibold sm:px-8 sm:py-3 sm:text-sm"
+                                        >
+                                            <span className="relative z-10 flex items-center gap-2">
+                                                {settings.hero_btn2_text}
+                                                <ArrowRight className="h-4 w-4" />
+                                            </span>
+                                        </Link>
+                                    </div>
+                                </FadeIn>
                             </div>
 
                             {/* Right Column: Side Image (40% width -> col-span-2) */}
                             {settings.hero_side_image && (
                                 <div className="relative hidden w-full sm:h-80 lg:col-span-2 lg:block lg:h-auto lg:self-stretch">
                                     {/* Illustration image — responsive positioning */}
-                                    <img
-                                        src={settings.hero_side_image}
-                                        alt="Hero Illustration"
-                                        className="h-full w-full object-contain object-bottom lg:absolute lg:inset-x-0 lg:bottom-0 lg:top-8 lg:h-[calc(100%-2rem)]"
-                                    />
+                                    <FadeIn direction="left" delay={0.3} className="h-full w-full">
+                                        <img
+                                            src={settings.hero_side_image}
+                                            alt="Hero Illustration"
+                                            className="h-full w-full object-contain object-bottom lg:absolute lg:inset-x-0 lg:bottom-0 lg:top-8 lg:h-[calc(100%-2rem)]"
+                                        />
+                                    </FadeIn>
                                 </div>
                             )}
                         </div>
-                    </div>
+                    </SectionReveal>
                 </div >
             </section >
+
+            {/* ─── SPONSORSHIP ─── */}
+            <SponsorshipSection />
 
             {/* ─── SAMBUTAN KETUA ─── */}
             <SambutanSection settings={settings} ketua={ketua} />

@@ -1,6 +1,7 @@
 import React from "react";
 import { getDivisions } from "@/lib/queries/public";
 import DivisionsCarousel from "@/components/public/DivisionsCarousel";
+import { FadeIn, ScaleIn } from "@/components/ui/MotionWrapper";
 
 // Helper to get a contrasting text color or a safe background
 // For this design, we'll use the division color as an accent
@@ -26,17 +27,21 @@ export default async function DivisionsSection() {
             />
 
             <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative z-10">
-                <div className="mb-12 text-center md:text-left">
-                    <h2 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
-                        Bidang & Divisi
-                    </h2>
-                    <p className="mt-4 text-lg text-gray-600 max-w-2xl">
-                        Mengenal lebih dekat struktur dan fokus area HMPSINF dalam mengembangkan potensi mahasiswa.
-                    </p>
-                </div>
+                <FadeIn direction="up">
+                    <div className="mb-12 text-center md:text-left">
+                        <h2 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
+                            Bidang & Divisi
+                        </h2>
+                        <p className="mt-4 text-lg text-gray-600 max-w-2xl">
+                            Mengenal lebih dekat struktur dan fokus area HMPSINF dalam mengembangkan potensi mahasiswa.
+                        </p>
+                    </div>
+                </FadeIn>
 
                 {/* Client Side Carousel */}
-                <DivisionsCarousel divisions={divisions} />
+                <FadeIn delay={0.15} direction="up" distance={12}>
+                    <DivisionsCarousel divisions={divisions} />
+                </FadeIn>
             </div>
         </section>
     );

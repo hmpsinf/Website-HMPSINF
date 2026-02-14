@@ -150,6 +150,114 @@ export async function getNewsBySlug(slug: string) {
   };
 }
 
+// ── Pengumuman (Pagination) ──
+export async function getAnnouncements(page = 1, limit = 12, search = "") {
+  const offset = (page - 1) * limit;
+  let whereClause = "is_published = 1";
+  const args: (string | number)[] = [];
+
+  if (search) {
+    whereClause += " AND (title LIKE ? OR content LIKE ?)";
+    args.push(`%${search}%`, `%${search}%`);
+  }
+
+  // Get total
+  const countResult = await db.execute({
+    sql: `SELECT COUNT(*) as total FROM pengumuman WHERE ${whereClause}`,
+    args,
+  });
+  const total = Number(countResult.rows[0]?.total || 0);
+
+  // Get data
+  const result = await db.execute({
+    sql: `
+      SELECT 
+        id, title, slug, content, thumbnail_url, published_at, author, view_count
+      FROM pengumuman
+      WHERE ${whereClause}
+      ORDER BY published_at DESC
+      LIMIT ? OFFSET ?
+    `,
+    args: [...args, limit, offset],
+  });
+
+  const announcements = result.rows.map((row) => ({
+    id: row.id as string,
+    title: row.title as string,
+    slug: row.slug as string,
+    content: row.content as string,
+    thumbnail_url: row.thumbnail_url as string | null,
+    published_at: row.published_at as string,
+    author: row.author as string,
+    view_count: Number(row.view_count || 0),
+  }));
+
+  return {
+    data: announcements,
+    meta: {
+      page,
+      limit,
+      total,
+      totalPages: Math.ceil(total / limit),
+    },
+  };
+}
+
+// ── Single Announcement by Slug ──
+export async function getAnnouncementBySlug(slug: string) {
+  const result = await db.execute({
+    sql: `
+      SELECT 
+        id, title, slug, content, thumbnail_url, published_at, author, view_count, created_at, updated_at
+      FROM pengumuman
+      WHERE slug = ? AND is_published = 1
+    `,
+    args: [slug],
+  });
+
+  if (result.rows.length === 0) return null;
+
+  const row = result.rows[0];
+  return {
+    id: row.id as string,
+    title: row.title as string,
+    slug: row.slug as string,
+    content: row.content as string,
+    thumbnail_url: row.thumbnail_url as string | null,
+    published_at: row.published_at as string,
+    author: row.author as string,
+    view_count: Number(row.view_count || 0),
+    created_at: row.created_at as string,
+    updated_at: row.updated_at as string,
+  };
+}
+
+// ── Latest Announcements ──
+export async function getLatestAnnouncements(limit = 4) {
+  const result = await db.execute({
+    sql: `
+      SELECT 
+        id, title, slug, content, thumbnail_url, published_at, author, view_count
+      FROM pengumuman
+      WHERE is_published = 1
+      ORDER BY published_at DESC
+      LIMIT ?
+    `,
+    args: [limit],
+  });
+
+  return result.rows.map((row) => ({
+    id: row.id as string,
+    title: row.title as string,
+    slug: row.slug as string,
+    content: row.content as string,
+    thumbnail_url: row.thumbnail_url as string | null,
+    published_at: row.published_at as string,
+    author: row.author as string,
+    view_count: Number(row.view_count || 0),
+  }));
+}
+
 // ── Related News (same category) ──
 export async function getRelatedNews(newsId: string, categoryId: string | null, limit = 3) {
   if (!categoryId) return [];
@@ -690,12 +798,12 @@ export async function getEventBySlug(slug: string) {
     event_end_time: row.event_end_time as string,
     location: row.location as string,
     description: row.description as string,
-    timeline: row.timeline as string,
-    kontak: row.kontak as string,
     link_url: row.link_url as string,
     link_text: row.link_text as string,
     is_open: Boolean(row.is_open),
     view_count: Number(row.view_count || 0),
+    timeline: row.timeline as string | null,
+    kontak: row.kontak as string | null,
     created_at: row.created_at as string,
     updated_at: row.updated_at as string,
   };
@@ -771,5 +879,34 @@ export async function getProgramKerjaDocuments() {
     created_at: row.created_at as string,
     owner_type: row.owner_type as string,
     division_id: row.division_id as string | null,
+  }));
+}
+
+// ── Sponsorship ──
+
+export async function getSponsorshipSettings() {
+  const result = await db.execute({
+    sql: "SELECT * FROM sponsorship_settings WHERE id = 'default'",
+    args: [],
+  });
+  if (result.rows.length === 0) return null;
+  const row = result.rows[0];
+  return {
+    title: row.title as string,
+    subtitle: row.subtitle as string | null,
+    show_section: Boolean(row.show_section),
+  };
+}
+
+export async function getSponsorshipLogos() {
+  const result = await db.execute({
+    sql: "SELECT * FROM sponsorship_logos ORDER BY display_order ASC, created_at DESC",
+    args: [],
+  });
+  return result.rows.map((row) => ({
+    id: row.id as string,
+    image_url: row.image_url as string,
+    public_id: row.public_id as string,
+    caption: row.caption as string | null,
   }));
 }

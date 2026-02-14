@@ -1,5 +1,6 @@
 import React from "react";
 import { getSiteSettings } from "@/lib/queries/public";
+import { FadeIn, ScaleIn } from "@/components/ui/MotionWrapper";
 
 export default async function VideoSection() {
     const settings = await getSiteSettings();
@@ -61,40 +62,46 @@ export default async function VideoSection() {
 
                         {/* Text Column */}
                         <div className="order-2 lg:order-1 space-y-8">
-                            <div>
-                                <div className="inline-flex items-center rounded-full bg-white/10 px-3 py-1 text-sm font-medium text-white ring-1 ring-inset ring-white/20 backdrop-blur-sm">
-                                    {subtitle}
+                            <FadeIn direction="up">
+                                <div>
+                                    <div className="inline-flex items-center rounded-full bg-white/10 px-3 py-1 text-sm font-medium text-white ring-1 ring-inset ring-white/20 backdrop-blur-sm">
+                                        {subtitle}
+                                    </div>
+                                    <h2 className="mt-4 text-4xl font-bold tracking-tight text-white sm:text-5xl lg:text-6xl">
+                                        {title}
+                                    </h2>
+                                    <p className="mt-6 text-lg leading-8 text-gray-300">
+                                        {description}
+                                    </p>
                                 </div>
-                                <h2 className="mt-4 text-4xl font-bold tracking-tight text-white sm:text-5xl lg:text-6xl">
-                                    {title}
-                                </h2>
-                                <p className="mt-6 text-lg leading-8 text-gray-300">
-                                    {description}
-                                </p>
-                            </div>
+                            </FadeIn>
 
                             {/* Decorative Element */}
-                            <div className="flex items-center gap-4 pt-4">
-                                <div className="h-1 w-20 bg-brand-500 rounded-full shrink-0"></div>
-                                <span className="text-sm font-medium text-gray-400 tracking-wider uppercase min-w-0 break-words">{footerText}</span>
-                            </div>
+                            <FadeIn delay={0.2}>
+                                <div className="flex items-center gap-4 pt-4">
+                                    <div className="h-1 w-20 bg-brand-500 rounded-full shrink-0"></div>
+                                    <span className="text-sm font-medium text-gray-400 tracking-wider uppercase min-w-0 wrap-break-word">{footerText}</span>
+                                </div>
+                            </FadeIn>
                         </div>
 
                         {/* Video Column */}
                         <div className="order-1 lg:order-2">
                             {/* Video Frame Effect */}
-                            <div className="relative aspect-video w-full overflow-hidden rounded-2xl bg-gray-900 shadow-2xl ring-1 ring-white/10 group">
-                                {/* Glow Effect behind video */}
-                                <div className="absolute -inset-4 bg-brand-500/30 blur-2xl transition-all duration-500 group-hover:bg-brand-500/40 -z-10 rounded-full opacity-0 group-hover:opacity-100"></div>
+                            <ScaleIn delay={0.3}>
+                                <div className="relative aspect-video w-full overflow-hidden rounded-2xl bg-gray-900 shadow-2xl ring-1 ring-white/10 group">
+                                    {/* Glow Effect behind video */}
+                                    <div className="absolute -inset-4 bg-brand-500/30 blur-2xl transition-all duration-500 group-hover:bg-brand-500/40 -z-10 rounded-full opacity-0 group-hover:opacity-100"></div>
 
-                                <iframe
-                                    src={videoUrl}
-                                    title={title}
-                                    className="absolute inset-0 h-full w-full"
-                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                                    allowFullScreen
-                                />
-                            </div>
+                                    <iframe
+                                        src={videoUrl}
+                                        title={title}
+                                        className="absolute inset-0 h-full w-full"
+                                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                                        allowFullScreen
+                                    />
+                                </div>
+                            </ScaleIn>
                         </div>
 
                     </div>

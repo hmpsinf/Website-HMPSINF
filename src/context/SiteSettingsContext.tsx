@@ -1,6 +1,7 @@
 "use client";
 
-import React, { createContext, useContext, useState, useEffect, useCallback } from "react";
+import React, { createContext, useContext, useState, useEffect, useCallback, useRef } from "react";
+import { usePathname } from "next/navigation";
 
 export interface SiteSettings {
     site_name: string | null;
@@ -109,6 +110,38 @@ const SiteSettingsContext = createContext<SiteSettingsContextType | undefined>(u
 export function SiteSettingsProvider({ children }: { children: React.ReactNode }) {
     const [settings, setSettings] = useState<SiteSettings | null>(null);
     const [loading, setLoading] = useState(true);
+    const hasFetchedInitialRef = useRef(false);
+    const pathname = usePathname();
+
+    const shouldFetchSettings =
+        pathname === "/" ||
+        pathname === "/login" ||
+        pathname === "/profile" ||
+        pathname.startsWith("/berita") ||
+        pathname.startsWith("/profil") ||
+        pathname.startsWith("/logo") ||
+        pathname.startsWith("/galeri") ||
+        pathname.startsWith("/unduhan") ||
+        pathname.startsWith("/kontak") ||
+        pathname.startsWith("/event") ||
+        pathname.startsWith("/pengumuman") ||
+        pathname.startsWith("/program-kerja") ||
+        pathname.startsWith("/dashboard") ||
+        pathname.startsWith("/announcements") ||
+        pathname.startsWith("/divisions") ||
+        pathname.startsWith("/documents") ||
+        pathname.startsWith("/events") ||
+        pathname.startsWith("/galleries") ||
+        pathname.startsWith("/hima-inti") ||
+        pathname.startsWith("/landing-page") ||
+        pathname.startsWith("/news") ||
+        pathname.startsWith("/popup") ||
+        pathname.startsWith("/programs") ||
+        pathname.startsWith("/sejarah") ||
+        pathname.startsWith("/settings") ||
+        pathname.startsWith("/site-settings") ||
+        pathname.startsWith("/sponsorship") ||
+        pathname.startsWith("/visi-misi");
 
     const fetchSettings = useCallback(async () => {
         try {
@@ -127,8 +160,16 @@ export function SiteSettingsProvider({ children }: { children: React.ReactNode }
     }, []);
 
     useEffect(() => {
+        if (!shouldFetchSettings) {
+            setSettings(defaultSettings);
+            setLoading(false);
+            return;
+        }
+
+        if (hasFetchedInitialRef.current) return;
+        hasFetchedInitialRef.current = true;
         fetchSettings();
-    }, [fetchSettings]);
+    }, [fetchSettings, shouldFetchSettings]);
 
     const refreshSettings = async () => {
         setLoading(true);

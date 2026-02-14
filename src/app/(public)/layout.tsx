@@ -14,6 +14,7 @@ export default async function PublicLayout({
             <PublicHeader
                 logoUrl={settings.logo_url}
                 siteName={settings.site_name}
+                footerText={settings.footer_text}
             />
             <main className="flex-1">{children}</main>
             <PublicFooter

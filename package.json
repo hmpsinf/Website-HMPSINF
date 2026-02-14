@@ -1,5 +1,5 @@
 {
-  "name": "free-nextjs-admin-dashboard",
+  "name": "hminf-website",
   "version": "2.2.2",
   "private": true,
   "scripts": {
@@ -52,6 +52,7 @@
     "flatpickr": "^4.6.13",
     "framer-motion": "^12.34.0",
     "jose": "^6.1.3",
+    "lottie-react": "^2.4.1",
     "lucide-react": "^0.563.0",
     "nanoid": "^5.1.6",
     "next": "16.0.10",

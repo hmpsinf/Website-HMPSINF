@@ -3,6 +3,7 @@ import Link from "next/link";
 import { ArrowRight, Calendar, Eye, MessageCircle, User } from "lucide-react";
 import { getLatestNews } from "@/lib/queries/public";
 import { formatSmartDate } from "@/lib/utils";
+import { FadeIn, StaggerContainer, StaggerItem, StaggerList } from "@/components/ui/MotionWrapper";
 
 export default async function NewsSection() {
     const news = await getLatestNews(3);
@@ -15,26 +16,28 @@ export default async function NewsSection() {
     return (
         <section className="bg-white py-16 md:py-24 overflow-hidden relative">
             <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative z-10">
-                <div className="flex flex-col md:flex-row md:items-end md:justify-between mb-12 gap-4">
-                    <div className="text-center md:text-left">
-                        <h2 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
-                            Berita & Artikel
-                        </h2>
-                        <p className="mt-4 text-lg text-gray-600 max-w-2xl">
-                            Informasi terbaru mengenai kegiatan, prestasi, dan wawasan seputar teknologi.
-                        </p>
+                <FadeIn direction="up">
+                    <div className="flex flex-col md:flex-row md:items-end md:justify-between mb-12 gap-4">
+                        <div className="text-center md:text-left">
+                            <h2 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
+                                Berita & Artikel
+                            </h2>
+                            <p className="mt-4 text-lg text-gray-600 max-w-2xl">
+                                Informasi terbaru mengenai kegiatan, prestasi, dan wawasan seputar teknologi.
+                            </p>
+                        </div>
+                        <div className="text-center md:text-right hidden md:block">
+                            <Link href="/berita" className="inline-flex items-center gap-2 text-sm font-semibold text-brand-600 hover:text-brand-700 transition-colors">
+                                Lihat Semua Berita
+                                <ArrowRight className="h-4 w-4" />
+                            </Link>
+                        </div>
                     </div>
-                    <div className="text-center md:text-right hidden md:block">
-                        <Link href="/berita" className="inline-flex items-center gap-2 text-sm font-semibold text-brand-600 hover:text-brand-700 transition-colors">
-                            Lihat Semua Berita
-                            <ArrowRight className="h-4 w-4" />
-                        </Link>
-                    </div>
-                </div>
+                </FadeIn>
 
-                <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-stretch">
+                <StaggerContainer className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-stretch" viewport={{ once: true, margin: "-100px" }}>
                     {/* Featured Item (Big) - Spans 2 cols */}
-                    <div className={`group relative flex flex-col overflow-hidden rounded-3xl bg-white ring-1 ring-gray-200 transition-all duration-300 hover:ring-brand-200 hover:-translate-y-1 ${others.length === 0 ? 'lg:col-span-3' : 'lg:col-span-2'}`}>
+                    <StaggerItem variant="scale" className={`group relative flex flex-col overflow-hidden rounded-3xl bg-white ring-1 ring-gray-200 transition-all duration-300 hover:ring-brand-200 hover:-translate-y-1 ${others.length === 0 ? 'lg:col-span-3' : 'lg:col-span-2'}`}>
                         <div className="relative h-full min-h-[400px] lg:min-h-[500px] w-full overflow-hidden">
                             {featured.thumbnail_url ? (
                                 <img
@@ -47,7 +50,7 @@ export default async function NewsSection() {
                                     <span className="text-lg">No Image</span>
                                 </div>
                             )}
-                            <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent" />
+                            <div className="absolute inset-0 bg-linear-to-t from-black/90 via-black/50 to-transparent" />
 
                             <div className="absolute top-4 left-4 sm:top-6 sm:left-6">
                                 {featured.category_name && (
@@ -87,13 +90,17 @@ export default async function NewsSection() {
                                 </p>
                             </div>
                         </div>
-                    </div>
+                    </StaggerItem>
 
                     {/* Secondary Items (Vertical List) - Spans 1 col */}
                     {others.length > 0 && (
-                        <div className="flex flex-col gap-6 lg:gap-8 lg:col-span-1">
-                            {others.map((item) => (
-                                <div key={item.id} className="group relative flex flex-col bg-white rounded-3xl ring-1 ring-gray-200 overflow-hidden transition-all duration-300 hover:ring-brand-300 hover:-translate-y-1">
+                        <StaggerList className="flex flex-col gap-6 lg:gap-8 lg:col-span-1">
+                            {others.map((item, index) => (
+                                <StaggerItem
+                                    key={item.id}
+                                    variant="scale"
+                                    className="group relative flex flex-col bg-white rounded-3xl ring-1 ring-gray-200 overflow-hidden transition-all duration-300 hover:ring-brand-300 hover:-translate-y-1"
+                                >
                                     <div className="relative h-48 w-full overflow-hidden shrink-0">
                                         {item.thumbnail_url ? (
                                             <img
@@ -130,11 +137,11 @@ export default async function NewsSection() {
                                             <ArrowRight className="ml-1 h-3.5 w-3.5 transition-transform group-hover:translate-x-1" />
                                         </div>
                                     </div>
-                                </div>
+                                </StaggerItem>
                             ))}
-                        </div>
+                        </StaggerList>
                     )}
-                </div>
+                </StaggerContainer>
 
                 <div className="mt-8 text-center md:hidden">
                     <Link
@@ -145,7 +152,7 @@ export default async function NewsSection() {
                         <ArrowRight className="h-4 w-4" />
                     </Link>
                 </div>
-            </div>
-        </section>
+            </div >
+        </section >
     );
 }

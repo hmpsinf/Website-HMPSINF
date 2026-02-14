@@ -37,7 +37,7 @@ export default function DocumentSearch() {
     };
 
     return (
-        <div className="mt-10 relative max-w-md mx-auto block">
+        <div className="relative flex-1 min-w-0">
             <div className="relative">
                 <input
                     type="text"

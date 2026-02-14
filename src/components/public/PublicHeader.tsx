@@ -5,7 +5,8 @@ import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useState, useRef, useEffect } from "react";
 import { createPortal } from "react-dom";
-import { Menu, X, ChevronDown } from "lucide-react";
+import { AnimatePresence, motion } from "framer-motion";
+import { X, ChevronDown } from "lucide-react";
 
 // ── Navigation structure with dropdowns ──
 interface NavItem {
@@ -37,6 +38,7 @@ const navItems: NavItem[] = [
     {
         label: "Informasi",
         children: [
+            { label: "Pengumuman", href: "/pengumuman" },
             { label: "Galeri", href: "/galeri" },
             { label: "Unduhan", href: "/unduhan" },
         ],
@@ -47,9 +49,10 @@ const navItems: NavItem[] = [
 interface PublicHeaderProps {
     logoUrl: string | null;
     siteName: string;
+    footerText: string | null;
 }
 
-export default function PublicHeader({ logoUrl, siteName }: PublicHeaderProps) {
+export default function PublicHeader({ logoUrl, siteName, footerText }: PublicHeaderProps) {
     const pathname = usePathname();
     const [mounted, setMounted] = useState(false);
     const [mobileOpen, setMobileOpen] = useState(false);
@@ -77,6 +80,20 @@ export default function PublicHeader({ logoUrl, siteName }: PublicHeaderProps) {
         return () => document.removeEventListener("click", handleClickOutside);
     }, []);
 
+    useEffect(() => {
+        if (!mounted) return;
+
+        if (mobileOpen) {
+            document.body.style.overflow = "hidden";
+        } else {
+            document.body.style.overflow = "";
+        }
+
+        return () => {
+            document.body.style.overflow = "";
+        };
+    }, [mobileOpen, mounted]);
+
     const handleDropdownEnter = (label: string) => {
         if (dropdownTimeoutRef.current) clearTimeout(dropdownTimeoutRef.current);
         setOpenDropdown(label);
@@ -90,17 +107,17 @@ export default function PublicHeader({ logoUrl, siteName }: PublicHeaderProps) {
         <header className="sticky top-0 z-50 border-b border-gray-200 bg-white/80 backdrop-blur-md">
             <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
                 {/* Logo */}
-                <Link href="/" className="flex items-center gap-2.5">
+                <Link href="/" className="flex min-w-0 items-center gap-2.5">
                     {logoUrl ? (
                         <Image
                             src={logoUrl}
                             alt={siteName}
-                            width={36}
-                            height={36}
-                            className="h-9 w-9 object-contain"
+                            width={32}
+                            height={32}
+                            className="h-8 w-8 shrink-0 object-contain md:h-9 md:w-9"
                         />
                     ) : null}
-                    <span className="text-xl font-bold tracking-tight text-gray-900 whitespace-nowrap">
+                    <span className="max-w-[200px] truncate text-lg font-bold tracking-tight text-gray-900 sm:max-w-none md:text-xl">
                         {siteName}
                     </span>
                 </Link>
@@ -182,110 +199,137 @@ export default function PublicHeader({ logoUrl, siteName }: PublicHeaderProps) {
                     aria-label="Toggle menu"
                 >
                     <svg className="w-6 h-6 fill-current pointer-events-none" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
-                        <rect className="origin-center -translate-y-[5px] translate-x-[7px] transition-all duration-300 ease-[cubic-bezier(.5,.85,.25,1.1)] group-[[aria-pressed=true]]:translate-x-0 group-[[aria-pressed=true]]:translate-y-0 group-[[aria-pressed=true]]:rotate-[315deg]" y="7" width="9" height="2" rx="1"></rect>
-                        <rect className="origin-center transition-all duration-300 ease-[cubic-bezier(.5,.85,.25,1.8)] group-[[aria-pressed=true]]:rotate-45" y="7" width="16" height="2" rx="1"></rect>
-                        <rect className="origin-center translate-y-[5px] transition-all duration-300 ease-[cubic-bezier(.5,.85,.25,1.1)] group-[[aria-pressed=true]]:translate-y-0 group-[[aria-pressed=true]]:rotate-[135deg]" y="7" width="9" height="2" rx="1"></rect>
+                        <rect className="origin-center -translate-y-[5px] translate-x-[7px] transition-all duration-300 ease-[cubic-bezier(.5,.85,.25,1.1)] group-aria-pressed:translate-x-0 group-aria-pressed:translate-y-0 group-aria-pressed:rotate-315" y="7" width="9" height="2" rx="1"></rect>
+                        <rect className="origin-center transition-all duration-300 ease-[cubic-bezier(.5,.85,.25,1.8)] group-aria-pressed:rotate-45" y="7" width="16" height="2" rx="1"></rect>
+                        <rect className="origin-center translate-y-[5px] transition-all duration-300 ease-[cubic-bezier(.5,.85,.25,1.1)] group-aria-pressed:translate-y-0 group-aria-pressed:rotate-135" y="7" width="9" height="2" rx="1"></rect>
                     </svg>
                 </button>
             </div>
 
             {/* Mobile Sidebar (Portal to Body) */}
-            {mounted && mobileOpen && createPortal(
-                <div className="md:hidden">
-                    <div
-                        className="fixed inset-0 z-[999] bg-gray-900/50 backdrop-blur-sm transition-opacity duration-300"
-                        onClick={() => setMobileOpen(false)}
-                    />
-                    <div
-                        className="fixed inset-y-0 right-0 z-[1000] h-full w-full max-w-[300px] overflow-y-auto bg-white shadow-2xl transition-transform duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]"
-                    >
-                        <div className="flex min-h-full flex-col">
-                            <div className="flex items-center justify-between border-b border-gray-100 px-6 py-4">
-                                <span className="text-lg font-bold text-gray-900">{siteName}</span>
-                                <button
+            {mounted &&
+                createPortal(
+                    <AnimatePresence>
+                        {mobileOpen && (
+                            <div className="md:hidden">
+                                <motion.div
+                                    initial={{ opacity: 0 }}
+                                    animate={{ opacity: 1 }}
+                                    exit={{ opacity: 0 }}
+                                    transition={{ duration: 0.2 }}
+                                    className="fixed inset-0 z-999 bg-gray-900/50 backdrop-blur-sm"
                                     onClick={() => setMobileOpen(false)}
-                                    className="rounded-full p-2 text-gray-500 hover:bg-gray-100"
+                                />
+
+                                <motion.div
+                                    initial={{ x: "100%" }}
+                                    animate={{ x: 0 }}
+                                    exit={{ x: "100%" }}
+                                    transition={{ duration: 0.28, ease: [0.16, 1, 0.3, 1] }}
+                                    className="fixed inset-y-0 right-0 z-1000 h-full w-full max-w-[300px] overflow-y-auto bg-white shadow-2xl"
                                 >
-                                    <X className="h-6 w-6" />
-                                </button>
-                            </div>
-
-                            <div className="flex-1 px-6 py-6">
-                                <nav className="flex flex-col gap-1">
-                                    {navItems.map((item) =>
-                                        item.children ? (
-                                            // Mobile accordion dropdown
-                                            <div key={item.label} className="py-1">
-                                                <button
-                                                    onClick={() =>
-                                                        setMobileAccordion(
-                                                            mobileAccordion === item.label ? null : item.label
-                                                        )
-                                                    }
-                                                    className={`flex w-full items-center justify-between rounded-xl px-4 py-3 text-base font-medium transition-all ${isDropdownActive(item)
-                                                        ? "bg-brand-50 text-brand-600"
-                                                        : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
-                                                        }`}
-                                                >
-                                                    {item.label}
-                                                    <ChevronDown
-                                                        className={`h-5 w-5 transition-transform duration-300 ${mobileAccordion === item.label ? "rotate-180" : ""
-                                                            }`}
+                                    <div className="flex min-h-full flex-col">
+                                        <div className="flex items-center justify-between border-b border-gray-100 px-5 py-4">
+                                            <Link href="/" onClick={() => setMobileOpen(false)} className="flex min-w-0 items-center gap-2">
+                                                {logoUrl ? (
+                                                    <Image
+                                                        src={logoUrl}
+                                                        alt={siteName}
+                                                        width={28}
+                                                        height={28}
+                                                        className="h-7 w-7 shrink-0 object-contain"
                                                     />
-                                                </button>
-                                                <div
-                                                    className={`grid transition-all duration-300 ease-in-out ${mobileAccordion === item.label
-                                                        ? "grid-rows-[1fr] opacity-100"
-                                                        : "grid-rows-[0fr] opacity-0"
-                                                        }`}
-                                                >
-                                                    <div className="overflow-hidden">
-                                                        <div className="ml-4 mt-1 flex flex-col gap-1 border-l-2 border-gray-100 pl-3">
-                                                            {item.children.map((child) => (
-                                                                <Link
-                                                                    key={child.href}
-                                                                    href={child.href}
-                                                                    onClick={() => setMobileOpen(false)}
-                                                                    className={`rounded-lg px-3 py-2.5 text-sm transition-colors ${isActive(child.href)
-                                                                        ? "text-brand-600 font-medium"
-                                                                        : "text-gray-500 hover:text-gray-900"
-                                                                        }`}
-                                                                >
-                                                                    {child.label}
-                                                                </Link>
-                                                            ))}
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        ) : (
-                                            // Simple mobile link
-                                            <Link
-                                                key={item.href}
-                                                href={item.href!}
-                                                onClick={() => setMobileOpen(false)}
-                                                className={`rounded-xl px-4 py-3 text-base font-medium transition-all ${isActive(item.href!)
-                                                    ? "bg-brand-50 text-brand-600"
-                                                    : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
-                                                    }`}
-                                            >
-                                                {item.label}
+                                                ) : null}
+                                                <span className="truncate text-base font-bold text-gray-900">
+                                                    {siteName}
+                                                </span>
                                             </Link>
-                                        )
-                                    )}
-                                </nav>
-                            </div>
 
-                            <div className="border-t border-gray-100 p-6 bg-gray-50/50">
-                                <p className="text-xs text-center text-gray-400">
-                                    © {new Date().getFullYear()} {siteName}
-                                </p>
+                                            <button
+                                                onClick={() => setMobileOpen(false)}
+                                                className="rounded-full p-2 text-gray-500 hover:bg-gray-100"
+                                                aria-label="Tutup menu"
+                                            >
+                                                <X className="h-6 w-6" />
+                                            </button>
+                                        </div>
+
+                                        <div className="flex-1 px-6 py-6">
+                                            <nav className="flex flex-col gap-1">
+                                                {navItems.map((item) =>
+                                                    item.children ? (
+                                                        <div key={item.label} className="py-1">
+                                                            <button
+                                                                onClick={() =>
+                                                                    setMobileAccordion(
+                                                                        mobileAccordion === item.label ? null : item.label
+                                                                    )
+                                                                }
+                                                                className={`flex w-full items-center justify-between rounded-xl px-4 py-3 text-base font-medium transition-all ${isDropdownActive(item)
+                                                                    ? "bg-brand-50 text-brand-600"
+                                                                    : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
+                                                                    }`}
+                                                            >
+                                                                {item.label}
+                                                                <ChevronDown
+                                                                    className={`h-5 w-5 transition-transform duration-300 ${mobileAccordion === item.label ? "rotate-180" : ""
+                                                                        }`}
+                                                                />
+                                                            </button>
+                                                            <div
+                                                                className={`grid transition-all duration-300 ease-in-out ${mobileAccordion === item.label
+                                                                    ? "grid-rows-[1fr] opacity-100"
+                                                                    : "grid-rows-[0fr] opacity-0"
+                                                                    }`}
+                                                            >
+                                                                <div className="overflow-hidden">
+                                                                    <div className="ml-4 mt-1 flex flex-col gap-1 border-l-2 border-gray-100 pl-3">
+                                                                        {item.children.map((child) => (
+                                                                            <Link
+                                                                                key={child.href}
+                                                                                href={child.href}
+                                                                                onClick={() => setMobileOpen(false)}
+                                                                                className={`rounded-lg px-3 py-2.5 text-sm transition-colors ${isActive(child.href)
+                                                                                    ? "font-medium text-brand-600"
+                                                                                    : "text-gray-500 hover:text-gray-900"
+                                                                                    }`}
+                                                                            >
+                                                                                {child.label}
+                                                                            </Link>
+                                                                        ))}
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    ) : (
+                                                        <Link
+                                                            key={item.href}
+                                                            href={item.href!}
+                                                            onClick={() => setMobileOpen(false)}
+                                                            className={`rounded-xl px-4 py-3 text-base font-medium transition-all ${isActive(item.href!)
+                                                                ? "bg-brand-50 text-brand-600"
+                                                                : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
+                                                                }`}
+                                                        >
+                                                            {item.label}
+                                                        </Link>
+                                                    )
+                                                )}
+                                            </nav>
+                                        </div>
+
+                                        <div className="border-t border-gray-100 bg-gray-50/50 p-6">
+                                            <p className="text-center text-xs text-gray-400">
+                                                {footerText || `© ${new Date().getFullYear()} ${siteName}. Hak Cipta Dilindungi.`}
+                                            </p>
+                                        </div>
+                                    </div>
+                                </motion.div>
                             </div>
-                        </div>
-                    </div>
-                </div>,
-                document.body
-            )}
+                        )}
+                    </AnimatePresence>,
+                    document.body
+                )}
         </header>
     );
 }

@@ -2,6 +2,7 @@ import Link from "next/link";
 import { ArrowUpRight, Calendar, Clock, MapPin, Terminal } from "lucide-react";
 import { getUpcomingEvents } from "@/lib/queries/public";
 import Image from "next/image";
+import { FadeIn, StaggerContainer, StaggerItem, StaggerList } from "@/components/ui/MotionWrapper";
 
 export default async function EventsSection() {
     const events = await getUpcomingEvents(3);
@@ -51,35 +52,37 @@ export default async function EventsSection() {
         <section className="py-24 bg-white dark:bg-gray-950 border-t border-gray-100 dark:border-gray-900">
             <div className="container mx-auto px-4 max-w-7xl">
                 {/* Header */}
-                <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-6">
-                    <div className="space-y-4">
-                        <div className="flex items-center gap-2 text-brand-600 dark:text-brand-400">
-                            <Terminal className="w-5 h-5" />
-                            <span className="font-mono text-sm uppercase tracking-widest">
-                                Agenda Himpunan
-                            </span>
+                <FadeIn direction="up">
+                    <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-6">
+                        <div className="space-y-4">
+                            <div className="flex items-center gap-2 text-brand-600 dark:text-brand-400">
+                                <Terminal className="w-5 h-5" />
+                                <span className="font-mono text-sm uppercase tracking-widest">
+                                    Agenda Himpunan
+                                </span>
+                            </div>
+                            <h2 className="text-4xl md:text-5xl font-bold font-outfit text-gray-900 dark:text-white tracking-tight">
+                                Event & Kegiatan
+                            </h2>
                         </div>
-                        <h2 className="text-4xl md:text-5xl font-bold font-outfit text-gray-900 dark:text-white tracking-tight">
-                            Event & Kegiatan
-                        </h2>
-                    </div>
 
-                    <div className="hidden md:block">
-                        <Link
-                            href="/agenda"
-                            className="group flex items-center gap-2 font-mono text-sm text-gray-500 hover:text-brand-600 transition-colors"
-                        >
-                            <span>Lihat Semua Event</span>
-                            <ArrowUpRight className="w-4 h-4 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
-                        </Link>
+                        <div className="hidden md:block">
+                            <Link
+                                href="/event"
+                                className="group flex items-center gap-2 font-mono text-sm text-gray-500 hover:text-brand-600 transition-colors"
+                            >
+                                <span>Lihat Semua Event</span>
+                                <ArrowUpRight className="w-4 h-4 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
+                            </Link>
+                        </div>
                     </div>
-                </div>
+                </FadeIn>
 
                 {/* Bento Grid layout */}
-                <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 auto-rows-fr">
+                <StaggerContainer className="grid grid-cols-1 lg:grid-cols-3 gap-6 auto-rows-fr" viewport={{ once: true, margin: "-100px" }}>
 
                     {/* Main Featured Event - Large Card */}
-                    <div className="lg:col-span-2 group relative overflow-hidden rounded-3xl border border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-900 hover:border-brand-500 dark:hover:border-brand-500 transition-all duration-300 min-h-[400px]">
+                    <StaggerItem variant="scale" className="lg:col-span-2 group relative overflow-hidden rounded-3xl border border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-900 hover:border-brand-500 dark:hover:border-brand-500 transition-all duration-300 min-h-[400px]">
                         {/* Background Image / Placeholder */}
                         <div className="absolute inset-0 z-0">
                             {mainEvent.thumbnail_url ? (
@@ -139,14 +142,15 @@ export default async function EventsSection() {
                                 </Link>
                             )}
                         </div>
-                    </div>
+                    </StaggerItem>
 
                     {/* Secondary Events Column */}
-                    <div className="flex flex-col gap-6">
+                    <StaggerList className="flex flex-col gap-6">
                         {sideEvents.length > 0 ? (
-                            sideEvents.map((event) => (
-                                <div
+                            sideEvents.map((event, index) => (
+                                <StaggerItem
                                     key={event.id}
+                                    variant="scale"
                                     className="group flex-1 flex flex-col justify-between p-8 rounded-3xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-950 hover:border-brand-500 dark:hover:border-brand-500 transition-all duration-300 relative"
                                 >
                                     <div>
@@ -199,29 +203,29 @@ export default async function EventsSection() {
                                         <span>{event.link_text || "Detail Event"}</span>
                                         <ArrowUpRight className="w-4 h-4 opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300" />
                                     </div>
-                                </div>
+                                </StaggerItem>
                             ))
                         ) : (
                             // Empty state filler if only 1 event exists
-                            <div className="h-full flex flex-col items-center justify-center p-8 rounded-3xl border border-dashed border-gray-200 dark:border-gray-800 text-gray-400 bg-gray-50/50 dark:bg-gray-900/50">
+                            <StaggerItem className="h-full flex flex-col items-center justify-center p-8 rounded-3xl border border-dashed border-gray-200 dark:border-gray-800 text-gray-400 bg-gray-50/50 dark:bg-gray-900/50">
                                 <Calendar className="w-12 h-12 mb-4 text-gray-300 dark:text-gray-700" />
-                                <span className="font-mono text-sm text-center">Tidak ada agenda lain.</span>
-                            </div>
+                                <span className="font-mono text-sm text-center">Tidak ada event lain.</span>
+                            </StaggerItem>
                         )}
 
                         {/* Fallback View More if less than 2 side events but we want to fill space? 
                             Actually let's just leave it responsive. If 1 side event, it takes full height.
                         */}
-                    </div>
-                </div>
+                    </StaggerList>
+                </StaggerContainer>
 
                 {/* Mobile View All Button */}
                 <div className="mt-12 md:hidden text-center">
                     <Link
-                        href="/agenda"
+                        href="/event"
                         className="inline-flex items-center gap-2 px-6 py-3 rounded-full border border-gray-200 dark:border-gray-800 text-sm font-medium hover:bg-gray-50 dark:hover:bg-gray-900 transition-colors"
                     >
-                        <span>Lihat Semua Agenda</span>
+                        <span>Lihat Semua Event</span>
                         <ArrowUpRight className="w-4 h-4" />
                     </Link>
                 </div>

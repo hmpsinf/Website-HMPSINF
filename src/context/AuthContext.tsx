@@ -1,7 +1,8 @@
 "use client";
 
-import React, { createContext, useContext, useState, useEffect, useCallback } from "react";
+import React, { createContext, useContext, useState, useEffect, useCallback, useRef } from "react";
 import { useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 
 interface User {
     id: number;
@@ -28,6 +29,27 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const [user, setUser] = useState<User | null>(null);
     const [loading, setLoading] = useState(true);
     const router = useRouter();
+    const pathname = usePathname();
+    const hasFetchedInitialRef = useRef(false);
+
+    const shouldFetchAuth =
+        pathname === "/profile" ||
+        pathname.startsWith("/dashboard") ||
+        pathname.startsWith("/announcements") ||
+        pathname.startsWith("/divisions") ||
+        pathname.startsWith("/documents") ||
+        pathname.startsWith("/events") ||
+        pathname.startsWith("/galleries") ||
+        pathname.startsWith("/hima-inti") ||
+        pathname.startsWith("/landing-page") ||
+        pathname.startsWith("/news") ||
+        pathname.startsWith("/popup") ||
+        pathname.startsWith("/programs") ||
+        pathname.startsWith("/sejarah") ||
+        pathname.startsWith("/settings") ||
+        pathname.startsWith("/site-settings") ||
+        pathname.startsWith("/sponsorship") ||
+        pathname.startsWith("/visi-misi");
 
     const fetchUser = useCallback(async () => {
         try {
@@ -46,8 +68,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }, []);
 
     useEffect(() => {
+        if (!shouldFetchAuth) {
+            setLoading(false);
+            return;
+        }
+
+        if (hasFetchedInitialRef.current) return;
+        hasFetchedInitialRef.current = true;
         fetchUser();
-    }, [fetchUser]);
+    }, [fetchUser, shouldFetchAuth]);
 
     const login = async (email: string, password: string) => {
         try {

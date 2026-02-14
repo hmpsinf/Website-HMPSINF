@@ -815,6 +815,15 @@ span.flatpickr-weekday,
   -ms-overflow-style: none;
   scrollbar-width: none;
 }
+
+html.landing-preloader-pending body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background: var(--color-white);
+  z-index: 1199;
+  pointer-events: none;
+}
 .scrollbar-hide::-webkit-scrollbar {
   display: none;
 }
@@ -833,4 +842,23 @@ span.flatpickr-weekday,
 
 .animate-bounce-x {
   animation: bounce-x 1s infinite;
+}
+
+@layer utilities {
+  @keyframes scroll {
+    from {
+      transform: translateX(0);
+    }
+    to {
+      transform: translateX(-50%);
+    }
+  }
+
+  .animate-scroll {
+    animation: scroll 40s linear infinite;
+  }
+
+  .pause-on-hover:hover .animate-scroll {
+    animation-play-state: paused;
+  }
 }

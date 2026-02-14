@@ -91,22 +91,20 @@ export default async function DocumentsPage({ searchParams }: PageProps) {
                         Dokumen & Arsip
                     </h1>
                     <p className="text-lg md:text-xl text-gray-600 dark:text-gray-400 leading-relaxed">
-                        Akses berbagai dokumen publik, panduan, dan arsip kegiatan HIMA IF UNIKOM.
+                        Akses berbagai dokumen publik, panduan, dan arsip kegiatan HIMPSINF.
                         Cari dan filter sesuai kebutuhan Anda.
                     </p>
-
-                    {/* Search Bar */}
-                    <div className="mt-8">
-                        <Suspense fallback={<div className="h-14 w-full max-w-md mx-auto bg-gray-100 rounded-full animate-pulse" />}>
-                            <DocumentSearch />
-                        </Suspense>
-                    </div>
                 </header>
 
-                {/* Filters */}
-                <Suspense fallback={<div className="h-12 w-64 mx-auto bg-gray-100 rounded-xl animate-pulse mb-8" />}>
-                    <DocumentFilters categories={categories} />
-                </Suspense>
+                {/* Search & Filters - Single Row */}
+                <div className="mb-8 flex items-center gap-2 sm:gap-3 max-w-3xl mx-auto">
+                    <Suspense fallback={<div className="h-11 flex-1 bg-gray-100 rounded-full animate-pulse" />}>
+                        <DocumentSearch />
+                    </Suspense>
+                    <Suspense fallback={<div className="h-11 w-24 bg-gray-100 rounded-xl animate-pulse" />}>
+                        <DocumentFilters categories={categories} />
+                    </Suspense>
+                </div>
 
                 {/* Documents Grid */}
                 <Suspense fallback={

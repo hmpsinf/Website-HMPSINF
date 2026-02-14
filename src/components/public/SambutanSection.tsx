@@ -3,6 +3,7 @@ import Image from "next/image";
 import { Instagram, MessageCircle } from "lucide-react";
 import { getPhotoPatternStyle, DEFAULT_HIMA_INTI_PATTERN_COLOR } from "@/lib/pattern";
 import SambutanText from "@/components/public/SambutanText";
+import { FadeIn, ScaleIn } from "@/components/ui/MotionWrapper";
 
 interface SambutanSectionProps {
     settings: {
@@ -39,8 +40,8 @@ export default function SambutanSection({ settings, ketua }: SambutanSectionProp
                     <div className="relative order-1 lg:order-1 flex justify-center lg:justify-start">
 
                         {/* Photo container with pattern background (same approach as HimaIntiCard) */}
-                        <div
-                            className="group relative aspect-[2/3] w-full max-w-sm overflow-hidden rounded-3xl bg-gray-100 lg:max-w-md"
+                        <ScaleIn
+                            className="group relative aspect-2/3 w-full max-w-sm overflow-hidden rounded-3xl bg-gray-100 lg:max-w-md"
                             style={patternStyle}
                         >
                             {ketua?.photo_url ? (
@@ -55,7 +56,7 @@ export default function SambutanSection({ settings, ketua }: SambutanSectionProp
                                     />
 
                                     {/* Gradient Overlay */}
-                                    <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent opacity-90 transition-opacity duration-300" />
+                                    <div className="absolute inset-0 bg-linear-to-t from-black/90 via-black/20 to-transparent opacity-90 transition-opacity duration-300" />
 
                                     {/* Content Overlay */}
                                     <div className="absolute bottom-0 left-0 right-0 p-6 sm:p-8 text-white">
@@ -99,18 +100,18 @@ export default function SambutanSection({ settings, ketua }: SambutanSectionProp
                                     <span className="text-gray-400 font-medium bg-white/80 px-4 py-2 rounded-lg backdrop-blur-sm">No Photo Available</span>
                                 </div>
                             )}
-                        </div>
+                        </ScaleIn>
                     </div>
 
                     {/* Divider Column (Desktop Only) */}
                     {/* This creates the thin vertical line in the middle gap */}
-                    <div className="hidden lg:flex flex-col items-center justify-center order-2 h-full py-12">
-                        <div className="h-full w-px bg-gradient-to-b from-transparent via-gray-300 to-transparent"></div>
-                    </div>
+                    <FadeIn delay={0.2} className="hidden lg:flex flex-col items-center justify-center order-2 h-full py-12">
+                        <div className="h-full w-px bg-linear-to-b from-transparent via-gray-300 to-transparent"></div>
+                    </FadeIn>
 
                     {/* Text Column - Right on Desktop */}
                     <div className="flex flex-col justify-center order-2 lg:order-3 space-y-8">
-                        <div className="space-y-4">
+                        <FadeIn delay={0.3} direction="up" distance={20} className="space-y-4">
                             <h2 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl text-center lg:text-left">
                                 {settings.sambutan_section_title || "Sambutan Ketua Himpunan"}
                             </h2>
@@ -119,9 +120,11 @@ export default function SambutanSection({ settings, ketua }: SambutanSectionProp
                                     {settings.sambutan_section_subtitle}
                                 </p>
                             )}
-                        </div>
+                        </FadeIn>
 
-                        <SambutanText content={settings.sambutan_content} />
+                        <FadeIn delay={0.4} direction="up" distance={20}>
+                            <SambutanText content={settings.sambutan_content} />
+                        </FadeIn>
                     </div>
                 </div>
             </div>

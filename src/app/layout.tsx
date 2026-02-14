@@ -53,7 +53,32 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="id">
+    <html lang="id" suppressHydrationWarning>
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(){
+  try {
+    var isLanding = window.location.pathname === '/';
+    var key = 'landing_preloader_seen';
+    var hasSeen = sessionStorage.getItem(key) === '1';
+
+    if (isLanding && !hasSeen) {
+      sessionStorage.setItem(key, '1');
+      window.__SHOW_LANDING_PRELOADER__ = true;
+      document.documentElement.classList.add('landing-preloader-pending');
+    } else {
+      window.__SHOW_LANDING_PRELOADER__ = false;
+      document.documentElement.classList.remove('landing-preloader-pending');
+    }
+  } catch (e) {
+    window.__SHOW_LANDING_PRELOADER__ = false;
+    document.documentElement.classList.remove('landing-preloader-pending');
+  }
+})();`,
+          }}
+        />
+      </head>
       <body className={`${outfit.variable} ${outfit.className} dark:bg-gray-900`}>
         <Providers>{children}</Providers>
       </body>
