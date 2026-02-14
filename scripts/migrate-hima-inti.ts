@@ -1,11 +1,7 @@
 // Migration untuk tabel HIMA Inti (Kepengurusan Inti)
 // Dipanggil dari API route atau langsung via CLI
 
-import { config } from "dotenv";
 import { createClient } from "@libsql/client";
-
-// Load environment variables from .env.local
-config({ path: ".env.local" });
 
 export async function migrateHimaInti() {
   const db = createClient({
@@ -64,10 +60,16 @@ export async function migrateHimaInti() {
   console.log("\n✅ Migrasi HIMA Inti selesai!");
 }
 
-// Run migration when executed directly
-migrateHimaInti()
-  .then(() => process.exit(0))
-  .catch((err) => {
-    console.error("Migration failed:", err);
-    process.exit(1);
-  });
+// Run migration only when executed directly via CLI
+if (process.argv[1]?.includes("migrate-hima-inti")) {
+  import("dotenv")
+    .then(({ config }) => {
+      config({ path: ".env.local" });
+      return migrateHimaInti();
+    })
+    .then(() => process.exit(0))
+    .catch((err) => {
+      console.error("Migration failed:", err);
+      process.exit(1);
+    });
+}
