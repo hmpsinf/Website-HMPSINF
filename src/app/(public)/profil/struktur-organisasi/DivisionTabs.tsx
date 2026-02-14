@@ -78,6 +78,10 @@ function DivisionLeaderCard({
                     </span>
                 </div>
 
+                <h3 className="text-sm font-bold text-gray-800 dark:text-white font-outfit leading-snug wrap-break-word">
+                    {memberName}
+                </h3>
+
                 {/* Social Links */}
                 {(instagram || whatsapp) && (
                     <div className="flex flex-col gap-1.5 mt-2">

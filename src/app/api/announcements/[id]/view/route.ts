@@ -7,27 +7,28 @@ export async function POST(
 ) {
   try {
     const { id } = await params;
-    const { sessionId } = await request.json();
 
-    if (!sessionId) {
-      return NextResponse.json({ error: "Session ID required" }, { status: 400 });
-    }
-
-    // Check if this session has already viewed this announcement
-    // For simplicity, we'll just trust the client's session storage check
-    // In a production app, we might want a separate table `announcement_views` to prevent spam
-    // But for now, we just increment the counter
-
-    await db.execute({
-        sql: `UPDATE pengumuman SET view_count = view_count + 1 WHERE id = ?`,
+    const result = await db.execute({
+        sql: `
+          UPDATE pengumuman
+          SET view_count = IFNULL(view_count, 0) + 1
+          WHERE id = ? AND is_published = 1
+        `,
         args: [id],
     });
+
+    if (result.rowsAffected === 0) {
+      return NextResponse.json(
+        { error: "Pengumuman tidak ditemukan atau belum dipublikasikan" },
+        { status: 404 }
+      );
+    }
 
     return NextResponse.json({ success: true });
   } catch (error) {
     console.error("Error incrementing view count:", error);
     return NextResponse.json(
-      { error: "Internal Server Error" },
+      { error: "Gagal menambahkan view pengumuman" },
       { status: 500 }
     );
   }
