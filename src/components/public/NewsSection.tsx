@@ -132,10 +132,13 @@ export default async function NewsSection() {
                                         <p className="text-gray-500 text-sm line-clamp-2 mb-4">
                                             {item.excerpt}
                                         </p>
-                                        <div className="mt-auto pt-4 flex items-center text-sm font-semibold text-brand-600 group-hover:text-brand-700">
+                                        <Link
+                                            href={`/berita/${item.slug}`}
+                                            className="mt-auto pt-4 flex items-center text-sm font-semibold text-brand-600 group-hover:text-brand-700"
+                                        >
                                             Baca Selengkapnya
                                             <ArrowRight className="ml-1 h-3.5 w-3.5 transition-transform group-hover:translate-x-1" />
-                                        </div>
+                                        </Link>
                                     </div>
                                 </StaggerItem>
                             ))}

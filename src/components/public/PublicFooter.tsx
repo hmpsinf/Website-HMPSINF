@@ -175,12 +175,10 @@ export default function PublicFooter({
             {/* Copyright */}
             <div className="border-t border-gray-200">
                 <div className="mx-auto max-w-7xl px-6 py-6">
-                    <FadeIn delay={0.2}>
-                        <div
-                            className="text-center text-sm text-gray-500"
-                            dangerouslySetInnerHTML={{ __html: resolvedFooterText }}
-                        />
-                    </FadeIn>
+                    <div
+                        className="text-center text-sm text-gray-500"
+                        dangerouslySetInnerHTML={{ __html: resolvedFooterText }}
+                    />
                 </div>
             </div>
         </footer>

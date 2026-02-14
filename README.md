@@ -9,13 +9,6 @@
   Fakultas Sains dan Teknologi Universitas Nurul Huda
 </p>
 
-<p align="center">
-  <a href="https://hmpsinf.web.id">🌐 Live Website</a> ・
-  <a href="#fitur">✨ Fitur</a> ・
-  <a href="#instalasi">🚀 Instalasi</a> ・
-  <a href="#tech-stack">⚙️ Tech Stack</a>
-</p>
-
 ---
 
 ## 📋 Deskripsi
