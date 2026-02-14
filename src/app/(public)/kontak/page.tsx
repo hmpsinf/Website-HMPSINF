@@ -33,6 +33,7 @@ export const metadata: Metadata = {
 
 export default async function ContactPage() {
     const settings = await getSiteSettings();
+    const resolvedAddress = settings.address && settings.address.trim().length > 0 ? settings.address : null;
 
     // Social Media Links Helper
     const socialLinks: {
@@ -121,9 +122,16 @@ export default async function ContactPage() {
                                 </div>
                                 <div>
                                     <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">Alamat</h3>
-                                    <p className="text-gray-600 dark:text-gray-400 leading-relaxed text-lg">
-                                        {settings.address || 'Alamat belum diatur'}
-                                    </p>
+                                    {resolvedAddress ? (
+                                        <div
+                                            className="text-gray-600 dark:text-gray-400 leading-relaxed text-lg"
+                                            dangerouslySetInnerHTML={{ __html: resolvedAddress }}
+                                        />
+                                    ) : (
+                                        <p className="text-gray-600 dark:text-gray-400 leading-relaxed text-lg">
+                                            Alamat belum diatur
+                                        </p>
+                                    )}
                                 </div>
                             </div>
 

@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useRef } from "react";
+import Link from "next/link";
 import { ArrowRight, ChevronLeft, ChevronRight } from "lucide-react";
 
 interface Division {
@@ -79,10 +80,13 @@ export default function DivisionsCarousel({ divisions }: DivisionsCarouselProps)
                                     {division.dosen_pendamping_name || "Dosen Pendamping"}
                                 </span>
                             </div>
-                            <button className="group/btn flex items-center gap-2 text-sm font-semibold text-gray-900 transition-colors group-hover:text-brand-600">
+                            <Link
+                                href="/profil/divisi"
+                                className="group/btn flex items-center gap-2 text-sm font-semibold text-gray-900 transition-colors group-hover:text-brand-600"
+                            >
                                 Detail
                                 <ArrowRight className="h-4 w-4 transition-transform group-hover/btn:translate-x-1" />
-                            </button>
+                            </Link>
                         </div>
                     </div>
                 ))}

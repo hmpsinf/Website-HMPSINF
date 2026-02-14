@@ -14,9 +14,9 @@
         "mcp-turso-cloud"
       ],
       "env": {
-        "TURSO_API_TOKEN": "eyJhbGciOiJFZERTQSIsInR5cCI6IkpXVCJ9.eyJqdGkiOiIzMzVLMWdRbkVmR1FpSkxlMkt3ZU5BIn0.U-tusRZxKkpKaNe7O6c78O-IruYyeJtwnUUy9YYNz6GCHSC_8b_Lhx3wacqMgZl3x5ZP2qbNPoRB0hqNGcWoDQ",
-        "TURSO_ORGANIZATION": "miftakhulrahman",
-        "TURSO_DEFAULT_DATABASE": "hminf"
+        "TURSO_API_TOKEN": "eyJhbGciOiJFZERTQSIsInR5cCI6IkpXVCJ9.eyJhIjoicnciLCJpYXQiOjE3NzEwNDI1MDAsImlkIjoiYWI3ZjQ0MWUtZGZhOC00NTA4LWFkN2MtNzJkNjhlNzQ1NmYzIiwicmlkIjoiNTZiY2Y5YmEtMTNhYi00MGQ4LTg5NjUtZDJjNjQzZmM2Njg1In0.mfxbx82QiJwOGTgvfDb56onLKd8WFjl8YU1R3dDSSESc_RuRILhTFhzYWQWWeKU8rpnhFYEMCfiDKEPNWHnFBQ",
+        "TURSO_ORGANIZATION": "hmpsinf",
+        "TURSO_DEFAULT_DATABASE": "hmpsinf"
       }
     },
     "cloudinary-asset-mgmt": {

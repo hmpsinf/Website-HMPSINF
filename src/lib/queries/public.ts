@@ -844,7 +844,10 @@ export async function getProgramKerja() {
     priority: row.priority as string,
     start_date: row.start_date as string | null,
     end_date: row.end_date as string | null,
-    owner_type: row.owner_type as string,
+    owner_type:
+      String(row.owner_type || "").toLowerCase().replace(/\s+/g, "_") === "hima_inti"
+        ? "hima"
+        : (row.owner_type as string),
     division_id: row.division_id as string | null,
     division_name: row.division_name as string | null,
     division_color: row.division_color as string | null,
@@ -856,18 +859,16 @@ export async function getProgramKerja() {
 
 // ── Dokumen Program Kerja (General) ──
 export async function getProgramKerjaDocuments() {
-  // Category ID for "Program Kerja" from document_categories table
-  const PROGRAM_KERJA_CATEGORY_ID = 'afced389-9087-4c2d-9517-87d75757c342';
-
   const result = await db.execute({
     sql: `
       SELECT 
-        id, name, file_url, file_type, file_size, created_at, owner_type, division_id
-      FROM documents
-      WHERE category_id = ?
-      ORDER BY created_at DESC
+        d.id, d.name, d.file_url, d.file_type, d.file_size, d.created_at, d.owner_type, d.division_id
+      FROM documents d
+      LEFT JOIN document_categories dc ON d.category_id = dc.id
+      WHERE LOWER(TRIM(dc.name)) = 'program kerja'
+      ORDER BY d.created_at DESC
     `,
-    args: [PROGRAM_KERJA_CATEGORY_ID],
+    args: [],
   });
 
   return result.rows.map((row) => ({
@@ -877,7 +878,10 @@ export async function getProgramKerjaDocuments() {
     file_type: row.file_type as string | null,
     file_size: Number(row.file_size || 0),
     created_at: row.created_at as string,
-    owner_type: row.owner_type as string,
+    owner_type:
+      String(row.owner_type || "").toLowerCase().replace(/\s+/g, "_") === "hima_inti"
+        ? "hima"
+        : (row.owner_type as string),
     division_id: row.division_id as string | null,
   }));
 }

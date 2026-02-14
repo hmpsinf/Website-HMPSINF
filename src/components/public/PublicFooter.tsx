@@ -50,6 +50,13 @@ export default function PublicFooter({
     facebookUrl,
     youtubeUrl,
 }: PublicFooterProps) {
+    const resolvedFooterText =
+        footerText && footerText.trim().length > 0
+            ? footerText
+            : `© ${new Date().getFullYear()} ${siteName}. Hak Cipta Dilindungi.`;
+
+    const resolvedAddress = address && address.trim().length > 0 ? address : null;
+
     const socials = [
         instagramUrl && { icon: Instagram, href: instagramUrl, label: "Instagram" },
         tiktokUrl && { icon: TikTokIcon, href: tiktokUrl, label: "TikTok" },
@@ -136,10 +143,10 @@ export default function PublicFooter({
                                         <span>{contactEmail}</span>
                                     </li>
                                 )}
-                                {address && (
+                                {resolvedAddress && (
                                     <li className="flex items-start gap-2 text-sm text-gray-500">
                                         <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-gray-400" />
-                                        <span>{address}</span>
+                                        <span dangerouslySetInnerHTML={{ __html: resolvedAddress }} />
                                     </li>
                                 )}
                             </ul>
@@ -169,9 +176,10 @@ export default function PublicFooter({
             <div className="border-t border-gray-200">
                 <div className="mx-auto max-w-7xl px-6 py-6">
                     <FadeIn delay={0.2}>
-                        <p className="text-center text-sm text-gray-500">
-                            {footerText || `© ${new Date().getFullYear()} ${siteName}. Hak Cipta Dilindungi.`}
-                        </p>
+                        <div
+                            className="text-center text-sm text-gray-500"
+                            dangerouslySetInnerHTML={{ __html: resolvedFooterText }}
+                        />
                     </FadeIn>
                 </div>
             </div>

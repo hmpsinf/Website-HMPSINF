@@ -110,7 +110,7 @@ export default async function LandingPage() {
                             <div className="px-6 py-16 text-center sm:px-10 sm:py-20 lg:col-span-3 lg:px-14 lg:py-20 lg:text-left flex flex-col justify-center items-center lg:items-start sm:min-h-[500px] lg:min-h-0 lg:block">
                                 <FadeIn delay={0.15} direction="up" distance={20}>
                                     <h1
-                                        className="font-outfit text-[25px] font-extrabold leading-[1.4] tracking-tight text-white sm:text-4xl sm:leading-[1.12] lg:text-5xl"
+                                        className="font-outfit text-[24px] font-extrabold leading-[1.4] tracking-tight text-white sm:text-4xl sm:leading-[1.12] lg:text-5xl"
                                         dangerouslySetInnerHTML={{ __html: settings.hero_title }}
                                     />
                                 </FadeIn>
