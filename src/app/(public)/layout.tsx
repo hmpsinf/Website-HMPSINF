@@ -2,6 +2,8 @@ import { getSiteSettings } from "@/lib/queries/public";
 import PublicHeader from "@/components/public/PublicHeader";
 import PublicFooter from "@/components/public/PublicFooter";
 
+export const revalidate = 60;
+
 export default async function PublicLayout({
     children,
 }: {

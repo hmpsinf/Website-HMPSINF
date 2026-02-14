@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { revalidatePath } from 'next/cache';
 import db from '@/lib/db';
 import { getCurrentUser } from '@/lib/auth';
 
@@ -59,6 +60,9 @@ export async function PUT(request: Request) {
         args: [key, value as string | null],
       });
     }
+
+    revalidatePath('/', 'layout');
+    revalidatePath('/', 'page');
 
     return NextResponse.json({
       message: 'Pengaturan berhasil diperbarui',

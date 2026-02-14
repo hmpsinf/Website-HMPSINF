@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { revalidatePath } from 'next/cache';
 import db from '@/lib/db';
 import { getCurrentUser } from '@/lib/auth';
 import { uploadLogo, deleteImage } from '@/lib/cloudinary';
@@ -108,6 +109,9 @@ export async function POST(request: Request) {
       args: [publicIdKey, uploadResult.publicId],
     });
 
+    revalidatePath('/', 'layout');
+    revalidatePath('/', 'page');
+
     return NextResponse.json({
       message: 'Logo berhasil diupload',
       url: uploadResult.url,
@@ -179,6 +183,9 @@ export async function DELETE(request: Request) {
       sql: `INSERT OR REPLACE INTO site_settings (key, value, updated_at) VALUES (?, NULL, CURRENT_TIMESTAMP)`,
       args: [publicIdKey],
     });
+
+    revalidatePath('/', 'layout');
+    revalidatePath('/', 'page');
 
     return NextResponse.json({
       message: 'Logo berhasil dihapus',
