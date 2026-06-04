@@ -473,7 +473,6 @@ export default function BootcampGuide() {
                                     items={[
                                         "Tampilan tabel data dengan Pagination",
                                         "Upload Gambar (Poster Event)",
-                                        "Konfirmasi Hapus interaktif menggunakan SweetAlert2",
                                         "Validasi form yang aman",
                                     ]}
                                 />
@@ -499,14 +498,14 @@ export default function BootcampGuide() {
                             <div data-protected="true">
                                 <CodeBlock
                                     language="bash"
-                                    code={`composer create-project laravel/laravel event-kampus\ncd event-kampus`}
+                                    code={`composer create-project laravel/laravel=^10.0 event-kampus\ncd event-kampus`}
                                 />
                             </div>
 
                             {/* 1.2 */}
                             <SubHeading id="step-1-2">1.2 Buat Database & Konfigurasi Lingkungan</SubHeading>
                             <Paragraph>
-                                Buka aplikasi database manager kamu (misalnya <strong>phpMyAdmin</strong> atau <strong>DBeaver</strong>), lalu buat satu database baru dengan nama:
+                                Buka aplikasi <strong>phpMyAdmin</strong> melalui <strong>Laragon</strong> kamu, lalu buat satu database baru dengan nama:
                             </Paragraph>
                             <div className="my-3 inline-block rounded-lg bg-gray-100 px-4 py-2 text-base font-semibold text-gray-800 border border-gray-200">
                                 event_kampus
@@ -522,7 +521,7 @@ export default function BootcampGuide() {
                                 />
                             </div>
                             <InfoBox type="tip">
-                                Sesuaikan <InlineCode>DB_USERNAME</InlineCode> dan <InlineCode>DB_PASSWORD</InlineCode> dengan konfigurasi server lokal kamu (XAMPP/Laragon/dll).
+                                Pastikan server <strong>Laragon</strong> sudah berjalan, dan sesuaikan <InlineCode>DB_USERNAME</InlineCode> dan <InlineCode>DB_PASSWORD</InlineCode> jika kamu pernah mengubahnya dari setelan bawaan.
                             </InfoBox>
 
                             {/* 1.3 */}
@@ -733,7 +732,7 @@ export default function BootcampGuide() {
                                 <CodeBlock
                                     language="php"
                                     filename="EventController.php → index()"
-                                    code={`public function index()\n{\n    $events = \\App\\Models\\Event::latest()->paginate(10);\n    return view('events.index', compact('events'));\n}`}
+                                    code={`use App\\Models\\Event;\n\npublic function index()\n{\n    $events = Event::latest()->paginate(10);\n    return view('events.index', compact('events'));\n}`}
                                 />
                             </div>
 
@@ -841,7 +840,7 @@ export default function BootcampGuide() {
                                 <CodeBlock
                                     language="php"
                                     filename="EventController.php → create() & store()"
-                                    code={`public function create()\n{\n    return view('events.create');\n}\n\npublic function store(\\Illuminate\\Http\\Request $request)\n{\n    // Validasi data yang masuk\n    $validated = $request->validate([\n        'nama_event' => 'required|string|max:255',\n        'poster'     => 'nullable|image|mimes:jpeg,png,jpg|max:2048',\n        'tanggal'    => 'required|date',\n        'tempat'     => 'required|string',\n        'kuota'      => 'required|integer|min:1',\n        'peserta_terdaftar' => 'nullable|integer|min:0',\n        'deskripsi'  => 'nullable|string',\n    ]);\n\n    // Proses upload gambar\n    if ($request->hasFile('poster')) {\n        $image = $request->file('poster');\n        $image->storeAs('public/posters', $image->hashName());\n        $validated['poster'] = $image->hashName();\n    }\n\n    \\App\\Models\\Event::create($validated);\n    return redirect()->route('events.index')->with('success', 'Event berhasil ditambahkan!');\n}`}
+                                    code={`use App\\Models\\Event;\nuse Illuminate\\Http\\Request;\n\npublic function create()\n{\n    return view('events.create');\n}\n\npublic function store(Request $request)\n{\n    // Validasi data yang masuk\n    $validated = $request->validate([\n        'nama_event' => 'required|string|max:255',\n        'poster'     => 'nullable|image|mimes:jpeg,png,jpg|max:2048',\n        'tanggal'    => 'required|date',\n        'tempat'     => 'required|string',\n        'kuota'      => 'required|integer|min:1',\n        'peserta_terdaftar' => 'nullable|integer|min:0',\n        'deskripsi'  => 'nullable|string',\n    ]);\n\n    // Proses upload gambar\n    if ($request->hasFile('poster')) {\n        $image = $request->file('poster');\n        $image->storeAs('public/posters', $image->hashName());\n        $validated['poster'] = $image->hashName();\n    }\n\n    Event::create($validated);\n    return redirect()->route('events.index')->with('success', 'Event berhasil ditambahkan!');\n}`}
                                 />
                             </div>
 
@@ -865,7 +864,7 @@ export default function BootcampGuide() {
                                 <CodeBlock
                                     language="php"
                                     filename="EventController.php → show()"
-                                    code={`public function show(\\App\\Models\\Event $event)\n{\n    return view('events.show', compact('event'));\n}`}
+                                    code={`use App\\Models\\Event;\n\npublic function show(Event $event)\n{\n    return view('events.show', compact('event'));\n}`}
                                 />
                             </div>
 
@@ -963,7 +962,7 @@ export default function BootcampGuide() {
                                 <CodeBlock
                                     language="php"
                                     filename="EventController.php → edit(), update(), destroy()"
-                                    code={`public function edit(\\App\\Models\\Event $event)\n{\n    return view('events.edit', compact('event'));\n}\n\npublic function update(\\Illuminate\\Http\\Request $request, \\App\\Models\\Event $event)\n{\n    $validated = $request->validate([\n        'nama_event' => 'required|string|max:255',\n        'poster'     => 'nullable|image|mimes:jpeg,png,jpg|max:2048',\n        'tanggal'    => 'required|date',\n        'tempat'     => 'required|string',\n        'kuota'      => 'required|integer|min:1',\n        'peserta_terdaftar' => 'nullable|integer|min:0',\n        'deskripsi'  => 'nullable|string',\n    ]);\n\n    if ($request->hasFile('poster')) {\n        // Hapus file lama di server jika ada\n        if ($event->poster) {\n            \\Illuminate\\Support\\Facades\\Storage::disk('public')->delete('posters/' . $event->poster);\n        }\n        \n        $image = $request->file('poster');\n        $image->storeAs('public/posters', $image->hashName());\n        $validated['poster'] = $image->hashName();\n    }\n\n    $event->update($validated);\n    return redirect()->route('events.index')->with('success', 'Event berhasil diperbarui!');\n}\n\npublic function destroy(\\App\\Models\\Event $event)\n{\n    if ($event->poster) {\n        \\Illuminate\\Support\\Facades\\Storage::disk('public')->delete('posters/' . $event->poster);\n    }\n\n    $event->delete();\n    return redirect()->route('events.index')->with('success', 'Event dihapus!');\n}`}
+                                    code={`use App\\Models\\Event;\nuse Illuminate\\Http\\Request;\nuse Illuminate\\Support\\Facades\\Storage;\n\npublic function edit(Event $event)\n{\n    return view('events.edit', compact('event'));\n}\n\npublic function update(Request $request, Event $event)\n{\n    $validated = $request->validate([\n        'nama_event' => 'required|string|max:255',\n        'poster'     => 'nullable|image|mimes:jpeg,png,jpg|max:2048',\n        'tanggal'    => 'required|date',\n        'tempat'     => 'required|string',\n        'kuota'      => 'required|integer|min:1',\n        'peserta_terdaftar' => 'nullable|integer|min:0',\n        'deskripsi'  => 'nullable|string',\n    ]);\n\n    if ($request->hasFile('poster')) {\n        // Hapus file lama di server jika ada\n        if ($event->poster) {\n            Storage::disk('public')->delete('posters/' . $event->poster);\n        }\n        \n        $image = $request->file('poster');\n        $image->storeAs('public/posters', $image->hashName());\n        $validated['poster'] = $image->hashName();\n    }\n\n    $event->update($validated);\n    return redirect()->route('events.index')->with('success', 'Event berhasil diperbarui!');\n}\n\npublic function destroy(Event $event)\n{\n    if ($event->poster) {\n        Storage::disk('public')->delete('posters/' . $event->poster);\n    }\n\n    $event->delete();\n    return redirect()->route('events.index')->with('success', 'Event dihapus!');\n}`}
                                 />
                             </div>
 
