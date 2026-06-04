@@ -427,7 +427,7 @@ export default function BootcampGuide() {
                         Panduan Bootcamp Laravel
                     </h1>
                     <p className="mx-auto mt-4 max-w-2xl text-base leading-relaxed text-gray-400 sm:text-lg">
-                        Membangun <span className="text-white font-medium">CRUD Event Kampus</span> — dari nol hingga CRUD lengkap dengan upload gambar, dan pagination.
+                        Membangun <span className="text-white font-medium">CRUD Event Kampus</span> dari nol hingga CRUD lengkap dengan upload gambar, dan pagination.
                     </p>
                     <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
                         {["Laravel", "MySQL", "SB Admin"].map((tech) => (
