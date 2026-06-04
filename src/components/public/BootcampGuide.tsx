@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef, useCallback } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { X, Menu, Download, Copy, Check, ChevronRight, BookOpen, Terminal, Database, Route, Monitor, Rocket } from "lucide-react";
+import { X, Menu, Download, Copy, Check, ChevronRight, BookOpen, Terminal, Database, Route, Monitor, Rocket, Hand, Lightbulb, CheckCircle2, AlertTriangle, Target, PartyPopper } from "lucide-react";
 
 // ─── Table of Contents Data ───
 interface TocItem {
@@ -79,21 +79,21 @@ function CodeBlock({
     const langLabel = filename || language;
 
     return (
-        <div className="group relative my-4 overflow-hidden rounded-xl border border-gray-200 bg-gray-950 shadow-sm">
+        <div className="group relative my-4 overflow-hidden rounded-xl border border-gray-200 bg-gray-950">
             {/* Header bar */}
-            <div className="flex items-center justify-between border-b border-gray-800 bg-gray-900 px-4 py-2.5">
-                <div className="flex items-center gap-2">
-                    <div className="flex gap-1.5">
+            <div className="flex items-center justify-between gap-3 border-b border-gray-800 bg-gray-900 px-4 py-2.5 flex-wrap sm:flex-nowrap">
+                <div className="flex items-center gap-2 min-w-0">
+                    <div className="flex gap-1.5 shrink-0">
                         <span className="h-3 w-3 rounded-full bg-red-500/80" />
                         <span className="h-3 w-3 rounded-full bg-yellow-500/80" />
                         <span className="h-3 w-3 rounded-full bg-green-500/80" />
                     </div>
-                    <span className="ml-2 text-xs font-medium text-gray-400">{langLabel}</span>
+                    <span className="ml-2 text-xs font-medium text-gray-400 truncate">{langLabel}</span>
                 </div>
                 {allowCopy && (
                     <button
                         onClick={handleCopy}
-                        className="flex items-center gap-1.5 rounded-md px-2.5 py-1 text-xs font-medium text-gray-400 transition-all hover:bg-gray-800 hover:text-gray-200"
+                        className="flex shrink-0 items-center gap-1.5 rounded-md px-2.5 py-1 text-xs font-medium text-gray-400 transition-all hover:bg-gray-800 hover:text-gray-200"
                         title="Salin kode"
                     >
                         {copied ? (
@@ -112,7 +112,7 @@ function CodeBlock({
             </div>
             {/* Code content */}
             <div
-                className={`overflow-x-auto p-4 ${!allowCopy ? "select-none" : ""}`}
+                className={`overflow-x-auto w-full p-4 ${!allowCopy ? "select-none" : ""}`}
                 onCopy={handlePreventCopy}
                 onMouseDown={!allowCopy ? (e) => { if (e.detail > 1) e.preventDefault(); } : undefined}
                 style={!allowCopy ? { WebkitUserSelect: "none", MozUserSelect: "none", msUserSelect: "none", userSelect: "none" } as React.CSSProperties : undefined}
@@ -126,11 +126,11 @@ function CodeBlock({
 }
 
 // ─── Section Heading ───
-function SectionHeading({ id, children, badge }: { id: string; children: React.ReactNode; badge?: string }) {
+function SectionHeading({ id, children, badge }: { id: string; children: React.ReactNode; badge?: React.ReactNode }) {
     return (
-        <h2 id={id} className="group mb-6 mt-16 flex items-center gap-3 scroll-mt-24 text-2xl font-bold tracking-tight text-gray-900 first:mt-0 sm:text-3xl">
+        <h2 id={id} className="group mb-6 mt-16 flex flex-wrap items-center gap-3 scroll-mt-24 text-2xl font-bold tracking-tight text-gray-900 first:mt-0 sm:text-3xl">
             {badge && (
-                <span className="inline-flex items-center rounded-lg bg-brand-50 px-3 py-1 text-sm font-semibold text-brand-600">
+                <span className="inline-flex items-center gap-1.5 rounded-lg bg-brand-100 px-3 py-1 text-sm font-semibold text-brand-700">
                     {badge}
                 </span>
             )}
@@ -161,19 +161,19 @@ function InlineCode({ children }: { children: React.ReactNode }) {
 
 function InfoBox({ children, type = "info" }: { children: React.ReactNode; type?: "info" | "tip" | "warning" }) {
     const styles = {
-        info: "border-brand-200 bg-brand-25 text-brand-800",
-        tip: "border-green-200 bg-green-50 text-green-800",
-        warning: "border-orange-200 bg-orange-50 text-orange-800",
+        info: "bg-brand-50 text-brand-800",
+        tip: "bg-green-50 text-green-800",
+        warning: "bg-orange-50 text-orange-800",
     };
     const icons = {
-        info: "💡",
-        tip: "✅",
-        warning: "⚠️",
+        info: <Lightbulb className="h-5 w-5 shrink-0 text-brand-600" />,
+        tip: <CheckCircle2 className="h-5 w-5 shrink-0 text-green-600" />,
+        warning: <AlertTriangle className="h-5 w-5 shrink-0 text-orange-600" />,
     };
     return (
-        <div className={`my-4 rounded-xl border px-4 py-3 text-sm leading-relaxed ${styles[type]}`}>
-            <span className="mr-1.5">{icons[type]}</span>
-            {children}
+        <div className={`my-4 flex items-start gap-3 rounded-xl px-4 py-3 text-sm leading-relaxed ${styles[type]}`}>
+            {icons[type]}
+            <div>{children}</div>
         </div>
     );
 }
@@ -252,7 +252,7 @@ const STARTER_CODE = `<!DOCTYPE html>
     <div id="content-wrapper" class="d-flex flex-column">
         <div id="content">
             {{-- TOPBAR --}}
-            <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
+            <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top">
                 <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3"><i class="fa fa-bars"></i></button>
                 <ul class="navbar-nav ml-auto">
                     <li class="nav-item dropdown no-arrow">
@@ -423,20 +423,14 @@ export default function BootcampGuide() {
             <div className="relative overflow-hidden border-b border-gray-200 bg-gradient-to-br from-gray-900 via-gray-800 to-brand-950">
                 <div className="absolute inset-0 bg-[url('/grid-pattern.svg')] opacity-10" />
                 <div className="relative mx-auto max-w-7xl px-6 py-16 sm:py-20 text-center">
-                    <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-1.5 text-sm font-medium text-gray-300 backdrop-blur-sm mb-6">
-                        <Terminal className="h-4 w-4" />
-                        <span>Durasi: 3–4 Jam</span>
-                        <span className="mx-1 text-gray-600">•</span>
-                        <span>Laravel 10 + Bootstrap 4</span>
-                    </div>
                     <h1 className="mx-auto max-w-4xl text-3xl font-bold tracking-tight text-white sm:text-4xl lg:text-5xl">
-                        Panduan Bootcamp Laravel Dasar
+                        Panduan Bootcamp Laravel
                     </h1>
                     <p className="mx-auto mt-4 max-w-2xl text-base leading-relaxed text-gray-400 sm:text-lg">
-                        Membangun <span className="text-white font-medium">Sistem Manajemen Event Kampus</span> — dari nol hingga CRUD lengkap dengan upload gambar, pagination, dan SweetAlert2.
+                        Membangun <span className="text-white font-medium">CRUD Event Kampus</span> — dari nol hingga CRUD lengkap dengan upload gambar, dan pagination.
                     </p>
                     <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
-                        {["Laravel 10", "MySQL", "SB Admin 2", "SweetAlert2"].map((tech) => (
+                        {["Laravel", "MySQL", "SB Admin"].map((tech) => (
                             <span key={tech} className="rounded-full border border-white/10 bg-white/5 px-3.5 py-1.5 text-xs font-medium text-gray-300">
                                 {tech}
                             </span>
@@ -464,12 +458,12 @@ export default function BootcampGuide() {
                     <article className="min-w-0 flex-1 px-6 py-10 sm:px-10 lg:px-16 lg:py-12">
                         {/* ── Intro ── */}
                         <section id="intro">
-                            <div className="mb-8 rounded-xl border border-brand-100 bg-brand-25 p-6">
-                                <h2 className="mb-3 text-xl font-bold text-gray-900 sm:text-2xl">
-                                    👋 Selamat Datang, Peserta!
+                            <div className="mb-8 rounded-xl bg-brand-50 p-6">
+                                <h2 className="mb-3 flex items-center gap-2 text-xl font-bold text-gray-900 sm:text-2xl">
+                                    <Hand className="h-6 w-6 text-brand-600" /> Selamat Datang, Peserta!
                                 </h2>
                                 <Paragraph>
-                                    Selamat datang di <strong>Bootcamp Laravel Dasar</strong>! Pada sesi ini, kamu akan belajar membangun sebuah <strong>Sistem Manajemen Event Kampus</strong> — sebuah Admin Panel / CMS yang berfungsi mengelola data acara kampus secara dinamis.
+                                    Selamat datang di <strong>Bootcamp Laravel</strong>! Pada sesi ini, kamu akan belajar membangun sebuah <strong>CRUD Event Kampus</strong> — sebuah Admin Panel yang berfungsi mengelola data acara kampus secara dinamis.
                                 </Paragraph>
                                 <Paragraph>
                                     Ikuti setiap langkah secara berurutan sambil mendengarkan penjelasan dari instruktur. Ketik setiap baris kode secara manual (kecuali kode starter yang disediakan tombol copy) agar kamu benar-benar memahami alur kerjanya.
@@ -490,7 +484,7 @@ export default function BootcampGuide() {
                         {/* SESI 1 — SETUP PROJECT & TEMPLATE              */}
                         {/* ═══════════════════════════════════════════════ */}
                         <section>
-                            <SectionHeading id="sesi-1" badge="📦 Sesi 1">
+                            <SectionHeading id="sesi-1" badge={<><Terminal className="h-4 w-4" /> Sesi 1</>}>
                                 Setup Project & Template
                             </SectionHeading>
                             <Paragraph>
@@ -541,9 +535,9 @@ export default function BootcampGuide() {
                             <a
                                 href="/downloads/sbadmin-event-kampus.zip"
                                 download
-                                className="group mb-6 mt-2 inline-flex items-center gap-3 rounded-xl border border-brand-200 bg-gradient-to-r from-brand-50 to-brand-100/50 px-6 py-4 text-brand-700 shadow-sm transition-all hover:border-brand-300 hover:shadow-md active:scale-[0.98]"
+                                className="group mb-6 mt-2 inline-flex items-center gap-3 rounded-xl bg-brand-50 px-6 py-4 text-brand-700 transition-all hover:bg-brand-100 active:scale-[0.98]"
                             >
-                                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-brand-500 text-white shadow-sm transition-transform group-hover:scale-110">
+                                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-brand-500 text-white transition-transform group-hover:scale-110">
                                     <Download className="h-5 w-5" />
                                 </div>
                                 <div>
@@ -594,7 +588,7 @@ export default function BootcampGuide() {
                         {/* SESI 2 — DATABASE                              */}
                         {/* ═══════════════════════════════════════════════ */}
                         <section>
-                            <SectionHeading id="sesi-2" badge="🗄️ Sesi 2">
+                            <SectionHeading id="sesi-2" badge={<><Database className="h-4 w-4" /> Sesi 2</>}>
                                 Database (Migration, Model, & Seeder)
                             </SectionHeading>
                             <Paragraph>
@@ -687,7 +681,7 @@ export default function BootcampGuide() {
                         {/* SESI 3 — ROUTE & CONTROLLER                    */}
                         {/* ═══════════════════════════════════════════════ */}
                         <section>
-                            <SectionHeading id="sesi-3" badge="🛣️ Sesi 3">
+                            <SectionHeading id="sesi-3" badge={<><Route className="h-4 w-4" /> Sesi 3</>}>
                                 Route & Controller Dasar
                             </SectionHeading>
                             <Paragraph>
@@ -723,7 +717,7 @@ export default function BootcampGuide() {
                         {/* SESI 4 — MEMBUAT TAMPILAN (VIEWS)              */}
                         {/* ═══════════════════════════════════════════════ */}
                         <section>
-                            <SectionHeading id="sesi-4" badge="🖥️ Sesi 4">
+                            <SectionHeading id="sesi-4" badge={<><Monitor className="h-4 w-4" /> Sesi 4</>}>
                                 Membuat Tampilan (Views)
                             </SectionHeading>
                             <Paragraph>
@@ -750,7 +744,75 @@ export default function BootcampGuide() {
                                 <CodeBlock
                                     language="html"
                                     filename="resources/views/events/index.blade.php"
-                                    code={`@extends('layouts.admin')\n\n@section('title', 'Data Event')\n\n@section('action-button')\n    <a href="{{ route('events.create') }}" class="btn btn-primary btn-sm shadow-sm">\n        <i class="fas fa-plus fa-sm text-white-50 mr-1"></i> Tambah Event\n    </a>\n@endsection\n\n@section('content')\n<div class="card border mb-4">\n    <div class="card-header py-3">\n        <h6 class="m-0 font-weight-bold text-primary">Daftar Event</h6>\n    </div>\n    <div class="card-body">\n        <div class="table-responsive">\n            <table class="table table-bordered table-hover" width="100%" cellspacing="0">\n                <thead class="thead-light">\n                    <tr>\n                        <th width="5%">#</th>\n                        <th width="10%">Poster</th>\n                        <th>Nama Event</th>\n                        <th>Tanggal</th>\n                        <th>Tempat</th>\n                        <th width="10%">Kuota</th>\n                        <th width="10%">Daftar</th>\n                        <th width="18%">Aksi</th>\n                    </tr>\n                </thead>\n                <tbody>\n                    @forelse($events as $event)\n                    <tr>\n                        <td>{{ $loop->iteration }}</td>\n                        <td class="text-center">\n                            @if($event->poster)\n                                <img src="{{ asset('storage/posters/' . $event->poster) }}" alt="Poster" class="img-thumbnail" width="50">\n                            @else\n                                <span class="text-muted small">Tidak ada</span>\n                            @endif\n                        </td>\n                        <td>{{ $event->nama_event }}</td>\n                        <td>{{ \\Carbon\\Carbon::parse($event->tanggal)->locale('id')->isoFormat('dddd, DD MMM YYYY') }}</td>\n                        <td>{{ $event->tempat }}</td>\n                        <td class="text-center">{{ $event->kuota }}</td>\n                        <td class="text-center">\n                            <span class="badge badge-{{ $event->peserta_terdaftar >= $event->kuota ? 'danger' : 'success' }}">\n                                {{ $event->peserta_terdaftar }}/{{ $event->kuota }}\n                            </span>\n                        </td>\n                        <td>\n                            <a href="{{ route('events.show', $event) }}" class="btn btn-info btn-sm"><i class="fas fa-eye"></i></a>\n                            <a href="{{ route('events.edit', $event) }}" class="btn btn-warning btn-sm"><i class="fas fa-edit"></i></a>\n                            <form action="{{ route('events.destroy', $event) }}" method="POST" class="d-inline">\n                                @csrf @method('DELETE')\n                                <button class="btn btn-danger btn-sm btn-delete" type="submit"><i class="fas fa-trash"></i></button>\n                            </form>\n                        </td>\n                    </tr>\n                    @empty\n                    <tr>\n                        <td colspan="8" class="text-center text-muted">Belum ada event. Tambahkan Sekarang</td>\n                    </tr>\n                    @endforelse\n                </tbody>\n            </table>\n        </div>\n        <div class="d-flex justify-content-end mt-3 ml-3">\n            {{ $events->links('pagination::bootstrap-5') }}\n        </div>\n    </div>\n</div>\n@endsection`}
+                                    code={`@extends('layouts.admin')\n\n@section('title', 'Data Event')\n\n@section('action-button')
+    <a href="{{ route('events.create') }}" class="btn btn-primary btn-sm">
+        <i class="fas fa-plus fa-sm text-white-50 mr-1"></i> Tambah Event
+    </a>
+@endsection
+
+@section('content')
+<div class="card border mb-4">
+    <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary">Daftar Event</h6>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-bordered table-hover" width="100%" cellspacing="0">
+                <thead class="thead-light">
+                    <tr>
+                        <th width="5%">#</th>
+                        <th width="10%">Poster</th>
+                        <th>Nama Event</th>
+                        <th>Tanggal</th>
+                        <th>Tempat</th>
+                        <th width="10%">Kuota</th>
+                        <th width="10%">Daftar</th>
+                        <th width="18%">Aksi</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @forelse($events as $event)
+                    <tr>
+                        <td>{{ $loop->iteration }}</td>
+                        <td class="text-center">
+                            @if($event->poster)
+                                <img src="{{ asset('storage/posters/' . $event->poster) }}" alt="Poster" class="img-thumbnail" width="50">
+                            @else
+                                <span class="text-muted small">Tidak ada</span>
+                            @endif
+                        </td>
+                        <td>{{ $event->nama_event }}</td>
+                        <td>{{ \\Carbon\\Carbon::parse($event->tanggal)->locale('id')->isoFormat('dddd, DD MMM YYYY') }}</td>
+                        <td>{{ $event->tempat }}</td>
+                        <td class="text-center">{{ $event->kuota }}</td>
+                        <td class="text-center">
+                            <span class="badge badge-{{ $event->peserta_terdaftar >= $event->kuota ? 'danger' : 'success' }}">
+                                {{ $event->peserta_terdaftar }}/{{ $event->kuota }}
+                            </span>
+                        </td>
+                        <td>
+                            <a href="{{ route('events.show', $event) }}" class="btn btn-info btn-sm"><i class="fas fa-eye"></i></a>
+                            <a href="{{ route('events.edit', $event) }}" class="btn btn-warning btn-sm"><i class="fas fa-edit"></i></a>
+                            <form action="{{ route('events.destroy', $event) }}" method="POST" class="d-inline">
+                                @csrf @method('DELETE')
+                                <button class="btn btn-danger btn-sm btn-delete" type="submit"><i class="fas fa-trash"></i></button>
+                            </form>
+                        </td>
+                    </tr>
+                    @empty
+                    <tr>
+                        <td colspan="8" class="text-center text-muted">Belum ada event. Tambahkan Sekarang</td>
+                    </tr>
+                    @endforelse
+                </tbody>
+            </table>
+        </div>
+        <div class="d-flex justify-content-end mt-3 ml-3">
+            {{ $events->links('pagination::bootstrap-5') }}
+        </div>
+    </div>
+</div>
+@endsection`}
                                 />
                             </div>
 
@@ -814,7 +876,81 @@ export default function BootcampGuide() {
                                 <CodeBlock
                                     language="html"
                                     filename="resources/views/events/show.blade.php"
-                                    code={`@extends('layouts.admin')\n\n@section('title', 'Detail Event')\n\n@section('action-button')\n    <a href="{{ route('events.index') }}" class="btn btn-secondary btn-sm shadow-sm">\n        <i class="fas fa-arrow-left fa-sm text-white-50 mr-1"></i> Kembali\n    </a>\n@endsection\n\n@section('content')\n<div class="row">\n    {{-- Kotak Poster --}}\n    <div class="col-lg-4">\n        <div class="card border mb-4">\n            <div class="card-header py-3">\n                <h6 class="m-0 font-weight-bold text-primary">Poster Event</h6>\n            </div>\n            <div class="card-body text-center">\n                @if($event->poster)\n                    <img src="{{ asset('storage/posters/' . $event->poster) }}" alt="Poster" class="img-fluid rounded mb-3" style="max-height: 250px;">\n                @else\n                    <div class="bg-light rounded p-4 mb-3 text-muted">\n                        <i class="fas fa-image fa-3x mb-2"></i><br>Tidak ada poster\n                    </div>\n                @endif\n            </div>\n        </div>\n    </div>\n\n    {{-- Kotak Info --}}\n    <div class="col-lg-8">\n        <div class="card border mb-4">\n            <div class="card-header py-3">\n                <h6 class="m-0 font-weight-bold text-primary">Informasi Event</h6>\n            </div>\n            <div class="card-body">\n                <table class="table table-borderless mb-0">\n                    <tr>\n                        <th width="25%">Nama Event</th>\n                        <td>{{ $event->nama_event }}</td>\n                    </tr>\n                    <tr>\n                        <th>Tanggal</th>\n                        <td>{{ \\Carbon\\Carbon::parse($event->tanggal)->locale('id')->isoFormat('dddd, DD MMMM YYYY') }}</td>\n                    </tr>\n                    <tr>\n                        <th>Tempat</th>\n                        <td>{{ $event->tempat }}</td>\n                    </tr>\n                    <tr>\n                        <th>Kuota</th>\n                        <td><span class="badge badge-primary">{{ $event->kuota }} orang</span></td>\n                    </tr>\n                    <tr>\n                        <th>Pendaftar</th>\n                        <td><span class="badge badge-{{ $event->peserta_terdaftar >= $event->kuota ? 'danger' : 'success' }}">{{ $event->peserta_terdaftar }} orang</span></td>\n                    </tr>\n                    <tr>\n                        <th>Deskripsi</th>\n                        <td>{{ $event->deskripsi ?? '-' }}</td>\n                    </tr>\n                </table>\n            </div>\n            <div class="card-footer">\n                <a href="{{ route('events.edit', $event) }}" class="btn btn-warning btn-sm">\n                    <i class="fas fa-edit mr-1"></i> Edit\n                </a>\n                <form action="{{ route('events.destroy', $event) }}" method="POST" class="d-inline">\n                    @csrf @method('DELETE')\n                    <button class="btn btn-danger btn-sm btn-delete" type="submit">\n                        <i class="fas fa-trash mr-1"></i> Hapus\n                    </button>\n                </form>\n            </div>\n        </div>\n    </div>\n</div>\n@endsection`}
+                                    code={`@extends('layouts.admin')\n\n@section('title', 'Detail Event')\n\n@section('action-button')
+    <a href="{{ route('events.index') }}" class="btn btn-secondary btn-sm">
+        <i class="fas fa-arrow-left fa-sm text-white-50 mr-1"></i> Kembali
+    </a>
+@endsection
+
+@section('content')
+<div class="row">
+    {{-- Kotak Poster --}}
+    <div class="col-lg-4">
+        <div class="card border mb-4">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary">Poster Event</h6>
+            </div>
+            <div class="card-body text-center">
+                @if($event->poster)
+                    <img src="{{ asset('storage/posters/' . $event->poster) }}" alt="Poster" class="img-fluid rounded mb-3" style="max-height: 250px;">
+                @else
+                    <div class="bg-light rounded p-4 mb-3 text-muted">
+                        <i class="fas fa-image fa-3x mb-2"></i><br>Tidak ada poster
+                    </div>
+                @endif
+            </div>
+        </div>
+    </div>
+
+    {{-- Kotak Info --}}
+    <div class="col-lg-8">
+        <div class="card border mb-4">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary">Informasi Event</h6>
+            </div>
+            <div class="card-body">
+                <table class="table table-borderless mb-0">
+                    <tr>
+                        <th width="25%">Nama Event</th>
+                        <td>{{ $event->nama_event }}</td>
+                    </tr>
+                    <tr>
+                        <th>Tanggal</th>
+                        <td>{{ \\Carbon\\Carbon::parse($event->tanggal)->locale('id')->isoFormat('dddd, DD MMMM YYYY') }}</td>
+                    </tr>
+                    <tr>
+                        <th>Tempat</th>
+                        <td>{{ $event->tempat }}</td>
+                    </tr>
+                    <tr>
+                        <th>Kuota</th>
+                        <td><span class="badge badge-primary">{{ $event->kuota }} orang</span></td>
+                    </tr>
+                    <tr>
+                        <th>Pendaftar</th>
+                        <td><span class="badge badge-{{ $event->peserta_terdaftar >= $event->kuota ? 'danger' : 'success' }}">{{ $event->peserta_terdaftar }} orang</span></td>
+                    </tr>
+                    <tr>
+                        <th>Deskripsi</th>
+                        <td>{{ $event->deskripsi ?? '-' }}</td>
+                    </tr>
+                </table>
+            </div>
+            <div class="card-footer">
+                <a href="{{ route('events.edit', $event) }}" class="btn btn-warning btn-sm">
+                    <i class="fas fa-edit mr-1"></i> Edit
+                </a>
+                <form action="{{ route('events.destroy', $event) }}" method="POST" class="d-inline">
+                    @csrf @method('DELETE')
+                    <button class="btn btn-danger btn-sm btn-delete" type="submit">
+                        <i class="fas fa-trash mr-1"></i> Hapus
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+@endsection`}
                                 />
                             </div>
 
@@ -849,7 +985,7 @@ export default function BootcampGuide() {
                         {/* HASIL AKHIR                                     */}
                         {/* ═══════════════════════════════════════════════ */}
                         <section>
-                            <SectionHeading id="hasil-akhir" badge="🎯">
+                            <SectionHeading id="hasil-akhir" badge={<Target className="h-4 w-4" />}>
                                 Hasil Akhir
                             </SectionHeading>
                             <Paragraph>
@@ -859,11 +995,13 @@ export default function BootcampGuide() {
                                 <CodeBlock language="bash" code="php artisan serve" />
                             </div>
                             <Paragraph>
-                                Buka <strong>http://127.0.0.1:8000</strong> di browser kamu. Aplikasi Manajemen Event Kampus sudah siap digunakan! 🎉
+                                Buka <strong>http://127.0.0.1:8000</strong> di browser kamu. Aplikasi Manajemen Event Kampus sudah siap digunakan! <PartyPopper className="inline-block h-4 w-4 ml-1 text-yellow-500" />
                             </Paragraph>
 
-                            <div className="mt-8 rounded-xl border border-green-200 bg-green-50 p-6">
-                                <h4 className="mb-3 text-lg font-bold text-green-800">✅ Fitur yang Sudah Dibangun:</h4>
+                            <div className="mt-8 rounded-xl bg-green-50 p-6">
+                                <h4 className="mb-3 flex items-center gap-2 text-lg font-bold text-green-800">
+                                    <CheckCircle2 className="h-5 w-5 text-green-600" /> Fitur yang Sudah Dibangun:
+                                </h4>
                                 <ul className="ml-5 list-disc space-y-2 text-green-700">
                                     <li>CRUD lengkap (Create, Read, Update, Delete) untuk data Event</li>
                                     <li>Upload gambar poster event</li>
@@ -874,8 +1012,10 @@ export default function BootcampGuide() {
                                 </ul>
                             </div>
 
-                            <div className="mt-6 rounded-xl border border-brand-200 bg-brand-25 p-6">
-                                <h4 className="mb-2 text-lg font-bold text-brand-800">🚀 Tantangan Selanjutnya (Opsional):</h4>
+                            <div className="mt-6 rounded-xl bg-brand-50 p-6">
+                                <h4 className="mb-2 flex items-center gap-2 text-lg font-bold text-brand-800">
+                                    <Rocket className="h-5 w-5 text-brand-600" /> Tantangan Selanjutnya (Opsional):
+                                </h4>
                                 <p className="text-sm leading-relaxed text-brand-700">
                                     Setelah bootcamp ini selesai, kamu bisa mencoba mengembangkan aplikasi lebih lanjut — misalnya menambahkan fitur login admin, filter/pencarian event, atau statistik dashboard. Selamat berkreasi!
                                 </p>
@@ -890,7 +1030,7 @@ export default function BootcampGuide() {
 
             {/* ── Mobile FAB: TOC Toggle ── */}
             <button
-                className="fixed bottom-6 right-6 z-50 flex h-14 w-14 items-center justify-center rounded-full bg-brand-600 text-white shadow-lg transition-all hover:bg-brand-700 hover:shadow-xl active:scale-95 lg:hidden"
+                className="fixed bottom-6 right-6 z-50 flex h-14 w-14 items-center justify-center rounded-full bg-brand-600 text-white border border-brand-700 transition-all hover:bg-brand-700 active:scale-95 lg:hidden"
                 onClick={() => setMobileMenuOpen(true)}
                 aria-label="Buka Daftar Isi"
             >
@@ -917,7 +1057,7 @@ export default function BootcampGuide() {
                                 animate={{ x: 0 }}
                                 exit={{ x: "100%" }}
                                 transition={{ duration: 0.28, ease: [0.16, 1, 0.3, 1] }}
-                                className="fixed inset-y-0 right-0 z-[999] w-full max-w-[320px] overflow-y-auto bg-white shadow-2xl"
+                                className="fixed inset-y-0 right-0 z-[999] w-full max-w-[320px] overflow-y-auto bg-white border-l border-gray-200"
                             >
                                 <div className="flex items-center justify-between border-b border-gray-100 px-5 py-4">
                                     <h3 className="text-base font-bold text-gray-900">Daftar Isi</h3>
