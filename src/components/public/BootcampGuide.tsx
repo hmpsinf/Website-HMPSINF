@@ -153,7 +153,7 @@ function Paragraph({ children }: { children: React.ReactNode }) {
 
 function InlineCode({ children }: { children: React.ReactNode }) {
     return (
-        <code className="rounded-md bg-gray-100 px-1.5 py-0.5 text-sm font-medium text-brand-600 border border-gray-200">
+        <code className="break-all rounded-md bg-gray-100 px-1.5 py-0.5 text-sm font-medium text-brand-600 border border-gray-200">
             {children}
         </code>
     );
