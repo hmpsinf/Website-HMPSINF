@@ -42,7 +42,7 @@ function CodeBlock({
     code,
     language,
     filename,
-    allowCopy = false,
+    allowCopy = true,
 }: {
     code: string;
     language: string;
@@ -356,24 +356,7 @@ export default function BootcampGuide() {
         return () => observerRef.current?.disconnect();
     }, [mounted]);
 
-    // Block copy on protected code blocks globally
-    useEffect(() => {
-        if (!mounted) return;
 
-        const handleGlobalCopy = (e: ClipboardEvent) => {
-            const selection = window.getSelection();
-            if (!selection || selection.rangeCount === 0) return;
-            const range = selection.getRangeAt(0);
-            const container = range.commonAncestorContainer as HTMLElement;
-            const codeWrapper = (container.nodeType === 3 ? container.parentElement : container)?.closest("[data-protected='true']");
-            if (codeWrapper) {
-                e.preventDefault();
-            }
-        };
-
-        document.addEventListener("copy", handleGlobalCopy);
-        return () => document.removeEventListener("copy", handleGlobalCopy);
-    }, [mounted]);
 
     const scrollToSection = useCallback((id: string) => {
         const el = document.getElementById(id);
