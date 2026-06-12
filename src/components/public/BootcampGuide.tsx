@@ -481,7 +481,7 @@ export default function BootcampGuide() {
                             <div data-protected="true">
                                 <CodeBlock
                                     language="bash"
-                                    code={`composer create-project laravel/laravel=^10.0 event-kampus\ncd event-kampus`}
+                                    code={`composer create-project laravel/laravel "event-kampus" "10.*" --no-security-blocking\ncd event-kampus`}
                                 />
                             </div>
 
@@ -544,9 +544,6 @@ export default function BootcampGuide() {
                             <Paragraph>
                                 Sekarang, buat file baru di <InlineCode>resources/views/layouts/admin.blade.php</InlineCode>. File ini akan menjadi &ldquo;kerangka utama&rdquo; (sidebar, navbar, footer) yang membungkus semua halaman aplikasi.
                             </Paragraph>
-                            <InfoBox type="info">
-                                Ini adalah satu-satunya kode yang boleh kamu <strong>Copy-Paste</strong>. Gunakan tombol <strong>&ldquo;Salin&rdquo;</strong> di pojok kanan atas blok kode berikut, lalu paste ke file <InlineCode>admin.blade.php</InlineCode>.
-                            </InfoBox>
                             <CodeBlock
                                 language="html"
                                 filename="resources/views/layouts/admin.blade.php"

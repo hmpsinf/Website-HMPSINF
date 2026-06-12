@@ -18,7 +18,7 @@ Pada sesi ini, kita akan melakukan instalasi awal Laravel, mengonfigurasi databa
 ### 1.1 Buat Project Laravel
 Buka terminal/Command Prompt, lalu jalankan perintah berikut untuk membuat folder project baru:
 ```bash
-composer create-project laravel/laravel event-kampus
+composer create-project laravel/laravel "event-kampus" "10.*" --no-security-blocking
 cd event-kampus
 ```
 
